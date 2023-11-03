@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Clock from './components/Clock';
 import SearchBar from './components/SearchBar';
-import Schoology from './components/Schoology';
+// import Schoology from './components/Schoology';
 
 export function App() {
 	return (
