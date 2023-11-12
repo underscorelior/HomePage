@@ -10,7 +10,7 @@
 - [ ] Settings
 - [ ] Minigames
 
-#### If possible:
+### If possible:
 
 - [ ] Show Schoology Assignments
 - [ ] Fidelity stats
