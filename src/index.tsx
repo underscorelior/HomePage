@@ -3,19 +3,21 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Clock from './components/Clock';
 import SearchBar from './components/SearchBar';
+// import Tasks from './components/Task';
 // import Schoology from './components/Schoology';
 
 export function App() {
 	return (
-		<div className='w-screen h-screen flex flex-col bg-ctp-base'>
-			<header className='w-full flex'>
-				<h1 className='w-full flex justify-end'>
+		<div className="bg-ctp-base flex h-screen w-screen flex-col overflow-hidden">
+			<header className="flex w-full">
+				<h1 className="flex w-full justify-end">
 					<Clock />
 				</h1>
 			</header>
-			<main className='w-full items-center justify-center flex'>
+			<main className="absolute top-[45%] flex w-full items-center justify-center">
 				<SearchBar />
 			</main>
+			<div className="right-0 top-0 h-full w-full">{/* <Tasks /> */}</div>
 			{/* <Schoology /> */}
 		</div>
 	);
@@ -24,5 +26,5 @@ export function App() {
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<App />
-	</React.StrictMode>
+	</React.StrictMode>,
 );
