@@ -26,9 +26,9 @@ function Clock() {
 	});
 
 	return (
-		<section className="mb-4 animate-gradient bg-gradient-to-r from-ctp-blue via-ctp-mauve to-ctp-blue bg-500% bg-clip-text p-6 text-5xl font-black text-transparent lg:text-6xl">
+		<section className="animate-gradient from-ctp-blue via-ctp-mauve to-ctp-blue bg-500% mb-4 bg-gradient-to-r bg-clip-text p-6 text-5xl font-black text-transparent lg:text-[4.25rem]">
 			{formattedTime}
-			<p className="text-end text-xl">{formattedDate}</p>
+			<p className="text-end text-[1.625rem]">{formattedDate}</p>
 		</section>
 	);
 }
