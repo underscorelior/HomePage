@@ -3,5 +3,17 @@
 @tailwind utilities;
 
 body {
-	overscroll-behavior-y: none;
+	/* overscroll-behavior-y: none; */
+}
+
+@layer components {
+}
+
+@layer utilities {
+}
+
+@layer base {
+	html {
+		@apply bg-ctp-base;
+	}
 }
