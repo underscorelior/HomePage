@@ -48,11 +48,7 @@ function Clock() {
 		const crd = pos.coords;
 		try {
 			const response = await axios.get(
-				`https://api.openweathermap.org/data/2.5/weather?lat=${
-					crd.latitude
-				}&lon=${crd.longitude}&units=metric&appid=${
-					import.meta.env.VITE_WEATHER_KEY
-				}`,
+				`https://api.openweathermap.org/data/2.5/weather?lat=${crd.latitude}&lon=${crd.longitude}&units=metric&appid=${process.env.VITE_WEATHER_KEY}`,
 			);
 			const locationResponse = await axios.get(
 				`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${crd.latitude}&longitude=${crd.longitude}&localityLanguage=en`,
