@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer components {
+	.gradtext {
+		@apply animate-gradient from-ctp-blue via-ctp-mauve to-ctp-blue bg-1000% bg-gradient-to-r bg-clip-text text-end text-transparent;
+	}
 }
 
 @layer utilities {
