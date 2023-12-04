@@ -1,4 +1,4 @@
-# homepage
+# Homepage
 
 ## ToDo:
 
@@ -10,6 +10,7 @@
 - [ ] Add a note section - maybe with readme (?)
 - [ ] Settings
 - [ ] Minigames
+- [ ] Spotify
 
 ### If possible:
 
