@@ -3,7 +3,7 @@
 ## ToDo:
 
 - [x] Show Time & Date
-- [ ] Show Weather
+- [x] Show Weather
 - [ ] Show Calendar
 - [ ] Small ToDo/Task planner
 - [ ] Weekly/Daily reminders/habit tracker ((ex. like for code 1 hr a day) with storing every missed day with max streak)
