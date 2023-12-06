@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa';
 
@@ -35,12 +35,17 @@ const pwaConfig: Partial<VitePWAOptions> = {
 	},
 };
 
-// https://vitejs.dev/config/
-export default defineConfig({
-	plugins: [react(), VitePWA(pwaConfig)],
-	server: {
-		watch: {
-			usePolling: true,
+export default defineConfig(({ command, mode }) => {
+	const env = loadEnv(mode, process.cwd(), '');
+	return {
+		define: {
+			'process.env.WEATHER_KEY': JSON.stringify(env.WEATHER_KEY),
 		},
-	},
+		plugins: [react(), VitePWA(pwaConfig)],
+		server: {
+			watch: {
+				usePolling: true,
+			},
+		},
+	};
 });
