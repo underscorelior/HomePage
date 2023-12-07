@@ -108,7 +108,7 @@ function Clock() {
 							) : (
 								<TiWeatherCloudy className="fill-ctp-text mr-2 text-4xl" />
 							)
-						) : weatherData.weather[0].main in ['Rain', 'Drizzle'] ? (
+						) : ['Rain', 'Drizzle'].includes(weatherData.weather[0].main) ? (
 							[
 								'light intensity shower rain',
 								'shower rain',
@@ -118,7 +118,7 @@ function Clock() {
 							].includes(weatherData.weather[0].description) ? (
 								<TiWeatherShower className="fill-ctp-blue mr-2 text-4xl" />
 							) : (
-								<TiWeatherDownpour className="fill-ctp-sapphire mr-2 text-4xl" />
+								<TiWeatherDownpour className="fill-ctp-blue mr-2 text-4xl" />
 							)
 						) : weatherData.weather[0].main == 'Thunderstorm' ? (
 							<TiWeatherStormy className="fill-ctp-yellow mr-2 text-4xl" />
