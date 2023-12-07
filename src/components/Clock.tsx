@@ -30,17 +30,8 @@ function Clock() {
 			setCurrentTime(new Date());
 		}, 1000);
 
-		const geoInterval = setInterval(() => {
-			navigator.geolocation.getCurrentPosition(fetchData, errors, {
-				enableHighAccuracy: true,
-				timeout: 5000,
-				maximumAge: 0,
-			});
-		}, 600000);
-
 		return () => {
 			clearInterval(intervalId);
-			clearInterval(geoInterval);
 		};
 	}, []);
 
