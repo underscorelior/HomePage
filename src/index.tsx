@@ -1,10 +1,7 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Clock from './components/Clock';
-import SearchBar from './components/SearchBar';
-// import Tasks from './components/Task';
-// import Schoology from './components/Schoology';
+// import Spotify from './components/Spotify';
 
 export function App() {
 	return (
@@ -14,17 +11,13 @@ export function App() {
 					<Clock />
 				</h1>
 			</header>
-			<main className="absolute top-[45%] flex w-full items-center justify-center">
+			{/* <main className="absolute top-[45%] flex w-full items-center justify-center">
 				<SearchBar />
-			</main>
-			<div className="right-0 top-0 h-full w-full">{/* <Tasks /> */}</div>
-			{/* <Schoology /> */}
+			</main> */}
+			{/* <div className="right-0 top-0 h-full w-full"> <Tasks /> </div>*/}
+			{/* <Spotify /> */}
 		</div>
 	);
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-	<React.StrictMode>
-		<App />
-	</React.StrictMode>,
-);
+ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
