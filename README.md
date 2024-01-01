@@ -12,6 +12,7 @@
 - [ ] Settings
 - [ ] Minigames
 - [ ] Spotify
+- [ ] Allow for toggling of elements
 
 ### If possible:
 
