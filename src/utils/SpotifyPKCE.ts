@@ -18,7 +18,10 @@ async function generateCodeChallenge(codeVerifier: string) {
 		.replace(/=+$/, '');
 }
 
-export async function redirectToAuthCodeFlow(clientId: string) {
+export async function redirectToAuthCodeFlow(
+	clientId: string,
+	callbackUrl: string,
+) {
 	const verifier = generateCodeVerifier(128);
 	const challenge = await generateCodeChallenge(verifier);
 
@@ -27,7 +30,7 @@ export async function redirectToAuthCodeFlow(clientId: string) {
 	const params = new URLSearchParams();
 	params.append('client_id', clientId);
 	params.append('response_type', 'code');
-	params.append('redirect_uri', 'http://localhost:5173/callback');
+	params.append('redirect_uri', callbackUrl + 'callback');
 	params.append(
 		'scope',
 		'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-playback-position user-top-read user-read-recently-played user-library-read user-library-modify',

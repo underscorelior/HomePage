@@ -107,7 +107,7 @@ export default function Spotify() {
 						refreshToken(clientId, URL);
 					}
 				} else if (!code) {
-					redirectToAuthCodeFlow(clientId);
+					redirectToAuthCodeFlow(clientId, URL);
 				} else {
 					const accessToken = await getAccessToken(clientId, code, URL);
 					localStorage.setItem('access_token', accessToken);
