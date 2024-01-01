@@ -4,7 +4,7 @@
 
 @layer components {
 	.gradtext {
-		@apply animate-gradient from-ctp-blue via-ctp-mauve to-ctp-blue bg-1000% bg-gradient-to-r bg-clip-text text-end text-transparent;
+		@apply animate-gradient bg-gradient-to-r from-ctp-blue via-ctp-mauve to-ctp-blue bg-1000% bg-clip-text text-end text-transparent;
 	}
 }
 
