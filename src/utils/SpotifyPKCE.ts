@@ -107,7 +107,6 @@ export async function player(accessToken: string) {
 	}
 	const x = await result.json();
 
-	// console.log(x.item.);
 	return [x, true];
 }
 

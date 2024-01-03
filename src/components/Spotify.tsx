@@ -5,6 +5,7 @@
 // TODO: Fix types
 // TODO: Fix spotify loading taking too long
 // TODO: Fix key breaking after a while
+// TODO: Simplify Code
 
 import { useEffect, useState } from 'react';
 import {
@@ -92,6 +93,12 @@ export default function Spotify() {
 			(async () => {
 				const storedAccessToken = localStorage.getItem('access_token');
 				if (storedAccessToken) {
+					if (
+						Date.now() > ((localStorage.getItem('expires_in') || 0) as number)
+					) {
+						refreshToken(clientId, URL);
+					}
+
 					const play = await player(storedAccessToken);
 					setIsPlaying(play[1]);
 
@@ -103,11 +110,6 @@ export default function Spotify() {
 					}
 
 					setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
-					if (
-						Date.now() > ((localStorage.getItem('expires_in') || 0) as number)
-					) {
-						refreshToken(clientId, URL);
-					}
 				} else if (!code) {
 					redirectToAuthCodeFlow(clientId, URL);
 				} else {
