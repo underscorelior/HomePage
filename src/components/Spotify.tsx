@@ -3,6 +3,8 @@
 // TODO: Implement "interpolation" to decrease requests
 // TODO: Add replay from pervious device when no song is active
 // TODO: Fix types
+// TODO: Fix spotify loading taking too long
+// TODO: Fix key breaking after a while
 
 import { useEffect, useState } from 'react';
 import {
@@ -122,6 +124,7 @@ export default function Spotify() {
 				}
 			})();
 		}, 1000);
+		effect.refresh;
 		return () => clearInterval(effect);
 	}, [URL, clientId, code]);
 
