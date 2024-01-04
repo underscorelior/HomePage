@@ -1,9 +1,7 @@
 // TODO: Fix spotify player when nothing at all is active
 // TODO: Implement heart
-// TODO: Implement "interpolation" to decrease requests
 // TODO: Add replay from pervious device when no song is active
 // TODO: Fix types
-// TODO: Fix spotify loading taking too long
 // TODO: Fix key breaking after a while
 // TODO: Simplify Code
 
@@ -26,7 +24,6 @@ import {
 	IoIosSkipBackward,
 	IoIosSkipForward,
 } from 'react-icons/io';
-// import { AiOutlineLoading } from 'react-icons/ai';
 
 export default function Spotify() {
 	const [seekPosition, setSeekPosition] = useState<number>(0);
@@ -36,6 +33,9 @@ export default function Spotify() {
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
 	const [playingProgress, setPlayingProgress] = useState<number>(0);
 	const [pausedActive, setPausedActive] = useState<boolean>(false);
+	const [sinceAPICall, setSinceAPICall] = useState<number>(0);
+	const [apiCallInProgress, setApiCallInProgress] = useState<boolean>(false);
+	const [afterAction, setAfterAction] = useState<number>(0);
 
 	const clientId = process.env.SPOTIFY_CLIENT_ID || '';
 	const URL = process.env.CALLBACK_URL || 'http://localhost:5173';
@@ -47,17 +47,13 @@ export default function Spotify() {
 		if (currentlyPlaying && playingProgress > 5000) {
 			return seek(0);
 		}
-		const result = await fetch(
-			'https://api.spotify.com/v1/me/player/previous',
-			{
-				method: 'POST',
-				headers: { Authorization: `Bearer ${accessToken}` },
-				body: JSON.stringify({
-					device_id: await getActiveDeviceId(accessToken),
-				}),
-			},
-		);
-		return await result.json();
+		await fetch('https://api.spotify.com/v1/me/player/previous', {
+			method: 'POST',
+			headers: { Authorization: `Bearer ${accessToken}` },
+			body: JSON.stringify({
+				device_id: await getActiveDeviceId(accessToken),
+			}),
+		});
 	}
 
 	async function getAccessToken(clientId: string, code: string, URL: string) {
@@ -89,21 +85,33 @@ export default function Spotify() {
 	}
 
 	useEffect(() => {
-		const effect = setInterval(() => {
-			(async () => {
+		const interval = setInterval(async () => {
+			if (
+				(sinceAPICall < 10 ||
+					(isPlaying &&
+						currentlyPlaying?.duration_ms !== undefined &&
+						Math.abs(playingProgress - currentlyPlaying.duration_ms) < 2000) ||
+					(afterAction != 0 && sinceAPICall < 3750)) &&
+				!apiCallInProgress
+			) {
+				setApiCallInProgress(true);
+
 				const storedAccessToken = localStorage.getItem('access_token');
+
 				if (storedAccessToken) {
 					if (
 						Date.now() > ((localStorage.getItem('expires_in') || 0) as number)
 					) {
-						refreshToken(clientId, URL);
+						await refreshToken(clientId, URL);
 					}
 
 					const play = await player(storedAccessToken);
 					setIsPlaying(play[1]);
 
 					if (play[1]) {
-						setPlayingProgress(play[0].progress_ms);
+						if (Math.abs(play[0].progress_ms - playingProgress) > 1000) {
+							setPlayingProgress(play[0].progress_ms);
+						}
 						setPausedActive(play[0].is_playing);
 					} else {
 						setPausedActive(false);
@@ -118,17 +126,34 @@ export default function Spotify() {
 					const currentlyPlaying = await player(accessToken);
 					setCurrentlyPlaying(currentlyPlaying[0]);
 					setIsPlaying(currentlyPlaying[1]);
-					if (
-						Date.now() > ((localStorage.getItem('expires_in') || 0) as number)
-					) {
-						refreshToken(clientId, URL);
-					}
+
+					Date.now() > ((localStorage.getItem('expires_in') || 0) as number);
+					await refreshToken(clientId, URL);
 				}
-			})();
-		}, 1000);
-		effect.refresh;
-		return () => clearInterval(effect);
-	}, [URL, clientId, code]);
+				setSinceAPICall(4000);
+				setApiCallInProgress(false);
+				setAfterAction(afterAction == 1 ? 2 : 0);
+			}
+			if (!isPlaying || pausedActive)
+				setPlayingProgress((prevProgress) => prevProgress + 2);
+			setSinceAPICall((prevSinceAPICall) => prevSinceAPICall - 1);
+		}, 1);
+
+		return () => {
+			clearInterval(interval);
+		};
+	}, [
+		URL,
+		clientId,
+		code,
+		sinceAPICall,
+		apiCallInProgress,
+		isPlaying,
+		playingProgress,
+		currentlyPlaying,
+		afterAction,
+		pausedActive,
+	]);
 
 	return (
 		<>
@@ -172,7 +197,8 @@ export default function Spotify() {
 												className="bg-ctp-green h-full rounded-lg"
 												style={{
 													width:
-														(playingProgress / currentlyPlaying.duration_ms) *
+														((playingProgress % currentlyPlaying.duration_ms) /
+															currentlyPlaying.duration_ms) *
 															100 +
 														'%',
 												}}
@@ -182,28 +208,41 @@ export default function Spotify() {
 												type="range"
 												min="0"
 												max={currentlyPlaying.duration_ms}
-												value={playingProgress}
+												value={playingProgress % currentlyPlaying.duration_ms}
 												onChange={(e) => {
 													setSeekPosition(Number(e.target.value));
 												}}
 												onMouseUp={() => {
 													seek(seekPosition);
+													setAfterAction(1);
 												}}
 											/>
 											<div
 												className="bg-ctp-green absolute top-[50%] h-3 w-3 -translate-x-1/2 -translate-y-1/2 transform rounded-full"
 												style={{
 													left:
-														(playingProgress / currentlyPlaying.duration_ms) *
+														((playingProgress % currentlyPlaying.duration_ms) /
+															currentlyPlaying.duration_ms) *
 															100 +
 														'%',
 												}}
 											/>
 											<div className="mt-1">
 												<p className="text-ctp-subtext1 font-mono text-xs font-light">
-													{Math.floor(playingProgress / 1000 / 60)}:
+													{Math.floor(
+														(playingProgress % currentlyPlaying.duration_ms) /
+															1000 /
+															60,
+													)}
+													:
 													{(
-														'0' + Math.floor((playingProgress / 1000) % 60)
+														'0' +
+														Math.floor(
+															((playingProgress %
+																currentlyPlaying.duration_ms) /
+																1000) %
+																60,
+														)
 													).slice(-2)}{' '}
 													/{' '}
 													{Math.floor(currentlyPlaying.duration_ms / 1000 / 60)}
@@ -220,19 +259,32 @@ export default function Spotify() {
 									</div>
 								)}
 								<div className="flex justify-center space-x-4">
-									<button className="rounded-full" onClick={() => previous()}>
+									<button
+										className="rounded-full"
+										onClick={() => {
+											previous();
+											setAfterAction(1);
+										}}>
 										<IoIosSkipBackward className="h-6 w-6" />
 									</button>
 									<button
 										className="rounded-full"
-										onClick={() => (pausedActive ? pause() : play())}>
+										onClick={() => {
+											pausedActive ? pause() : play();
+											setAfterAction(1);
+										}}>
 										{pausedActive ? (
 											<IoIosPause className="h-6 w-6" />
 										) : (
 											<IoIosPlay className="h-6 w-6" />
 										)}
 									</button>
-									<button className="rounded-full" onClick={() => next()}>
+									<button
+										className="rounded-full"
+										onClick={() => {
+											next();
+											setAfterAction(1);
+										}}>
 										<IoIosSkipForward className="h-6 w-6" />
 									</button>
 								</div>
@@ -241,7 +293,6 @@ export default function Spotify() {
 					</div>
 				</div>
 			) : (
-				// <AiOutlineLoading className="fill-ctp-text w-full animate-spin items-end text-[1.625rem]" />
 				<></>
 			)}
 		</>

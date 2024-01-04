@@ -112,38 +112,34 @@ export async function player(accessToken: string) {
 
 export async function pause() {
 	const accessToken = localStorage.getItem('access_token') || '';
-	const result = await fetch('https://api.spotify.com/v1/me/player/pause', {
+	await fetch('https://api.spotify.com/v1/me/player/pause', {
 		method: 'PUT',
 		headers: { Authorization: `Bearer ${accessToken}` },
 		body: JSON.stringify({ device_id: await getActiveDeviceId(accessToken) }),
 	});
-	return await result.json();
 }
 
 export async function play() {
 	const accessToken = localStorage.getItem('access_token') || '';
-	const result = await fetch('https://api.spotify.com/v1/me/player/play', {
+	await fetch('https://api.spotify.com/v1/me/player/play', {
 		method: 'PUT',
 		headers: { Authorization: `Bearer ${accessToken}` },
 		body: JSON.stringify({ device_id: await getActiveDeviceId(accessToken) }),
 	});
-	return await result.json();
 }
 
 export async function next() {
 	const accessToken = localStorage.getItem('access_token') || '';
-	const result = await fetch('https://api.spotify.com/v1/me/player/next', {
+	await fetch('https://api.spotify.com/v1/me/player/next', {
 		method: 'POST',
 		headers: { Authorization: `Bearer ${accessToken}` },
 		body: JSON.stringify({ device_id: await getActiveDeviceId(accessToken) }),
 	});
-
-	return await result.json();
 }
 
 export async function seek(position: number) {
 	const accessToken = localStorage.getItem('access_token') || '';
-	const result = await fetch(
+	await fetch(
 		`https://api.spotify.com/v1/me/player/seek?position_ms=${position}`,
 		{
 			method: 'PUT',
@@ -151,13 +147,8 @@ export async function seek(position: number) {
 			body: JSON.stringify({ device_id: await getActiveDeviceId(accessToken) }),
 		},
 	);
-	return await result.json();
 }
 
 export async function heart() {
 	// check if track is hearted, if so, unheart it, if not, heart it
-}
-
-export async function isHearted() {
-	// check if track is hearted
 }
