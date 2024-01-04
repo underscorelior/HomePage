@@ -135,7 +135,7 @@ export default function Spotify() {
 				setAfterAction(afterAction == 1 ? 2 : 0);
 			}
 			if (!isPlaying || pausedActive)
-				setPlayingProgress((prevProgress) => prevProgress + 2);
+				setPlayingProgress((prevProgress) => prevProgress + 1.55);
 			setSinceAPICall((prevSinceAPICall) => prevSinceAPICall - 1);
 		}, 1);
 
