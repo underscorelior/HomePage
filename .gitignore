@@ -27,3 +27,4 @@ dist-ssr
 
 .env
 src/utils/SchoologyTest.js
+.vercel
