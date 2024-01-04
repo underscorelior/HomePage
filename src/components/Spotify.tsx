@@ -1,7 +1,5 @@
-// TODO: Fix spotify player when nothing at all is active
 // TODO: Implement heart
 // TODO: Add replay from pervious device when no song is active
-// TODO: Fix types
 // TODO: Fix key breaking after a while
 // TODO: Simplify Code
 
@@ -91,7 +89,7 @@ export default function Spotify() {
 					(isPlaying &&
 						currentlyPlaying?.duration_ms !== undefined &&
 						Math.abs(playingProgress - currentlyPlaying.duration_ms) < 2000) ||
-					(afterAction != 0 && sinceAPICall < 3750)) &&
+					(afterAction != 0 && sinceAPICall < 2500)) &&
 				!apiCallInProgress
 			) {
 				setApiCallInProgress(true);
@@ -130,7 +128,7 @@ export default function Spotify() {
 					Date.now() > ((localStorage.getItem('expires_in') || 0) as number);
 					await refreshToken(clientId, URL);
 				}
-				setSinceAPICall(4000);
+				setSinceAPICall(3000);
 				setApiCallInProgress(false);
 				setAfterAction(afterAction == 1 ? 2 : 0);
 			}
