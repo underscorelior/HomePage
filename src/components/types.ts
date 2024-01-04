@@ -107,11 +107,3 @@ interface Device {
 	type: string;
 	volume_percent: number;
 }
-
-interface RecentlyPlayed {
-	items: [
-		{
-			track: TrackObject;
-		},
-	];
-}
