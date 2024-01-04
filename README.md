@@ -10,7 +10,7 @@
 - [ ] Weekly/Daily reminders/habit tracker ((ex. like for code 1 hr a day) with storing every missed day with max streak)
 - [ ] Add a note section - maybe with md (?)
 - [ ] Settings
-- [ ] Minigames
+- [ ] Minigames - (Snake, 2048, minesweeper, tetris, etc.)
 - [ ] Spotify
 - [ ] Allow for toggling of elements
 
