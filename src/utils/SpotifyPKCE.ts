@@ -69,7 +69,39 @@ export const refreshToken = async (clientId: string, URL: string) => {
 	window.location.href = URL;
 };
 
-export async function getActiveDeviceId(accessToken: string) {
+export async function getAccessToken(
+	clientId: string,
+	code: string,
+	URL: string,
+) {
+	const verifier = localStorage.getItem('verifier') || '';
+
+	if (localStorage.getItem('access_token'))
+		return localStorage.getItem('access_token');
+	const params = new URLSearchParams();
+	params.append('client_id', clientId);
+	params.append('grant_type', 'authorization_code');
+	params.append('code', code);
+	params.append('redirect_uri', URL + '/callback');
+	params.append('code_verifier', verifier);
+
+	const result = await fetch('https://accounts.spotify.com/api/token', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+		body: params,
+	});
+	const { access_token, refresh_token, expires_in } = await result.json();
+	localStorage.setItem('refresh_token', refresh_token);
+	localStorage.setItem('access_token', access_token);
+	localStorage.setItem(
+		'expires_in',
+		(Date.now() + ((expires_in || 0) as number) * 1000) as unknown as string,
+	);
+	window.location.href = URL;
+	return access_token;
+}
+
+async function getActiveDeviceId(accessToken: string) {
 	const result = await fetch('https://api.spotify.com/v1/me/player/devices', {
 		method: 'GET',
 		headers: { Authorization: `Bearer ${accessToken}` },
@@ -134,6 +166,23 @@ export async function next() {
 		method: 'POST',
 		headers: { Authorization: `Bearer ${accessToken}` },
 		body: JSON.stringify({ device_id: await getActiveDeviceId(accessToken) }),
+	});
+}
+
+export async function previous(
+	currentlyPlaying: boolean,
+	playingProgress: number,
+) {
+	const accessToken = localStorage.getItem('access_token') || '';
+	if (currentlyPlaying && playingProgress > 5000) {
+		return seek(0);
+	}
+	await fetch('https://api.spotify.com/v1/me/player/previous', {
+		method: 'POST',
+		headers: { Authorization: `Bearer ${accessToken}` },
+		body: JSON.stringify({
+			device_id: await getActiveDeviceId(accessToken),
+		}),
 	});
 }
 

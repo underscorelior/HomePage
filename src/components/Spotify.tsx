@@ -1,6 +1,5 @@
 // TODO: Add animations to heart button
-// TODO: Add replay from pervious device when no song is active
-// TODO: Simplify Code
+// TODO: Add replay from previous device when no song is active - if possible
 
 import { useEffect, useState } from 'react';
 import {
@@ -11,9 +10,10 @@ import {
 	play,
 	next,
 	seek,
-	getActiveDeviceId,
 	heart,
 	isHearted,
+	getAccessToken,
+	previous,
 } from '../utils/SpotifyPKCE';
 import {
 	IoIosHeart,
@@ -38,51 +38,13 @@ export default function Spotify() {
 	const [hearted, setHearted] = useState<boolean>(false);
 
 	const clientId = process.env.SPOTIFY_CLIENT_ID || '';
+	if (clientId === '') {
+		throw new Error('Missing Spotify Client ID');
+	}
+
 	const URL = process.env.CALLBACK_URL || 'http://localhost:5173';
 	const params = new URLSearchParams(window.location.search);
 	const code = params.get('code');
-
-	async function previous() {
-		const accessToken = localStorage.getItem('access_token') || '';
-		if (currentlyPlaying && playingProgress > 5000) {
-			return seek(0);
-		}
-		await fetch('https://api.spotify.com/v1/me/player/previous', {
-			method: 'POST',
-			headers: { Authorization: `Bearer ${accessToken}` },
-			body: JSON.stringify({
-				device_id: await getActiveDeviceId(accessToken),
-			}),
-		});
-	}
-
-	async function getAccessToken(clientId: string, code: string, URL: string) {
-		const verifier = localStorage.getItem('verifier') || '';
-
-		if (localStorage.getItem('access_token'))
-			return localStorage.getItem('access_token');
-		const params = new URLSearchParams();
-		params.append('client_id', clientId);
-		params.append('grant_type', 'authorization_code');
-		params.append('code', code);
-		params.append('redirect_uri', URL + '/callback');
-		params.append('code_verifier', verifier);
-
-		const result = await fetch('https://accounts.spotify.com/api/token', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-			body: params,
-		});
-		const { access_token, refresh_token, expires_in } = await result.json();
-		localStorage.setItem('refresh_token', refresh_token);
-		localStorage.setItem('access_token', access_token);
-		localStorage.setItem(
-			'expires_in',
-			(Date.now() + ((expires_in || 0) as number) * 1000) as unknown as string,
-		);
-		window.location.href = URL;
-		return access_token;
-	}
 
 	useEffect(() => {
 		const interval = setInterval(async () => {
@@ -280,7 +242,7 @@ export default function Spotify() {
 									<button
 										className="rounded-full"
 										onClick={() => {
-											previous();
+											previous(currentlyPlaying !== null, playingProgress);
 											setAfterAction(1);
 										}}>
 										<IoIosSkipBackward className="h-6 w-6" />
