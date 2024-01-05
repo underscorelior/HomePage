@@ -149,6 +149,31 @@ export async function seek(position: number) {
 	);
 }
 
-export async function heart() {
-	// check if track is hearted, if so, unheart it, if not, heart it
+export async function heart(isHearted: boolean, trackId: string) {
+	const accessToken = localStorage.getItem('access_token') || '';
+	if (isHearted) {
+		await fetch(`https://api.spotify.com/v1/me/tracks?ids=${trackId}`, {
+			method: 'DELETE',
+			headers: { Authorization: `Bearer ${accessToken}` },
+		});
+	} else {
+		await fetch(`https://api.spotify.com/v1/me/tracks?ids=${trackId}`, {
+			method: 'PUT',
+			headers: { Authorization: `Bearer ${accessToken}` },
+		});
+	}
+}
+
+export async function isHearted(trackId: string) {
+	const accessToken = localStorage.getItem('access_token') || '';
+	const result = await fetch(
+		`https://api.spotify.com/v1/me/tracks/contains?ids=${trackId}`,
+		{
+			method: 'GET',
+			headers: { Authorization: `Bearer ${accessToken}` },
+		},
+	);
+
+	const res = await result.json();
+	return res[0];
 }

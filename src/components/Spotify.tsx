@@ -1,7 +1,7 @@
-// TODO: Implement heart
+// TODO: Add animations to heart button
 // TODO: Add replay from pervious device when no song is active
-// TODO: Fix key breaking after a while
 // TODO: Simplify Code
+// TODO: Stop requests when page is closed, then run request when page gets open
 
 import { useEffect, useState } from 'react';
 import {
@@ -14,8 +14,10 @@ import {
 	seek,
 	getActiveDeviceId,
 	heart,
+	isHearted,
 } from '../utils/SpotifyPKCE';
 import {
+	IoIosHeart,
 	IoIosHeartEmpty,
 	IoIosPause,
 	IoIosPlay,
@@ -34,6 +36,7 @@ export default function Spotify() {
 	const [sinceAPICall, setSinceAPICall] = useState<number>(0);
 	const [apiCallInProgress, setApiCallInProgress] = useState<boolean>(false);
 	const [afterAction, setAfterAction] = useState<number>(0);
+	const [hearted, setHearted] = useState<boolean>(false);
 
 	const clientId = process.env.SPOTIFY_CLIENT_ID || '';
 	const URL = process.env.CALLBACK_URL || 'http://localhost:5173';
@@ -115,6 +118,11 @@ export default function Spotify() {
 						setPausedActive(false);
 					}
 
+					const hearted = await isHearted(
+						play[1] ? play[0].item.id : play[0].id || '',
+					);
+					setHearted(hearted);
+
 					setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
 				} else if (!code) {
 					redirectToAuthCodeFlow(clientId, URL);
@@ -181,11 +189,17 @@ export default function Spotify() {
 											{currentlyPlaying.artists[0].name}
 										</p>
 									</div>
-									<button className="rounded-full">
-										<IoIosHeartEmpty
-											className="h-6 w-6"
-											onClick={() => heart()}
-										/>
+									<button
+										className="rounded-full"
+										onClick={() => {
+											heart(hearted, currentlyPlaying?.id);
+											setAfterAction(1);
+										}}>
+										{hearted ? (
+											<IoIosHeart className="text-ctp-green h-6 w-6" />
+										) : (
+											<IoIosHeartEmpty className="h-6 w-6" />
+										)}
 									</button>
 								</div>
 								{isPlaying && (
