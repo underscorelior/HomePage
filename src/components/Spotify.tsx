@@ -1,7 +1,6 @@
 // TODO: Add animations to heart button
 // TODO: Add replay from pervious device when no song is active
 // TODO: Simplify Code
-// TODO: Stop requests when page is closed, then run request when page gets open
 
 import { useEffect, useState } from 'react';
 import {
@@ -87,62 +86,69 @@ export default function Spotify() {
 
 	useEffect(() => {
 		const interval = setInterval(async () => {
-			if (
-				(sinceAPICall < 10 ||
-					(isPlaying &&
-						currentlyPlaying?.duration_ms !== undefined &&
-						Math.abs(playingProgress - currentlyPlaying.duration_ms) < 2000) ||
-					(afterAction != 0 && sinceAPICall < 2500)) &&
-				!apiCallInProgress
-			) {
-				setApiCallInProgress(true);
+			if (document.hasFocus()) {
+				if (
+					(sinceAPICall < 10 ||
+						(isPlaying &&
+							currentlyPlaying?.duration_ms !== undefined &&
+							Math.abs(playingProgress - currentlyPlaying.duration_ms) <
+								2000) ||
+						(afterAction != 0 && sinceAPICall < 2500)) &&
+					!apiCallInProgress
+				) {
+					setApiCallInProgress(true);
 
-				const storedAccessToken = localStorage.getItem('access_token');
+					const storedAccessToken = localStorage.getItem('access_token');
 
-				if (storedAccessToken) {
-					if (
-						Date.now() > ((localStorage.getItem('expires_in') || 0) as number)
-					) {
+					if (storedAccessToken) {
+						if (
+							Date.now() > ((localStorage.getItem('expires_in') || 0) as number)
+						) {
+							await refreshToken(clientId, URL);
+						}
+
+						const play = await player(storedAccessToken);
+						setIsPlaying(play[1]);
+
+						if (play[1]) {
+							if (Math.abs(play[0].progress_ms - playingProgress) > 1000) {
+								setPlayingProgress(play[0].progress_ms);
+							}
+							setPausedActive(play[0].is_playing);
+						} else {
+							setPausedActive(false);
+						}
+
+						const hearted = await isHearted(
+							play[1] ? play[0].item.id : play[0].id || '',
+						);
+						setHearted(hearted);
+
+						setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
+					} else if (!code) {
+						redirectToAuthCodeFlow(clientId, URL);
+					} else {
+						const accessToken = await getAccessToken(clientId, code, URL);
+						localStorage.setItem('access_token', accessToken);
+						const currentlyPlaying = await player(accessToken);
+						setCurrentlyPlaying(currentlyPlaying[0]);
+						setIsPlaying(currentlyPlaying[1]);
+
+						Date.now() > ((localStorage.getItem('expires_in') || 0) as number);
 						await refreshToken(clientId, URL);
 					}
-
-					const play = await player(storedAccessToken);
-					setIsPlaying(play[1]);
-
-					if (play[1]) {
-						if (Math.abs(play[0].progress_ms - playingProgress) > 1000) {
-							setPlayingProgress(play[0].progress_ms);
-						}
-						setPausedActive(play[0].is_playing);
-					} else {
-						setPausedActive(false);
-					}
-
-					const hearted = await isHearted(
-						play[1] ? play[0].item.id : play[0].id || '',
-					);
-					setHearted(hearted);
-
-					setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
-				} else if (!code) {
-					redirectToAuthCodeFlow(clientId, URL);
-				} else {
-					const accessToken = await getAccessToken(clientId, code, URL);
-					localStorage.setItem('access_token', accessToken);
-					const currentlyPlaying = await player(accessToken);
-					setCurrentlyPlaying(currentlyPlaying[0]);
-					setIsPlaying(currentlyPlaying[1]);
-
-					Date.now() > ((localStorage.getItem('expires_in') || 0) as number);
-					await refreshToken(clientId, URL);
+					setSinceAPICall(3000);
+					setApiCallInProgress(false);
+					setAfterAction(afterAction == 1 ? 2 : 0);
 				}
-				setSinceAPICall(3000);
+				if (!isPlaying || pausedActive)
+					setPlayingProgress((prevProgress) => prevProgress + 1.55);
+				setSinceAPICall((prevSinceAPICall) => prevSinceAPICall - 1);
+			} else {
+				setSinceAPICall(0);
+				setAfterAction(1);
 				setApiCallInProgress(false);
-				setAfterAction(afterAction == 1 ? 2 : 0);
 			}
-			if (!isPlaying || pausedActive)
-				setPlayingProgress((prevProgress) => prevProgress + 1.55);
-			setSinceAPICall((prevSinceAPICall) => prevSinceAPICall - 1);
 		}, 1);
 
 		return () => {
