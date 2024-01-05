@@ -92,8 +92,8 @@ export default function Spotify() {
 						(isPlaying &&
 							currentlyPlaying?.duration_ms !== undefined &&
 							Math.abs(playingProgress - currentlyPlaying.duration_ms) <
-								2000) ||
-						(afterAction != 0 && sinceAPICall < 2500)) &&
+								1500) ||
+						(afterAction != 0 && sinceAPICall < 1500)) &&
 					!apiCallInProgress
 				) {
 					setApiCallInProgress(true);
@@ -137,7 +137,7 @@ export default function Spotify() {
 						Date.now() > ((localStorage.getItem('expires_in') || 0) as number);
 						await refreshToken(clientId, URL);
 					}
-					setSinceAPICall(3000);
+					setSinceAPICall(2000);
 					setApiCallInProgress(false);
 					setAfterAction(afterAction == 1 ? 2 : 0);
 				}
