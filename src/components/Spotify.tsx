@@ -133,7 +133,7 @@ export default function Spotify() {
 				if (afterAction == 2) {
 					setHeartClicked(false);
 				}
-				setAfterAction(afterAction == 3 ? 0 : afterAction + 1);
+				setAfterAction(afterAction == 2 ? 0 : afterAction + 1);
 			}
 			if (!isPlaying || pausedActive)
 				setPlayingProgress((prevProgress) => prevProgress + increment);
