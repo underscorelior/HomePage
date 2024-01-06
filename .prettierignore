@@ -7,4 +7,3 @@ package.json
 postcss.config.js
 webpack.config.js
 prettier.config.js
-tailwind.config.js
