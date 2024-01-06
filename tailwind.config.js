@@ -6,11 +6,18 @@ module.exports = {
 		extend: {
 			animation: {
 				gradient: 'gradient 30s linear infinite',
+				shake: 'shake 0.5s ease-in-out 1',
 			},
 			keyframes: {
 				gradient: {
 					from: { 'background-position': '0%' },
 					to: { 'background-position': '500%' },
+				},
+				shake: {
+					'0%, 100%': { transform: 'translateX(0)' },
+					'25%': { transform: 'translateX(-2.5px)' },
+					'50%': { transform: 'translateX(2.5px)' },
+					'75%': { transform: 'translateX(-1.25px)' },
 				},
 			},
 			backgroundSize: {

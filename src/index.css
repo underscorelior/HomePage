@@ -4,7 +4,7 @@
 
 @layer components {
 	.gradtext {
-		@apply animate-gradient bg-gradient-to-r from-ctp-blue via-ctp-mauve to-ctp-blue bg-1000% bg-clip-text text-end text-transparent;
+		@apply animate-gradient from-ctp-blue via-ctp-mauve to-ctp-blue bg-1000% bg-gradient-to-r bg-clip-text text-end text-transparent;
 	}
 }
 
@@ -14,5 +14,109 @@
 @layer base {
 	html {
 		@apply bg-ctp-base;
+	}
+}
+
+input[type='checkbox'] + label {
+	width: 20px;
+	height: 20px;
+	position: relative;
+	display: grid;
+	place-content: center;
+
+	#center-heart {
+		#inner,
+		#outer {
+			fill: transparent;
+			transition: 0.2s ease;
+		}
+	}
+
+	#left-hearts > *,
+	#right-hearts > * {
+		opacity: 0;
+		transition: 0.2s ease;
+	}
+
+	cursor: pointer;
+
+	&::before,
+	&::after {
+		content: '';
+		display: grid;
+		border-radius: 100%;
+		position: absolute;
+		outline: 2px solid #a6e3a1;
+		height: 24px;
+		width: 24px;
+		animation: scalePulse 0.5s cubic-bezier(0.12, 0.84, 0.5, 0.44) forwards;
+	}
+
+	&::after {
+		opacity: 1;
+		transform: scale(0);
+		animation-delay: 0.2s;
+	}
+
+	#center-heart {
+		#inner,
+		#outer {
+			fill: #a6e3a1;
+		}
+	}
+
+	#left-hearts > *,
+	#right-hearts > * {
+		transform-origin: center center;
+		animation: floatingHearts 0.65s cubic-bezier(0.12, 0.84, 0.5, 0.44) forwards;
+	}
+
+	#right-hearts g:first-child {
+		animation-delay: 0.3s;
+	}
+
+	#right-hearts g:last-child {
+		animation-delay: 0.1s;
+	}
+
+	#left-hearts g:first-child {
+		animation-delay: 0.2s;
+	}
+
+	#left-hearts g:last-child {
+		animation-delay: 0.5s;
+	}
+
+	svg {
+		height: 24px;
+		overflow: visible;
+		cursor: pointer;
+	}
+}
+
+@keyframes floatingHearts {
+	0% {
+		opacity: 0;
+		transform: translateY(1.25px);
+	}
+
+	50% {
+		opacity: 0.5;
+	}
+
+	100% {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+}
+
+@keyframes scalePulse {
+	from {
+		transform: scale(0);
+	}
+
+	to {
+		transform: scale(1.1);
+		opacity: 0;
 	}
 }
