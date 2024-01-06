@@ -201,6 +201,7 @@ export default function Spotify() {
 											heart(hearted, currentlyPlaying?.id);
 											setHeartClicked(true);
 											setAfterAction(1);
+											setHearted(!hearted);
 										}}>
 										{hearted ? (
 											heartClicked ? (
