@@ -133,7 +133,7 @@ export default function Spotify() {
 				if (afterAction == 2) {
 					setHeartClicked(false);
 				}
-				setAfterAction(afterAction == 1 ? 2 : 0);
+				setAfterAction(afterAction == 3 ? 0 : afterAction + 1);
 			}
 			if (!isPlaying || pausedActive)
 				setPlayingProgress((prevProgress) => prevProgress + increment);
@@ -205,7 +205,6 @@ export default function Spotify() {
 										{hearted ? (
 											heartClicked ? (
 												<div className="h-6 w-6">
-													{' '}
 													<Heart />
 												</div>
 											) : (
@@ -214,7 +213,7 @@ export default function Spotify() {
 										) : (
 											<IoIosHeartEmpty
 												className={
-													(heartClicked && 'animate-shake') + ' h-6 w-6'
+													(heartClicked && 'animate-shake') + ' h-6 w-6' //
 												}
 											/>
 										)}
