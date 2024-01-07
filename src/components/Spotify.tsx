@@ -83,7 +83,6 @@ export default function Spotify() {
 							setPlayingProgress(play[0].progress_ms);
 						}
 
-						console.log(lastUpdate);
 						const change =
 							((diff / (play[0].progress_ms - lastUpdate)) * 2000) / cooldown;
 						if (
@@ -96,14 +95,6 @@ export default function Spotify() {
 						}
 
 						setLastUpdate(play[0].progress_ms);
-
-						console.table({
-							increment,
-							diff,
-							diffC: diff / cooldown,
-							change,
-							lastUpdate,
-						});
 
 						setPausedActive(play[0].is_playing);
 					} else {
@@ -142,7 +133,6 @@ export default function Spotify() {
 
 		const interval = setInterval(async () => {
 			if (document.hasFocus() != lastFocus && document.hasFocus()) {
-				console.log('A');
 				setSinceAPICall(0);
 				setAfterAction(1);
 				setApiCallInProgress(false);
