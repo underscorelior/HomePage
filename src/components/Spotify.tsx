@@ -1,5 +1,3 @@
-// TODO: Add replay from previous device when no song is active - if possible
-
 import { useEffect, useState } from 'react';
 import {
 	redirectToAuthCodeFlow,

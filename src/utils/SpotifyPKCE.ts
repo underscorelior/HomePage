@@ -1,3 +1,5 @@
+import toast from 'react-hot-toast';
+
 function generateCodeVerifier(length: number) {
 	let text = '';
 	const possible =
@@ -101,13 +103,32 @@ export async function getAccessToken(
 	return access_token;
 }
 
-async function getActiveDeviceId(accessToken: string) {
+async function getActiveDeviceId(accessToken: string, type: number) {
 	const result = await fetch('https://api.spotify.com/v1/me/player/devices', {
 		method: 'GET',
 		headers: { Authorization: `Bearer ${accessToken}` },
 	});
 	const { devices } = await result.json();
 	const activeDevice = devices.find((device: Device) => device.is_active);
+
+	if (!activeDevice) {
+		toast.error(
+			`Failed to ${type == 1 ? 'play/pause' : type == 2 ? 'skip' : 'seek'}`,
+			{
+				style: {
+					border: '1px solid #313244',
+					padding: '16px',
+					color: '#cdd6f4',
+					backgroundColor: '#181825',
+				},
+				iconTheme: {
+					primary: '#f38ba8',
+					secondary: '#1e1e2e',
+				},
+			},
+		);
+		return false;
+	}
 	return activeDevice.id;
 }
 
@@ -144,28 +165,47 @@ export async function player(accessToken: string) {
 
 export async function pause() {
 	const accessToken = localStorage.getItem('access_token') || '';
+
+	const deviceId = await getActiveDeviceId(accessToken, 1);
+	if (!deviceId) {
+		return false;
+	}
+
 	await fetch('https://api.spotify.com/v1/me/player/pause', {
 		method: 'PUT',
 		headers: { Authorization: `Bearer ${accessToken}` },
-		body: JSON.stringify({ device_id: await getActiveDeviceId(accessToken) }),
+		body: JSON.stringify({ device_id: deviceId }),
 	});
 }
 
 export async function play() {
 	const accessToken = localStorage.getItem('access_token') || '';
+
+	const deviceId = await getActiveDeviceId(accessToken, 1);
+	if (!deviceId) {
+		return false;
+	}
+
 	await fetch('https://api.spotify.com/v1/me/player/play', {
 		method: 'PUT',
 		headers: { Authorization: `Bearer ${accessToken}` },
-		body: JSON.stringify({ device_id: await getActiveDeviceId(accessToken) }),
+		body: JSON.stringify({ device_id: deviceId }),
 	});
+	return true;
 }
 
 export async function next() {
 	const accessToken = localStorage.getItem('access_token') || '';
+
+	const deviceId = await getActiveDeviceId(accessToken, 2);
+	if (!deviceId) {
+		return false;
+	}
+
 	await fetch('https://api.spotify.com/v1/me/player/next', {
 		method: 'POST',
 		headers: { Authorization: `Bearer ${accessToken}` },
-		body: JSON.stringify({ device_id: await getActiveDeviceId(accessToken) }),
+		body: JSON.stringify({ device_id: deviceId }),
 	});
 }
 
@@ -174,6 +214,12 @@ export async function previous(
 	playingProgress: number,
 ) {
 	const accessToken = localStorage.getItem('access_token') || '';
+
+	const deviceId = await getActiveDeviceId(accessToken, 2);
+	if (!deviceId) {
+		return false;
+	}
+
 	if (currentlyPlaying && playingProgress > 5000) {
 		return seek(0);
 	}
@@ -181,19 +227,25 @@ export async function previous(
 		method: 'POST',
 		headers: { Authorization: `Bearer ${accessToken}` },
 		body: JSON.stringify({
-			device_id: await getActiveDeviceId(accessToken),
+			device_id: deviceId,
 		}),
 	});
 }
 
 export async function seek(position: number) {
 	const accessToken = localStorage.getItem('access_token') || '';
+
+	const deviceId = await getActiveDeviceId(accessToken, 3);
+	if (!deviceId) {
+		return false;
+	}
+
 	await fetch(
 		`https://api.spotify.com/v1/me/player/seek?position_ms=${position}`,
 		{
 			method: 'PUT',
 			headers: { Authorization: `Bearer ${accessToken}` },
-			body: JSON.stringify({ device_id: await getActiveDeviceId(accessToken) }),
+			body: JSON.stringify({ device_id: deviceId }),
 		},
 	);
 }

@@ -2,10 +2,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Clock from './components/Clock';
 import Spotify from './components/Spotify';
+import { Toaster } from 'react-hot-toast';
 
 export function App() {
 	return (
 		<div className="bg-ctp-base flex h-screen w-screen flex-col overflow-hidden">
+			<Toaster />
 			<header className="flex w-full">
 				<h1 className="flex w-full justify-end">
 					<Clock />
