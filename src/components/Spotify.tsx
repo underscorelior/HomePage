@@ -153,6 +153,9 @@ export default function Spotify() {
 		currentlyPlaying,
 		afterAction,
 		pausedActive,
+		increment,
+		lastFocus,
+		lastUpdate,
 	]);
 
 	return (
