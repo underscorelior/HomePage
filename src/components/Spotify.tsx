@@ -311,7 +311,7 @@ export default function Spotify() {
 					</div>
 				</div>
 			) : (
-				<div className="border-ctp-surface0 bg-ctp-crust text-ctp-text flex max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 shadow-md sm:w-2/3 sm:max-w-xl">
+				<div className="border-ctp-surface0 bg-ctp-crust text-ctp-text flex w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 shadow-md sm:w-2/3 sm:max-w-xl">
 					<div className="w-1/3 flex-shrink-0">
 						<div className="bg-ctp-mantle aspect-square h-full w-full animate-pulse rounded-md" />
 					</div>
@@ -335,14 +335,13 @@ export default function Spotify() {
 							<div className="flex justify-center space-x-4">
 								{[...Array(3)].map((_, index) => (
 									<div key={index} className="animate-pulse rounded-full">
-										<div className="bg-ctp-subtext0 h-6 w-6 rounded-full" />
+										<div className="bg-ctp-overlay0 h-6 w-6 rounded-full" />
 									</div>
 								))}
 							</div>
 						</div>
 					</div>
 				</div>
-				// <></>
 			)}
 		</>
 	);
