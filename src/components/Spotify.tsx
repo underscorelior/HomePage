@@ -1,4 +1,5 @@
-// Add skeleton loading
+// TODO: Add skeleton loading
+// TODO: Fix token being invalidated
 import { useEffect, useState } from 'react';
 import {
 	redirectToAuthCodeFlow,
@@ -70,42 +71,43 @@ export default function Spotify() {
 						Date.now() > ((localStorage.getItem('expires_in') || 0) as number)
 					) {
 						await refreshToken(clientId, URL);
-					}
-
-					const play = await player(storedAccessToken);
-					setIsPlaying(play[1]);
-
-					if (play[1]) {
-						const diff = play[0].progress_ms - playingProgress;
-
-						if (Math.abs(diff) > 1000) {
-							setPlayingProgress(play[0].progress_ms);
-						}
-
-						const change =
-							((diff / (play[0].progress_ms - lastUpdate)) * 2000) / cooldown;
-						if (
-							lastUpdate != 0 &&
-							(!isPlaying || pausedActive) &&
-							Math.abs(change) !== Infinity &&
-							Math.abs(change) < 1
-						) {
-							setIncrement((increment) => increment + change);
-						}
-
-						setLastUpdate(play[0].progress_ms);
-
-						setPausedActive(play[0].is_playing);
+						setSinceAPICall(cooldown - 500);
 					} else {
-						setPausedActive(false);
+						const play = await player(storedAccessToken);
+						setIsPlaying(play[1]);
+
+						if (play[1]) {
+							const diff = play[0].progress_ms - playingProgress;
+
+							if (Math.abs(diff) > 1000) {
+								setPlayingProgress(play[0].progress_ms);
+							}
+
+							const change =
+								((diff / (play[0].progress_ms - lastUpdate)) * 2000) / cooldown;
+							if (
+								lastUpdate != 0 &&
+								(!isPlaying || pausedActive) &&
+								Math.abs(change) !== Infinity &&
+								Math.abs(change) < 1
+							) {
+								setIncrement((increment) => increment + change);
+							}
+
+							setLastUpdate(play[0].progress_ms);
+
+							setPausedActive(play[0].is_playing);
+						} else {
+							setPausedActive(false);
+						}
+
+						const hearted = await isHearted(
+							play[1] ? play[0].item.id : play[0].id || '',
+						);
+						setHearted(hearted);
+
+						setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
 					}
-
-					const hearted = await isHearted(
-						play[1] ? play[0].item.id : play[0].id || '',
-					);
-					setHearted(hearted);
-
-					setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
 				} else if (!code) {
 					redirectToAuthCodeFlow(clientId, URL);
 				} else {
