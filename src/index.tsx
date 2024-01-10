@@ -4,22 +4,17 @@ import Clock from './components/Clock';
 import Spotify from './components/Spotify';
 import { Toaster } from 'react-hot-toast';
 import Tasks from './components/Tasks';
+import Minigames from './components/Minigames';
 
 export function App() {
 	return (
 		<div className="bg-ctp-base flex h-screen w-screen flex-col overflow-hidden">
 			<Toaster />
-			<header className="flex w-full">
-				<h1 className="flex w-full justify-end">
-					<Clock />
-				</h1>
-			</header>
-			{/* <main className="absolute top-[45%] flex w-full items-center justify-center">
-				<SearchBar />
-			</main> */}
+			<Clock />
 			<div className="fixed bottom-0 flex h-max w-full justify-center">
-				<Tasks />
+				<Minigames />
 				<Spotify />
+				<Tasks />
 			</div>
 		</div>
 	);
