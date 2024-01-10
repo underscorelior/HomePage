@@ -158,155 +158,149 @@ export default function Spotify() {
 	return (
 		<>
 			{currentlyPlaying != null ? (
-				<div className="fixed bottom-0 flex h-max w-full justify-center">
-					<div className="border-ctp-surface0 bg-ctp-crust text-ctp-text flex max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 shadow-md sm:w-2/3 sm:max-w-xl">
-						<div className="w-1/3 flex-shrink-0">
-							<img
-								className="h-auto w-auto object-cover"
-								src={currentlyPlaying.album.images[0].url}
-								alt={currentlyPlaying.album.name}
-								style={{
-									aspectRatio: '100/100',
-									objectFit: 'cover',
-								}}
-								width="100"
-							/>
-						</div>
-						<div className="flex h-full w-2/3 items-center justify-center gap-y-4">
-							<div className="flex h-full w-full flex-col justify-between space-y-4 px-6 py-6">
-								<div className="mb-3 flex items-center justify-between">
-									<div className="w-[85%]">
-										<p className="text-md text-ctp-text overflow-hidden text-ellipsis whitespace-nowrap font-medium">
-											{currentlyPlaying.name}
-										</p>
-										<p className="text-md text-ctp-subtext1">
-											{currentlyPlaying.artists[0].name}
-										</p>
-									</div>
-									<button
-										className="rounded-full"
-										onClick={() => {
-											heart(hearted, currentlyPlaying?.id);
-											setHeartClicked(true);
-											setAfterAction(1);
-											setHearted(!hearted);
-										}}>
-										{hearted ? (
-											heartClicked ? (
-												<div className="h-6 w-6">
-													<Heart />
-												</div>
-											) : (
-												<IoIosHeart className="text-ctp-green h-6 w-6" />
-											)
-										) : (
-											<IoIosHeartEmpty
-												className={
-													(heartClicked && 'animate-shake') + ' h-6 w-6' //
-												}
-											/>
-										)}
-									</button>
+				<div className="border-ctp-surface0 bg-ctp-crust text-ctp-text flex max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 shadow-md sm:w-2/3 sm:max-w-xl">
+					<div className="w-1/3 flex-shrink-0">
+						<img
+							className="h-auto w-auto object-cover"
+							src={currentlyPlaying.album.images[0].url}
+							alt={currentlyPlaying.album.name}
+							style={{
+								aspectRatio: '100/100',
+								objectFit: 'cover',
+							}}
+							width="100"
+						/>
+					</div>
+					<div className="flex h-full w-2/3 items-center justify-center gap-y-4">
+						<div className="flex h-full w-full flex-col justify-between space-y-4 px-6 py-6">
+							<div className="mb-3 flex items-center justify-between">
+								<div className="w-[85%]">
+									<p className="text-md text-ctp-text overflow-hidden text-ellipsis whitespace-nowrap font-medium">
+										{currentlyPlaying.name}
+									</p>
+									<p className="text-md text-ctp-subtext1">
+										{currentlyPlaying.artists[0].name}
+									</p>
 								</div>
-								{isPlaying && (
-									<div className="flex items-center pb-4">
-										<div className="border-ctp-crust bg-ctp-surface2 relative h-3 w-full rounded-lg border">
-											<div
-												className="bg-ctp-green h-full rounded-lg"
-												style={{
-													width:
-														((playingProgress % currentlyPlaying.duration_ms) /
-															currentlyPlaying.duration_ms) *
-															100 +
-														'%',
-												}}
-											/>
-											<input
-												className="absolute top-0 h-full w-full cursor-pointer opacity-0"
-												type="range"
-												min="0"
-												max={currentlyPlaying.duration_ms}
-												value={playingProgress % currentlyPlaying.duration_ms}
-												onChange={(e) => {
-													setSeekPosition(Number(e.target.value));
-												}}
-												onMouseUp={() => {
-													seek(seekPosition);
-													setAfterAction(1);
-												}}
-											/>
-											<div
-												className="bg-ctp-green absolute top-[50%] h-3 w-3 -translate-x-1/2 -translate-y-1/2 transform rounded-full"
-												style={{
-													left:
-														((playingProgress % currentlyPlaying.duration_ms) /
-															currentlyPlaying.duration_ms) *
-															100 +
-														'%',
-												}}
-											/>
-											<div className="mt-1">
-												<p className="text-ctp-subtext1 font-mono text-xs font-light">
-													{Math.floor(
-														(playingProgress % currentlyPlaying.duration_ms) /
-															1000 /
-															60,
-													)}
-													:
-													{(
-														'0' +
-														Math.floor(
-															((playingProgress %
-																currentlyPlaying.duration_ms) /
-																1000) %
-																60,
-														)
-													).slice(-2)}{' '}
-													/{' '}
-													{Math.floor(currentlyPlaying.duration_ms / 1000 / 60)}
-													:
-													{(
-														'0' +
-														Math.floor(
-															(currentlyPlaying.duration_ms / 1000) % 60,
-														)
-													).slice(-2)}
-												</p>
+								<button
+									className="rounded-full"
+									onClick={() => {
+										heart(hearted, currentlyPlaying?.id);
+										setHeartClicked(true);
+										setAfterAction(1);
+										setHearted(!hearted);
+									}}>
+									{hearted ? (
+										heartClicked ? (
+											<div className="h-6 w-6">
+												<Heart />
 											</div>
+										) : (
+											<IoIosHeart className="text-ctp-green h-6 w-6" />
+										)
+									) : (
+										<IoIosHeartEmpty
+											className={
+												(heartClicked && 'animate-shake') + ' h-6 w-6' //
+											}
+										/>
+									)}
+								</button>
+							</div>
+							{isPlaying && (
+								<div className="flex items-center pb-4">
+									<div className="border-ctp-crust bg-ctp-surface2 relative h-3 w-full rounded-lg border">
+										<div
+											className="bg-ctp-green h-full rounded-lg"
+											style={{
+												width:
+													((playingProgress % currentlyPlaying.duration_ms) /
+														currentlyPlaying.duration_ms) *
+														100 +
+													'%',
+											}}
+										/>
+										<input
+											className="absolute top-0 h-full w-full cursor-pointer opacity-0"
+											type="range"
+											min="0"
+											max={currentlyPlaying.duration_ms}
+											value={playingProgress % currentlyPlaying.duration_ms}
+											onChange={(e) => {
+												setSeekPosition(Number(e.target.value));
+											}}
+											onMouseUp={() => {
+												seek(seekPosition);
+												setAfterAction(1);
+											}}
+										/>
+										<div
+											className="bg-ctp-green absolute top-[50%] h-3 w-3 -translate-x-1/2 -translate-y-1/2 transform rounded-full"
+											style={{
+												left:
+													((playingProgress % currentlyPlaying.duration_ms) /
+														currentlyPlaying.duration_ms) *
+														100 +
+													'%',
+											}}
+										/>
+										<div className="mt-1">
+											<p className="text-ctp-subtext1 font-mono text-xs font-light">
+												{Math.floor(
+													(playingProgress % currentlyPlaying.duration_ms) /
+														1000 /
+														60,
+												)}
+												:
+												{(
+													'0' +
+													Math.floor(
+														((playingProgress % currentlyPlaying.duration_ms) /
+															1000) %
+															60,
+													)
+												).slice(-2)}{' '}
+												/ {Math.floor(currentlyPlaying.duration_ms / 1000 / 60)}
+												:
+												{(
+													'0' +
+													Math.floor((currentlyPlaying.duration_ms / 1000) % 60)
+												).slice(-2)}
+											</p>
 										</div>
 									</div>
-								)}
-								<div className="flex justify-center space-x-4">
-									<button
-										className="rounded-full"
-										onClick={() => {
-											previous(currentlyPlaying !== null, playingProgress);
-											setAfterAction(1);
-										}}>
-										<IoIosSkipBackward className="h-6 w-6" />
-									</button>
-									<button
-										className="rounded-full"
-										onClick={() => {
-											pausedActive ? pause() : play();
-											setAfterAction(1);
-											setApiCallInProgress(false);
-										}}>
-										{pausedActive ? (
-											<IoIosPause className="h-6 w-6" />
-										) : (
-											<IoIosPlay className="h-6 w-6" />
-										)}
-									</button>
-									<button
-										className="rounded-full"
-										onClick={() => {
-											next();
-											setAfterAction(1);
-										}}>
-										<IoIosSkipForward className="h-6 w-6" />
-									</button>
 								</div>
+							)}
+							<div className="flex justify-center space-x-4">
+								<button
+									className="rounded-full"
+									onClick={() => {
+										previous(currentlyPlaying !== null, playingProgress);
+										setAfterAction(1);
+									}}>
+									<IoIosSkipBackward className="h-6 w-6" />
+								</button>
+								<button
+									className="rounded-full"
+									onClick={() => {
+										pausedActive ? pause() : play();
+										setAfterAction(1);
+										setApiCallInProgress(false);
+									}}>
+									{pausedActive ? (
+										<IoIosPause className="h-6 w-6" />
+									) : (
+										<IoIosPlay className="h-6 w-6" />
+									)}
+								</button>
+								<button
+									className="rounded-full"
+									onClick={() => {
+										next();
+										setAfterAction(1);
+									}}>
+									<IoIosSkipForward className="h-6 w-6" />
+								</button>
 							</div>
 						</div>
 					</div>
