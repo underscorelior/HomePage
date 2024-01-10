@@ -3,6 +3,7 @@ import './index.css';
 import Clock from './components/Clock';
 import Spotify from './components/Spotify';
 import { Toaster } from 'react-hot-toast';
+import Tasks from './components/Tasks';
 
 export function App() {
 	return (
@@ -16,7 +17,10 @@ export function App() {
 			{/* <main className="absolute top-[45%] flex w-full items-center justify-center">
 				<SearchBar />
 			</main> */}
-			<Spotify />
+			<div className="fixed bottom-0 flex h-max w-full justify-center">
+				<Tasks />
+				<Spotify />
+			</div>
 		</div>
 	);
 }
