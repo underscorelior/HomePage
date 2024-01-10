@@ -3,8 +3,8 @@ import './index.css';
 import Clock from './components/Clock';
 import Spotify from './components/Spotify';
 import { Toaster } from 'react-hot-toast';
-import Tasks from './components/Tasks';
-import Minigames from './components/Minigames';
+// import Tasks from './components/Tasks';
+// import Minigames from './components/Minigames';
 
 export function App() {
 	return (
@@ -12,9 +12,9 @@ export function App() {
 			<Toaster />
 			<Clock />
 			<div className="fixed bottom-0 flex h-max w-full justify-center">
-				<Minigames />
+				{/* <Minigames /> */}
 				<Spotify />
-				<Tasks />
+				{/* <Tasks /> */}
 			</div>
 		</div>
 	);
