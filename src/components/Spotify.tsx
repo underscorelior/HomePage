@@ -1,4 +1,3 @@
-// TODO: Add skeleton loading
 // TODO: Fix token being invalidated
 import { useEffect, useState } from 'react';
 import {
@@ -312,7 +311,38 @@ export default function Spotify() {
 					</div>
 				</div>
 			) : (
-				<></>
+				<div className="border-ctp-surface0 bg-ctp-crust text-ctp-text flex max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 shadow-md sm:w-2/3 sm:max-w-xl">
+					<div className="w-1/3 flex-shrink-0">
+						<div className="bg-ctp-mantle aspect-square h-full w-full animate-pulse rounded-md" />
+					</div>
+					<div className="flex h-full w-2/3 items-center justify-center gap-y-4">
+						<div className="flex h-full w-full flex-col justify-between space-y-4 p-6">
+							<div className="mb-3 flex items-center justify-between">
+								<div className="w-[85%] animate-pulse">
+									<div className="bg-ctp-surface2 mb-2 h-4 w-2/3 rounded-md" />
+									<div className="bg-ctp-surface0 h-4 w-1/3 rounded-md" />
+								</div>
+								<div className="animate-pulse rounded-full">
+									<div className="bg-ctp-green h-6 w-6 rounded-full" />
+								</div>
+							</div>
+							<div className="flex flex-col gap-y-1 pb-2">
+								<div className="border-ctp-crust bg-ctp-surface2 relative h-3 w-full animate-pulse rounded-lg border">
+									<div className="bg-ctp-surface1 h-full rounded-lg" />
+								</div>
+								<div className="bg-ctp-surface0 h-3 w-1/4 rounded-md" />
+							</div>
+							<div className="flex justify-center space-x-4">
+								{[...Array(3)].map((_, index) => (
+									<div key={index} className="animate-pulse rounded-full">
+										<div className="bg-ctp-subtext0 h-6 w-6 rounded-full" />
+									</div>
+								))}
+							</div>
+						</div>
+					</div>
+				</div>
+				// <></>
 			)}
 		</>
 	);
