@@ -110,3 +110,8 @@ interface Device {
 	type: string;
 	volume_percent: number;
 }
+
+interface Task {
+	text: string;
+	color: string;
+}
