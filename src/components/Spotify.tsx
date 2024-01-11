@@ -164,9 +164,9 @@ export default function Spotify() {
 		<>
 			{currentlyPlaying != null ? (
 				<div className="border-ctp-surface0 bg-ctp-crust text-ctp-text flex max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 shadow-md sm:w-2/3 sm:max-w-xl">
-					<div className="w-1/3 flex-shrink-0">
+					<div className="w-2/5 flex-shrink-0 sm:w-1/3">
 						<img
-							className="h-auto w-auto object-cover"
+							className="aspect-square h-full w-full object-cover"
 							src={currentlyPlaying.album.images[0].url}
 							alt={currentlyPlaying.album.name}
 							style={{
@@ -176,10 +176,10 @@ export default function Spotify() {
 							width="100"
 						/>
 					</div>
-					<div className="flex h-full w-2/3 items-center justify-center gap-y-4">
+					<div className="flex h-full w-full items-center justify-center gap-y-4 sm:w-2/3">
 						<div className="flex h-full w-full flex-col justify-between space-y-4 px-6 py-6">
 							<div className="mb-3 flex items-center justify-between">
-								<div className="w-[85%]">
+								<div className="w-full sm:w-[85%]">
 									<p className="text-md text-ctp-text overflow-hidden text-ellipsis whitespace-nowrap font-medium">
 										{currentlyPlaying.name}
 									</p>
@@ -312,13 +312,13 @@ export default function Spotify() {
 				</div>
 			) : (
 				<div className="border-ctp-surface0 bg-ctp-crust text-ctp-text flex w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 shadow-md sm:w-2/3 sm:max-w-xl">
-					<div className="w-1/3 flex-shrink-0">
-						<div className="bg-ctp-mantle aspect-square h-full w-full animate-pulse rounded-md" />
+					<div className="w-2/5 flex-shrink-0 sm:w-1/3">
+						<div className="bg-ctp-mantle aspect-square h-auto w-full animate-pulse rounded-md" />
 					</div>
-					<div className="flex h-full w-2/3 items-center justify-center gap-y-4">
+					<div className="flex h-full w-full items-center justify-center gap-y-4 sm:w-2/3">
 						<div className="flex h-full w-full flex-col justify-between space-y-4 p-6">
 							<div className="mb-3 flex items-center justify-between">
-								<div className="w-[85%] animate-pulse">
+								<div className="w-full animate-pulse sm:w-[85%]">
 									<div className="bg-ctp-surface2 mb-2 h-4 w-2/3 rounded-md" />
 									<div className="bg-ctp-surface0 h-4 w-1/3 rounded-md" />
 								</div>
