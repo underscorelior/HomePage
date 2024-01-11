@@ -16,6 +16,6 @@
 
 ### If possible:
 
-- [ ] Show Schoology Assignments
+- [ ] Schoology - Upcoming assignments, grade graph, graded assignments
 - [ ] Fidelity stats
 - [ ] Sync
