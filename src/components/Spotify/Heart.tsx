@@ -95,7 +95,6 @@ function Heart() {
 					</g>
 				</svg>
 			</label>
-			{/* </input> */}
 		</div>
 	);
 }

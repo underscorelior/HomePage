@@ -6,6 +6,15 @@
 	.gradtext {
 		@apply animate-gradient from-ctp-blue via-ctp-mauve to-ctp-blue bg-1000% bg-gradient-to-r bg-clip-text text-end text-transparent;
 	}
+}
+
+@layer utilities {
+}
+
+@layer base {
+	html {
+		@apply bg-ctp-base;
+	}
 
 	::-webkit-scrollbar {
 		@apply h-[0.125rem] w-2 bg-transparent;
@@ -17,15 +26,6 @@
 
 	::-webkit-scrollbar-track {
 		@apply bg-transparent;
-	}
-}
-
-@layer utilities {
-}
-
-@layer base {
-	html {
-		@apply bg-ctp-base;
 	}
 }
 

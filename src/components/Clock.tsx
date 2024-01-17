@@ -93,12 +93,12 @@ function Clock() {
 				{weatherData ? (
 					<span className="flex w-full flex-row items-end justify-center text-end text-[1.625rem]">
 						{weatherData.weather[0].main == 'Clear' ? (
-							<TiWeatherSunny className="mr-2 fill-ctp-peach text-4xl" />
+							<TiWeatherSunny className="fill-ctp-peach mr-2 text-4xl" />
 						) : weatherData.weather[0].main == 'Clouds' ? (
 							weatherData.weather[0].description == 'few clouds' ? (
-								<TiWeatherPartlySunny className="mr-2 fill-ctp-text text-4xl" />
+								<TiWeatherPartlySunny className="fill-ctp-text mr-2 text-4xl" />
 							) : (
-								<TiWeatherCloudy className="mr-2 fill-ctp-text text-4xl" />
+								<TiWeatherCloudy className="fill-ctp-text mr-2 text-4xl" />
 							)
 						) : ['Rain', 'Drizzle'].includes(weatherData.weather[0].main) ? (
 							[
@@ -108,25 +108,25 @@ function Clock() {
 								'light intensity drizzle',
 								'light intensity drizzle rain',
 							].includes(weatherData.weather[0].description) ? (
-								<TiWeatherShower className="mr-2 fill-ctp-blue text-4xl" />
+								<TiWeatherShower className="fill-ctp-blue mr-2 text-4xl" />
 							) : (
-								<TiWeatherDownpour className="mr-2 fill-ctp-blue text-4xl" />
+								<TiWeatherDownpour className="fill-ctp-blue mr-2 text-4xl" />
 							)
 						) : weatherData.weather[0].main == 'Thunderstorm' ? (
-							<TiWeatherStormy className="mr-2 fill-ctp-yellow text-4xl" />
+							<TiWeatherStormy className="fill-ctp-yellow mr-2 text-4xl" />
 						) : weatherData.weather[0].main == 'Snow' ? (
-							<TiWeatherSnow className="mr-2 fill-ctp-text text-4xl" />
+							<TiWeatherSnow className="fill-ctp-text mr-2 text-4xl" />
 						) : (weatherData.weather[0].id + '')[0] == '7' ? (
-							<TiWeatherWindyCloudy className="mr-2 fill-ctp-text text-4xl" />
+							<TiWeatherWindyCloudy className="fill-ctp-text mr-2 text-4xl" />
 						) : (
-							<TiDelete className="mr-2 fill-ctp-red text-4xl" />
+							<TiDelete className="fill-ctp-red mr-2 text-4xl" />
 						)}
 						<p className="gradtext">
 							{Math.round(weatherData.main.temp)}°C - {location}
 						</p>
 					</span>
 				) : (
-					<AiOutlineLoading className="w-full animate-spin items-end fill-ctp-text text-[1.625rem]" />
+					<AiOutlineLoading className="fill-ctp-text w-full animate-spin items-end text-[1.625rem]" />
 				)}
 			</div>
 		</section>
