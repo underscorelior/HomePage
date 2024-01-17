@@ -61,7 +61,8 @@ function TaskCard({
 export default function Tasks() {
 	const [tasks, setTasks] = useState<Task[]>([]);
 	const [colorSelectOpen, setColorSelectOpen] = useState<boolean>(false);
-	const selectedColor = localStorage.getItem('selectedColor') as Color;
+	const selectedColor =
+		(localStorage.getItem('selectedColor') as Color) || 'sky';
 
 	function createTask(text: string, color: Color) {
 		if (!text) {
