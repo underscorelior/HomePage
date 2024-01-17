@@ -65,7 +65,9 @@ export default function Spotify() {
 
 				const storedAccessToken = localStorage.getItem('access_token');
 
-				if (storedAccessToken) {
+				if (storedAccessToken == 'undefined' && !code) {
+					redirectToAuthCodeFlow(clientId, URL);
+				} else if (storedAccessToken) {
 					if (
 						Date.now() > ((localStorage.getItem('expires_in') || 0) as number)
 					) {
@@ -163,10 +165,10 @@ export default function Spotify() {
 	return (
 		<>
 			{currentlyPlaying != null ? (
-				<div className="border-ctp-surface0 bg-ctp-crust text-ctp-text flex max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 shadow-md sm:w-2/3 sm:max-w-xl">
+				<div className="border-ctp-surface0 bg-ctp-crust text-ctp-text flex w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 shadow-md sm:w-2/3 sm:max-w-xl">
 					<div className="w-2/5 flex-shrink-0 sm:w-1/3">
 						<img
-							className="aspect-square h-full w-full object-cover"
+							className="h-auto w-auto object-cover"
 							src={currentlyPlaying.album.images[0].url}
 							alt={currentlyPlaying.album.name}
 							style={{
@@ -176,14 +178,14 @@ export default function Spotify() {
 							width="100"
 						/>
 					</div>
-					<div className="flex h-full w-full items-center justify-center gap-y-4 sm:w-2/3">
-						<div className="flex h-full w-full flex-col justify-between space-y-4 px-6 py-6">
-							<div className="mb-3 flex items-center justify-between">
-								<div className="w-full sm:w-[85%]">
-									<p className="text-md text-ctp-text overflow-hidden text-ellipsis whitespace-nowrap font-medium">
+					<div className="flex h-full w-3/5 items-center justify-center gap-y-4 sm:mx-auto sm:w-2/3">
+						<div className="flex h-full w-full flex-col justify-between gap-y-2 px-5 py-4 sm:gap-y-4 sm:py-6">
+							<div className="flex w-[95%] items-center justify-between sm:mb-3 sm:w-full">
+								<div className="w-[75%] sm:w-[85%]">
+									<p className="text-md text-ctp-text -mb-1 overflow-hidden text-ellipsis whitespace-nowrap font-medium sm:mb-0">
 										{currentlyPlaying.name}
 									</p>
-									<p className="text-md text-ctp-subtext1">
+									<p className="text-md text-ctp-subtext1 overflow-hidden text-ellipsis whitespace-nowrap">
 										{currentlyPlaying.artists[0].name}
 									</p>
 								</div>
@@ -205,15 +207,13 @@ export default function Spotify() {
 										)
 									) : (
 										<IoIosHeartEmpty
-											className={
-												(heartClicked && 'animate-shake') + ' h-6 w-6' //
-											}
+											className={(heartClicked && 'animate-shake') + ' h-6 w-6'}
 										/>
 									)}
 								</button>
 							</div>
 							{isPlaying && (
-								<div className="flex items-center pb-4">
+								<div className="flex items-center pb-3 sm:pb-4">
 									<div className="border-ctp-crust bg-ctp-surface2 relative h-3 w-full rounded-lg border">
 										<div
 											className="bg-ctp-green h-full rounded-lg"
@@ -276,7 +276,7 @@ export default function Spotify() {
 									</div>
 								</div>
 							)}
-							<div className="flex justify-center space-x-4">
+							<div className="flex justify-center gap-x-4">
 								<button
 									className="rounded-full"
 									onClick={() => {
@@ -313,26 +313,26 @@ export default function Spotify() {
 			) : (
 				<div className="border-ctp-surface0 bg-ctp-crust text-ctp-text flex w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 shadow-md sm:w-2/3 sm:max-w-xl">
 					<div className="w-2/5 flex-shrink-0 sm:w-1/3">
-						<div className="bg-ctp-mantle aspect-square h-auto w-full animate-pulse rounded-md" />
+						<div className="bg-ctp-mantle aspect-square h-full w-full animate-pulse rounded-md" />
 					</div>
-					<div className="flex h-full w-full items-center justify-center gap-y-4 sm:w-2/3">
-						<div className="flex h-full w-full flex-col justify-between space-y-4 p-6">
-							<div className="mb-3 flex items-center justify-between">
-								<div className="w-full animate-pulse sm:w-[85%]">
-									<div className="bg-ctp-surface2 mb-2 h-4 w-2/3 rounded-md" />
-									<div className="bg-ctp-surface0 h-4 w-1/3 rounded-md" />
+					<div className="flex h-full w-2/3 items-center justify-center gap-y-2 sm:gap-y-4">
+						<div className="flex h-full w-full flex-col justify-between gap-y-2 px-5 py-5 sm:gap-y-4 sm:p-6">
+							<div className="mb-2 flex items-center justify-between sm:mb-3">
+								<div className="w-full animate-pulse sm:w-[80%]">
+									<div className="bg-ctp-surface2 mb-0.5 h-4 w-4/5 rounded-md sm:mb-2" />
+									<div className="bg-ctp-surface0 h-3 w-1/3 rounded-md sm:h-3" />
 								</div>
 								<div className="animate-pulse rounded-full">
 									<div className="bg-ctp-green h-6 w-6 rounded-full" />
 								</div>
 							</div>
-							<div className="flex flex-col gap-y-1 pb-2">
+							<div className="flex flex-col gap-y-1 pb-4 sm:pb-5">
 								<div className="border-ctp-crust bg-ctp-surface2 relative h-3 w-full animate-pulse rounded-lg border">
 									<div className="bg-ctp-surface1 h-full rounded-lg" />
 								</div>
 								<div className="bg-ctp-surface0 h-3 w-1/4 rounded-md" />
 							</div>
-							<div className="flex justify-center space-x-4">
+							<div className="flex justify-center gap-x-4">
 								{[...Array(3)].map((_, index) => (
 									<div key={index} className="animate-pulse rounded-full">
 										<div className="bg-ctp-overlay0 h-6 w-6 rounded-full" />
