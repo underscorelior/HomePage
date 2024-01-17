@@ -36,8 +36,8 @@ function TaskCard({
 	removeTask: (task: Task) => void;
 }) {
 	return (
-		<div className="m-3 flex h-12 flex-row items-center justify-between gap-x-2">
-			<div className="size-10 mx-auto flex items-center justify-center">
+		<div className="m-3 flex h-12 min-w-0 flex-row items-center justify-between gap-x-2">
+			<div className="mx-auto flex size-10 items-center justify-center">
 				<span
 					className={
 						'border-ctp-surface0 h-full w-full rounded-full border-2 p-2'
@@ -45,7 +45,7 @@ function TaskCard({
 					style={{ backgroundColor: colors[task.color] }}></span>
 			</div>
 			<div className="flex h-full w-[65%] flex-row items-center space-x-4">
-				<p className="text-ctp-text bg-ctp-mantle border-ctp-surface0 flex h-full w-full items-center overflow-x-auto overflow-y-hidden text-ellipsis whitespace-nowrap rounded-lg border-2 px-4 py-2 text-lg font-semibold">
+				<p className="text-ctp-text bg-ctp-mantle border-ctp-surface0 flex h-full w-full items-center overflow-x-auto overflow-y-hidden rounded-lg border-2 px-4 py-2 text-lg font-semibold">
 					{task.text}
 				</p>
 			</div>
@@ -107,7 +107,6 @@ export default function Tasks() {
 
 	function sortTasks(tasks: Task[]) {
 		const sortedTasks = tasks.sort((a, b) => {
-			// Sort tasks by color
 			const aColor = Object.keys(colors).indexOf(a.color);
 			const bColor = Object.keys(colors).indexOf(b.color);
 			return aColor - bColor;
@@ -123,7 +122,7 @@ export default function Tasks() {
 	}, []);
 
 	return (
-		<div className="border-ctp-surface0 bg-ctp-crust fixed bottom-0 right-0 flex h-[2/5] max-h-[calc(3vh*100/5)] min-h-[calc(3vh*100/5)] w-[calc(6vh*100/15)] flex-col justify-between rounded-tl-xl border-l-2 border-t-2 transition-all duration-300 ease-in-out">
+		<div className="border-ctp-surface0 bg-ctp-crust fixed bottom-0 right-0 hidden h-[2/5] max-h-[calc(3vh*100/5)] min-h-[calc(3vh*100/5)] w-[calc(6vh*100/15)] flex-col justify-between rounded-tl-xl border-l-2 border-t-2 transition-all duration-300 ease-in-out xl:flex">
 			<div className="h-[75%] overflow-y-auto">
 				{tasks.map((task) => (
 					<TaskCard task={task} removeTask={removeTask} />
