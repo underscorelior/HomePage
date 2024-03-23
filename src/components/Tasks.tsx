@@ -37,7 +37,7 @@ function TaskCard({
 }) {
 	return (
 		<div className="m-3 flex h-12 min-w-0 flex-row items-center justify-between gap-x-2">
-			<div className="mx-auto flex size-10 items-center justify-center">
+			<div className="size-10 mx-auto flex items-center justify-center">
 				<span
 					className={
 						'border-ctp-surface0 h-full w-full rounded-full border-2 p-2'

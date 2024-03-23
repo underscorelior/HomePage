@@ -20,6 +20,8 @@ function Clock() {
 	);
 	const [location, setLocation] = useState('');
 
+	// const API_KEY = ;
+
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition(fetchData, errors, {
 			enableHighAccuracy: true,
@@ -40,7 +42,9 @@ function Clock() {
 		const crd = pos.coords;
 		try {
 			const response = await axios.get(
-				`https://api.openweathermap.org/data/2.5/weather?lat=${crd.latitude}&lon=${crd.longitude}&units=metric&appid=${process.env.WEATHER_KEY}`,
+				`https://api.openweathermap.org/data/2.5/weather?lat=${crd.latitude}
+				&lon=${crd.longitude}&units=metric
+				&appid=${localStorage.getItem('owm-key') || process.env.WEATHER_KEY}`,
 			);
 			const locationResponse = await axios.get(
 				`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${crd.latitude}&longitude=${crd.longitude}&localityLanguage=en`,
@@ -84,8 +88,8 @@ function Clock() {
 	}
 
 	return (
-		<section className="fixed flex w-full flex-col items-end p-6 font-black">
-			<div className="gradtext text-5xl lg:text-[4.25rem]">
+		<section className="gradtext fixed flex w-full flex-col items-end p-6 font-black">
+			<div className=" text-5xl lg:text-[4.25rem]">
 				{formattedTime}
 				<p className="text-end text-[1.625rem]">{formattedDate}</p>
 			</div>
@@ -93,12 +97,12 @@ function Clock() {
 				{weatherData ? (
 					<span className="flex w-full flex-row items-end justify-center text-end text-[1.625rem]">
 						{weatherData.weather[0].main == 'Clear' ? (
-							<TiWeatherSunny className="fill-ctp-peach mr-2 text-4xl" />
+							<TiWeatherSunny className="mr-2 fill-yellow-200 text-4xl" />
 						) : weatherData.weather[0].main == 'Clouds' ? (
 							weatherData.weather[0].description == 'few clouds' ? (
-								<TiWeatherPartlySunny className="fill-ctp-text mr-2 text-4xl" />
+								<TiWeatherPartlySunny className="mr-2 fill-yellow-100 text-4xl" />
 							) : (
-								<TiWeatherCloudy className="fill-ctp-text mr-2 text-4xl" />
+								<TiWeatherCloudy className="mr-2 fill-neutral-300 text-4xl" />
 							)
 						) : ['Rain', 'Drizzle'].includes(weatherData.weather[0].main) ? (
 							[
@@ -108,25 +112,25 @@ function Clock() {
 								'light intensity drizzle',
 								'light intensity drizzle rain',
 							].includes(weatherData.weather[0].description) ? (
-								<TiWeatherShower className="fill-ctp-blue mr-2 text-4xl" />
+								<TiWeatherShower className="mr-2 fill-blue-400 text-4xl" />
 							) : (
-								<TiWeatherDownpour className="fill-ctp-blue mr-2 text-4xl" />
+								<TiWeatherDownpour className="mr-2 fill-blue-400 text-4xl" />
 							)
 						) : weatherData.weather[0].main == 'Thunderstorm' ? (
-							<TiWeatherStormy className="fill-ctp-yellow mr-2 text-4xl" />
+							<TiWeatherStormy className="mr-2 fill-yellow-300 text-4xl" />
 						) : weatherData.weather[0].main == 'Snow' ? (
-							<TiWeatherSnow className="fill-ctp-text mr-2 text-4xl" />
+							<TiWeatherSnow className="mr-2 fill-slate-200 text-4xl" />
 						) : (weatherData.weather[0].id + '')[0] == '7' ? (
-							<TiWeatherWindyCloudy className="fill-ctp-text mr-2 text-4xl" />
+							<TiWeatherWindyCloudy className="mr-2 fill-stone-400 text-4xl" />
 						) : (
-							<TiDelete className="fill-ctp-red mr-2 text-4xl" />
+							<TiDelete className="mr-2 fill-red-500 text-4xl" />
 						)}
-						<p className="gradtext">
+						<span>
 							{Math.round(weatherData.main.temp)}°C - {location}
-						</p>
+						</span>
 					</span>
 				) : (
-					<AiOutlineLoading className="fill-ctp-text w-full animate-spin items-end text-[1.625rem]" />
+					<AiOutlineLoading className="w-full animate-spin items-end fill-neutral-300 text-[1.625rem]" />
 				)}
 			</div>
 		</section>
