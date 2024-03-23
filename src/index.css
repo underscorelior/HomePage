@@ -4,7 +4,7 @@
 
 @layer components {
 	.gradtext {
-		@apply animate-gradient from-ctp-blue via-ctp-mauve to-ctp-blue bg-1000% bg-gradient-to-r bg-clip-text text-end text-transparent;
+		@apply animate-gradient bg-1000% bg-gradient-to-r from-[#89b4fa] via-[#cba6f7] to-[#89b4fa] bg-clip-text text-end text-transparent;
 	}
 }
 
@@ -13,7 +13,7 @@
 
 @layer base {
 	html {
-		@apply bg-ctp-base;
+		@apply bg-neutral-950;
 	}
 
 	::-webkit-scrollbar {
@@ -21,7 +21,7 @@
 	}
 
 	::-webkit-scrollbar-thumb {
-		@apply bg-ctp-teal rounded-md;
+		@apply rounded-md bg-[#94e2d5];
 	}
 
 	::-webkit-scrollbar-track {
@@ -58,7 +58,7 @@ input[type='checkbox'] + label {
 		display: grid;
 		border-radius: 100%;
 		position: absolute;
-		outline: 2px solid #a6e3a1;
+		outline: 2px solid #22c55e;
 		height: 24px;
 		width: 24px;
 		animation: scalePulse 0.5s cubic-bezier(0.12, 0.84, 0.5, 0.44) forwards;
@@ -73,7 +73,7 @@ input[type='checkbox'] + label {
 	#center-heart {
 		#inner,
 		#outer {
-			fill: #a6e3a1;
+			fill: #22c55e;
 		}
 	}
 
