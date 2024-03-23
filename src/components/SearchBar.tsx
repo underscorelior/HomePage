@@ -9,11 +9,11 @@ function SearchBar() {
 			<input
 				type="text"
 				name="q"
-				className="bg-ctp-crust text-ctp-text ring-ctp-surface0 focus:outline-ctp-surface2 active:outline-ctp-surface2 h-full w-2/5 rounded-lg px-3 outline-none ring-2"
+				className="bg-ctp-crust text-ctp-text focus:outline-ctp-surface2 active:outline-ctp-surface2 h-full w-2/5 rounded-lg px-3 outline-none ring-2 ring-neutral-700"
 			/>
 			<button
 				type="submit"
-				className="bg-ctp-mantle text-ctp-sky ring-ctp-surface0 flex aspect-square h-full w-auto items-center justify-center rounded-lg font-black ring-2">
+				className="bg-ctp-mantle text-ctp-sky flex aspect-square h-full w-auto items-center justify-center rounded-lg font-black ring-2 ring-neutral-700">
 				<FaSearch />
 			</button>
 		</form>
