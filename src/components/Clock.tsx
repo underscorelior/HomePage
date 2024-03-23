@@ -20,6 +20,8 @@ function Clock() {
 	);
 	const [location, setLocation] = useState('');
 
+	// const API_KEY = ;
+
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition(fetchData, errors, {
 			enableHighAccuracy: true,
