@@ -127,14 +127,14 @@ async function getActiveDeviceId(accessToken: string, type: number) {
 			`Failed to ${type == 1 ? 'play/pause' : type == 2 ? 'skip' : 'seek'}`,
 			{
 				style: {
-					border: '1px solid #313244',
-					padding: '16px',
-					color: '#cdd6f4',
-					backgroundColor: '#181825',
+					border: '1px solid #171717',
+					padding: '12px',
+					color: '#d4d4d4',
+					backgroundColor: '#0a0a0a',
 				},
 				iconTheme: {
-					primary: '#f38ba8',
-					secondary: '#1e1e2e',
+					primary: '#dc2626',
+					secondary: '#171717',
 				},
 			},
 		);
