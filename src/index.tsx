@@ -29,9 +29,9 @@ export function App() {
 					/>
 					{minigames && <Minigames />}
 				</div> */}
-					<Spotify />
 					{/* {tasks && <Tasks />} */}
 				</div>
+				<Spotify />
 			</div>
 		</div>
 	);
