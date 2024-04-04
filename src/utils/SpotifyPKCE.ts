@@ -1,3 +1,5 @@
+// TODO: Refactor
+
 import toast from 'react-hot-toast';
 
 function generateCodeVerifier(length: number) {
@@ -34,10 +36,10 @@ export async function redirectToAuthCodeFlow(
 	callbackUrl: string,
 ) {
 	const verifier =
-		localStorage.getItem('verifier') || generateCodeVerifier(128);
+		localStorage.getItem('spotify_verifier') || generateCodeVerifier(128);
 	const challenge = await generateCodeChallenge(verifier);
 
-	localStorage.setItem('verifier', verifier);
+	localStorage.setItem('spotify_verifier', verifier);
 
 	const params = new URLSearchParams();
 	params.append('client_id', clientId);
@@ -55,7 +57,7 @@ export async function redirectToAuthCodeFlow(
 }
 
 export const refreshToken = async (clientId: string, URL: string) => {
-	const refreshToken = localStorage.getItem('refresh_token') || '';
+	const refreshToken = localStorage.getItem('spotify_verifier') || '';
 	const url = 'https://accounts.spotify.com/api/token';
 
 	const payload = {
@@ -71,10 +73,10 @@ export const refreshToken = async (clientId: string, URL: string) => {
 	};
 	const body = await fetch(url, payload);
 	const response = await body.json();
-	localStorage.setItem('access_token', response.access_token);
-	localStorage.setItem('refresh_token', response.refresh_token);
+	localStorage.setItem('spotify_access_token', response.access_token);
+	localStorage.setItem('spotify_verifier', response.refresh_token);
 	localStorage.setItem(
-		'expires_in',
+		'spotify_expires_in',
 		(Date.now() + response.expires_in * 1000) as unknown as string,
 	);
 
@@ -86,10 +88,10 @@ export async function getAccessToken(
 	code: string,
 	URL: string,
 ) {
-	const verifier = localStorage.getItem('verifier') || '';
+	const verifier = localStorage.getItem('spotify_verifier') || '';
 
-	const at = localStorage.getItem('access_token') || 'undefined';
-	if (at !== 'undefined') return localStorage.getItem('access_token');
+	const at = localStorage.getItem('spotify_access_token') || 'undefined';
+	if (at !== 'undefined') return localStorage.getItem('spotify_access_token');
 	const params = new URLSearchParams();
 	params.append('client_id', clientId);
 	params.append('grant_type', 'authorization_code');
@@ -104,10 +106,10 @@ export async function getAccessToken(
 	});
 	const { access_token, refresh_token, expires_in } = await result.json();
 
-	localStorage.setItem('refresh_token', refresh_token);
-	localStorage.setItem('access_token', access_token);
+	localStorage.setItem('spotify_verifier', refresh_token);
+	localStorage.setItem('spotify_access_token', access_token);
 	localStorage.setItem(
-		'expires_in',
+		'spotify_expires_in',
 		(Date.now() + ((expires_in || 0) as number) * 1000) as unknown as string,
 	);
 	window.location.href = URL;
@@ -170,12 +172,11 @@ export async function player(accessToken: string) {
 		return [rel.items[0].track, false];
 	}
 	const x = await result.json();
-
 	return [x, true];
 }
 
 export async function pause() {
-	const accessToken = localStorage.getItem('access_token') || '';
+	const accessToken = localStorage.getItem('spotify_access_token') || '';
 
 	const deviceId = await getActiveDeviceId(accessToken, 1);
 	if (!deviceId) {
@@ -190,7 +191,7 @@ export async function pause() {
 }
 
 export async function play() {
-	const accessToken = localStorage.getItem('access_token') || '';
+	const accessToken = localStorage.getItem('spotify_access_token') || '';
 
 	const deviceId = await getActiveDeviceId(accessToken, 1);
 	if (!deviceId) {
@@ -206,7 +207,7 @@ export async function play() {
 }
 
 export async function next() {
-	const accessToken = localStorage.getItem('access_token') || '';
+	const accessToken = localStorage.getItem('spotify_access_token') || '';
 
 	const deviceId = await getActiveDeviceId(accessToken, 2);
 	if (!deviceId) {
@@ -220,11 +221,23 @@ export async function next() {
 	});
 }
 
+export async function is_premium() {
+	const accessToken = localStorage.getItem('spotify_access_token') || '';
+
+	const result = await fetch('https://api.spotify.com/v1/me', {
+		method: 'GET',
+		headers: { Authorization: `Bearer ${accessToken}` },
+	});
+	const res = (await result.json()) as unknown as User;
+
+	return res.product === 'premium';
+}
+
 export async function previous(
 	currentlyPlaying: boolean,
 	playingProgress: number,
 ) {
-	const accessToken = localStorage.getItem('access_token') || '';
+	const accessToken = localStorage.getItem('spotify_access_token') || '';
 
 	const deviceId = await getActiveDeviceId(accessToken, 2);
 	if (!deviceId) {
@@ -244,7 +257,7 @@ export async function previous(
 }
 
 export async function seek(position: number) {
-	const accessToken = localStorage.getItem('access_token') || '';
+	const accessToken = localStorage.getItem('spotify_access_token') || '';
 
 	const deviceId = await getActiveDeviceId(accessToken, 3);
 	if (!deviceId) {
@@ -259,10 +272,12 @@ export async function seek(position: number) {
 			body: JSON.stringify({ device_id: deviceId }),
 		},
 	);
+
+	return true;
 }
 
 export async function heart(isHearted: boolean, trackId: string) {
-	const accessToken = localStorage.getItem('access_token') || '';
+	const accessToken = localStorage.getItem('spotify_access_token') || '';
 	if (isHearted) {
 		await fetch(`https://api.spotify.com/v1/me/tracks?ids=${trackId}`, {
 			method: 'DELETE',
@@ -277,7 +292,7 @@ export async function heart(isHearted: boolean, trackId: string) {
 }
 
 export async function isHearted(trackId: string) {
-	const accessToken = localStorage.getItem('access_token') || '';
+	const accessToken = localStorage.getItem('spotify_access_token') || '';
 	const result = await fetch(
 		`https://api.spotify.com/v1/me/tracks/contains?ids=${trackId}`,
 		{

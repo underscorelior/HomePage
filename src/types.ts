@@ -13,7 +13,8 @@ interface Image {
 	height: number | null;
 	width: number | null;
 }
-export interface TrackObject {
+
+interface TrackObject {
 	album: {
 		href: string;
 		images: Image[];
@@ -52,7 +53,7 @@ export interface TrackObject {
 	is_local: boolean;
 }
 
-export interface WeatherApiResponse {
+interface WeatherApiResponse {
 	coord: {
 		lon: number;
 		lat: number;
@@ -100,7 +101,7 @@ export interface WeatherApiResponse {
 	cod: number;
 }
 
-export interface Device {
+interface Device {
 	id: string;
 	is_active: boolean;
 	is_private_session: boolean;
@@ -110,7 +111,7 @@ export interface Device {
 	volume_percent: number;
 }
 
-export interface User {
+interface User {
 	country: string;
 	display_name: string;
 	email: string;

@@ -1,11 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // TODO: Fix token being invalidated
-// TODO: Store spotify data in an object for easier reset {access_token, expires_in, refresh_token, verifier}
 // TODO: Add to queue button, maybe a queue list, shuffle, repeat, volume controls.
-// TODO: Switch to cookies
 // TODO: Prevent loop by showing a toast as an error
 // TODO: Store previous device id to try and play from it.
-// TODO: If user is POOR, don't include non premium features.
-// TODO: Errors for failing to seek, heart, etc.
+// TODO: Toast errors for failing to seek, heart, etc.
+// TODO: Complete force click for actions.
+// TODO: Refactor API code.
 import { useEffect, useState } from 'react';
 import {
 	redirectToAuthCodeFlow,
@@ -19,6 +19,7 @@ import {
 	isHearted,
 	getAccessToken,
 	previous,
+	is_premium,
 } from '../utils/SpotifyPKCE';
 import {
 	IoIosHeart,
@@ -45,6 +46,7 @@ export default function Spotify() {
 	const [currentlyPlaying, setCurrentlyPlaying] = useState<TrackObject | null>(
 		null,
 	);
+	const [isPremium, setIsPremium] = useState<boolean>(false);
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
 	const [playingProgress, setPlayingProgress] = useState<number>(0);
 	const [sinceAPICall, setSinceAPICall] = useState<number>(0);
@@ -52,72 +54,60 @@ export default function Spotify() {
 	const [hearted, setHearted] = useState<boolean>(false);
 	const [heartClicked, setHeartClicked] = useState<boolean>(false);
 	const [lastFocus, setLastFocus] = useState<boolean>(false);
-	const [heartedChecked, setHeartedChecked] = useState<number>(0);
+	const [specialCheck, setSpecialCheck] = useState<number>(0);
 	const [forceCall, setForceCall] = useState<boolean>(false);
-	const [forcedCallInProgress, setForcedCallInProgress] =
-		useState<boolean>(false);
+
+	// const [forcedCallInProgress, setForcedCallInProgress] =
+	// 	useState<boolean>(false);
 
 	async function doStuff() {
-		if (
-			(isPlaying &&
-				!apiCallInProgress &&
-				currentlyPlaying?.duration_ms !== undefined &&
-				playingProgress >= currentlyPlaying.duration_ms) ||
-			(sinceAPICall < 10 && !apiCallInProgress) ||
-			(forceCall && !forcedCallInProgress)
-		) {
-			setForceCall(false);
-			setForcedCallInProgress(true);
-			setApiCallInProgress(true);
+		setForceCall(false);
+		setApiCallInProgress(true);
 
-			// getInfo();
-			const storedAccessToken =
-				localStorage.getItem('access_token') || 'undefined';
+		const storedAccessToken =
+			localStorage.getItem('spotify_access_token') || 'undefined';
 
-			if (code && storedAccessToken == 'undefined') {
-				await getAccessToken(clientId, code, URL);
-				const currentlyPlaying = await player(storedAccessToken);
-				setCurrentlyPlaying(currentlyPlaying[0]);
-				setIsPlaying(currentlyPlaying[1]);
+		if (code && storedAccessToken == 'undefined') {
+			await getAccessToken(clientId, code, URL);
+			const currentlyPlaying = await player(storedAccessToken);
+			setCurrentlyPlaying(currentlyPlaying[0]);
+			setIsPlaying(currentlyPlaying[1]);
+		} else {
+			if (storedAccessToken == 'undefined') {
+				redirectToAuthCodeFlow(clientId, URL);
 			} else {
-				if (storedAccessToken == 'undefined') {
-					redirectToAuthCodeFlow(clientId, URL);
+				if (
+					Date.now() >
+					((localStorage.getItem('spotify_expires_in') || 0) as number)
+				) {
+					await refreshToken(clientId, URL);
+					setSinceAPICall(cooldown / 10);
 				} else {
-					if (
-						Date.now() > ((localStorage.getItem('expires_in') || 0) as number)
-					) {
-						await refreshToken(clientId, URL);
-						setSinceAPICall(cooldown / 10);
-					} else {
-						const play = await player(storedAccessToken);
-						setIsPlaying(play[1]);
-						console.log(isPlaying);
+					const play = await player(storedAccessToken);
+					setIsPlaying(play[1]);
 
-						if (play[1]) {
-							console.log(
-								playingProgress,
-								play[0].progress_ms,
-								play[0].progress_ms - playingProgress,
-							);
-							setPlayingProgress(play[0].progress_ms);
-							setIsPlaying(play[0].is_playing);
-						}
-						if (heartedChecked == 0) {
-							const hearted = await isHearted(
-								play[1] ? play[0].item.id : play[0].id || '',
-							);
-							setHearted(hearted);
-						}
-						setHeartedChecked((heartedChecked + 1) % 3);
-
-						setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
+					if (play[1]) {
+						setPlayingProgress(play[0].progress_ms);
+						setIsPlaying(play[0].is_playing);
 					}
-				}
 
-				setSinceAPICall(cooldown);
-				setApiCallInProgress(false);
-				setForcedCallInProgress(false);
+					if (specialCheck == 0) {
+						const hearted = await isHearted(
+							play[1] ? play[0].item.id : play[0].id || '',
+						);
+						setHearted(hearted);
+
+						setIsPremium(await is_premium());
+					}
+					setSpecialCheck((specialCheck + 1) % 3);
+
+					setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
+				}
 			}
+
+			setSinceAPICall(cooldown);
+			setApiCallInProgress(false);
+			// setForcedCallInProgress(false);
 		}
 	}
 
@@ -125,7 +115,7 @@ export default function Spotify() {
 		if (!apiCallInProgress) {
 			setApiCallInProgress(true);
 			const storedAccessToken =
-				localStorage.getItem('access_token') || 'undefined';
+				localStorage.getItem('spotify_access_token') || 'undefined';
 
 			if (code && storedAccessToken == 'undefined') {
 				await getAccessToken(clientId, code, URL);
@@ -137,7 +127,8 @@ export default function Spotify() {
 					redirectToAuthCodeFlow(clientId, URL);
 				} else {
 					if (
-						Date.now() > ((localStorage.getItem('expires_in') || 0) as number)
+						Date.now() >
+						((localStorage.getItem('spotify_expires_in') || 0) as number)
 					) {
 						await refreshToken(clientId, URL);
 						setSinceAPICall(cooldown / 10);
@@ -158,14 +149,23 @@ export default function Spotify() {
 		if (isPlaying) {
 			setPlayingProgress(Math.round(100 * (playingProgress + 4.95 / 3)) / 100);
 		}
-		doStuff();
+		if (
+			(isPlaying &&
+				!apiCallInProgress &&
+				currentlyPlaying?.duration_ms !== undefined &&
+				playingProgress >= currentlyPlaying.duration_ms) ||
+			(sinceAPICall < 10 && !apiCallInProgress) ||
+			forceCall
+		) {
+			doStuff();
+		}
 		setSinceAPICall(sinceAPICall - 1);
 	}
 
 	useEffect(() => {
 		const interval = setInterval(async () => {
 			const storedAccessToken =
-				localStorage.getItem('access_token') || 'undefined';
+				localStorage.getItem('spotify_access_token') || 'undefined';
 
 			if (storedAccessToken != 'undefined') {
 				doInterval();
@@ -246,21 +246,25 @@ export default function Spotify() {
 													'%',
 											}}
 										/>
-										<input
-											className="absolute top-0 h-full w-full cursor-pointer opacity-0"
-											type="range"
-											min="0"
-											max={currentlyPlaying.duration_ms}
-											value={playingProgress % currentlyPlaying.duration_ms}
-											onChange={(e) => {
-												setSeekPosition(Number(e.target.value));
-											}}
-											onMouseUp={() => {
-												const a = seek(seekPosition);
-												a;
-												onAction();
-											}}
-										/>
+										{isPremium ? (
+											<input
+												className="absolute top-0 h-full w-full cursor-pointer opacity-0"
+												type="range"
+												min="0"
+												max={currentlyPlaying.duration_ms}
+												value={playingProgress % currentlyPlaying.duration_ms}
+												onChange={(e) => {
+													setSeekPosition(Number(e.target.value));
+												}}
+												onMouseUp={() => {
+													const a = seek(seekPosition);
+													a;
+													onAction();
+												}}
+											/>
+										) : (
+											''
+										)}
 										<div
 											className="absolute top-[50%] h-3 w-3 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-green-400"
 											style={{
@@ -298,45 +302,51 @@ export default function Spotify() {
 									</div>
 								</div>
 							)}
-							<div className="flex justify-center gap-x-4">
-								<button
-									className="rounded-full"
-									onClick={() => {
-										const a = previous(
-											currentlyPlaying !== null,
-											playingProgress,
-										);
-										a;
-										setSinceAPICall(cooldown / 5);
-										setApiCallInProgress(false);
-									}}>
-									<IoIosSkipBackward className="h-6 w-6" />
-								</button>
-								<button
-									className="rounded-full"
-									onClick={() => {
-										const a = isPlaying ? pause() : play();
-										a;
-										setSinceAPICall(cooldown / 5);
-										setApiCallInProgress(false);
-									}}>
-									{isPlaying ? (
-										<IoIosPause className="h-6 w-6" />
-									) : (
-										<IoIosPlay className="h-6 w-6" />
-									)}
-								</button>
-								<button
-									className="rounded-full"
-									onClick={() => {
-										const a = next();
-										a;
-										setSinceAPICall(cooldown / 5);
-										setApiCallInProgress(false);
-									}}>
-									<IoIosSkipForward className="h-6 w-6" />
-								</button>
-							</div>
+							{isPremium && (
+								<div className="flex justify-center gap-x-4">
+									<button
+										className="rounded-full"
+										onClick={() => {
+											const a = previous(
+												currentlyPlaying !== null,
+												playingProgress,
+											);
+											a;
+											setSinceAPICall(cooldown / 5);
+											setApiCallInProgress(false);
+										}}>
+										<IoIosSkipBackward className="h-6 w-6" />
+									</button>
+									<button
+										className="rounded-full"
+										onClick={() => {
+											if (isPremium) {
+												const a = isPlaying ? pause() : play();
+												a;
+												setSinceAPICall(cooldown / 5);
+												setApiCallInProgress(false);
+											}
+										}}>
+										{isPlaying ? (
+											<IoIosPause className="h-6 w-6" />
+										) : (
+											<IoIosPlay className="h-6 w-6" />
+										)}
+									</button>
+									<button
+										className="rounded-full"
+										onClick={() => {
+											if (isPremium) {
+												const a = next();
+												a;
+												setSinceAPICall(cooldown / 5);
+												setApiCallInProgress(false);
+											}
+										}}>
+										<IoIosSkipForward className="h-6 w-6" />
+									</button>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
