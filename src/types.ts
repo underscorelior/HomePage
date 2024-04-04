@@ -10,11 +10,10 @@ declare module 'virtual:pwa-register' {
 
 interface Image {
 	url: string;
-	height: number;
-	width: number;
+	height: number | null;
+	width: number | null;
 }
-
-interface TrackObject {
+export interface TrackObject {
 	album: {
 		href: string;
 		images: Image[];
@@ -53,7 +52,7 @@ interface TrackObject {
 	is_local: boolean;
 }
 
-interface WeatherApiResponse {
+export interface WeatherApiResponse {
 	coord: {
 		lon: number;
 		lat: number;
@@ -101,7 +100,7 @@ interface WeatherApiResponse {
 	cod: number;
 }
 
-interface Device {
+export interface Device {
 	id: string;
 	is_active: boolean;
 	is_private_session: boolean;
@@ -109,4 +108,27 @@ interface Device {
 	name: string;
 	type: string;
 	volume_percent: number;
+}
+
+export interface User {
+	country: string;
+	display_name: string;
+	email: string;
+	explicit_content: {
+		filter_enabled: boolean;
+		filter_locked: boolean;
+	};
+	external_urls: {
+		spotify: string;
+	};
+	followers: {
+		href: string | null;
+		total: number;
+	};
+	href: string;
+	id: string;
+	images: Image[];
+	product: string;
+	type: string;
+	uri: string;
 }
