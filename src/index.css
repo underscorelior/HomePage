@@ -4,7 +4,7 @@
 
 @layer components {
 	.gradtext {
-		@apply animate-gradient bg-1000% bg-gradient-to-r from-[#89b4fa] via-[#cba6f7] to-[#89b4fa] bg-clip-text text-end text-transparent;
+		@apply animate-gradient bg-gradient-to-r from-[#89b4fa] via-[#cba6f7] to-[#89b4fa] bg-500% bg-clip-text text-end text-transparent;
 	}
 }
 

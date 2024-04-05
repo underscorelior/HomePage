@@ -35,7 +35,7 @@ module.exports = {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				gradient: 'gradient 25s linear infinite',
+				gradient: 'gradient 50s linear infinite',
 				shake: 'shake 0.5s ease-in-out 1',
 			},
 			backgroundSize: {
