@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger,
-} from '@/shadcn/components/alert-dialog';
+// import {
+// 	AlertDialog,
+// 	AlertDialogAction,
+// 	AlertDialogContent,
+// 	AlertDialogDescription,
+// 	AlertDialogFooter,
+// 	AlertDialogHeader,
+// 	AlertDialogTitle,
+// 	AlertDialogTrigger,
+// } from '@/shadcn/components/alert-dialog';
 import {
 	Popover,
 	PopoverContent,
@@ -36,52 +36,52 @@ import { TbTemperatureCelsius, TbTemperatureFahrenheit } from 'react-icons/tb';
 import { TiWeatherCloudy } from 'react-icons/ti';
 import { SiSpotify } from 'react-icons/si';
 
-function ApiKeyPopup() {
-	function saveKeys() {}
+// function ApiKeyPopup() {
+// 	function saveKeys() {}
 
-	return (
-		<AlertDialog>
-			<AlertDialogTrigger className="mx-auto mt-4 w-max rounded-lg border-2 border-neutral-700 p-3 font-semibold text-neutral-300 outline-none">
-				API Keys
-			</AlertDialogTrigger>
-			<AlertDialogContent className="border-2 border-neutral-700 bg-neutral-950">
-				<AlertDialogHeader>
-					<AlertDialogTitle className="pb-3 text-center text-3xl font-bold tracking-wide text-neutral-300">
-						API Keys
-					</AlertDialogTitle>
-					<AlertDialogDescription>
-						<div className="flex flex-col gap-y-4">
-							<div className="flex flex-row gap-x-4">
-								<TiWeatherCloudy className="h-10 w-10 text-orange-300" />
-								<Input
-									placeholder="OpenWeatherMap API Key"
-									type="password"
-									className="w-full rounded-lg border-neutral-700 bg-neutral-950 px-3 text-lg text-neutral-400 placeholder-stone-200 outline-none ring-2 ring-neutral-700 placeholder:font-bold focus:outline-stone-800 active:outline-stone-800"
-								/>
-							</div>
-							<div className="flex flex-row gap-x-4">
-								<SiSpotify className="h-10 w-10 text-green-400" />
-								<Input
-									placeholder="Spotify Client ID"
-									type="password"
-									className="w-full rounded-lg border-neutral-700 bg-neutral-950 px-3 text-lg text-neutral-400 placeholder-stone-200 outline-none ring-2 ring-neutral-700 placeholder:font-bold focus:outline-stone-800 active:outline-stone-800"
-								/>
-							</div>
-						</div>
-					</AlertDialogDescription>
-				</AlertDialogHeader>
-				<AlertDialogFooter>
-					{/* <AlertDialogCancel>Cancel</AlertDialogCancel> */}
-					<AlertDialogAction
-						className="border-2 border-neutral-700 bg-neutral-950"
-						onClick={() => saveKeys()}>
-						Save
-					</AlertDialogAction>
-				</AlertDialogFooter>
-			</AlertDialogContent>
-		</AlertDialog>
-	);
-}
+// 	return (
+// 		<AlertDialog>
+// 			<AlertDialogTrigger className="mx-auto mt-4 w-max rounded-lg border-2 border-neutral-700 p-3 font-semibold text-neutral-300 outline-none">
+// 				API Keys
+// 			</AlertDialogTrigger>
+// 			<AlertDialogContent className="border-2 border-neutral-700 bg-neutral-950">
+// 				<AlertDialogHeader>
+// 					<AlertDialogTitle className="pb-3 text-center text-3xl font-bold tracking-wide text-neutral-300">
+// 						API Keys
+// 					</AlertDialogTitle>
+// 					<AlertDialogDescription>
+// 						<div className="flex flex-col gap-y-4">
+// 							<div className="flex flex-row gap-x-4">
+// 								<TiWeatherCloudy className="h-10 w-10 text-orange-300" />
+// 								<Input
+// 									placeholder="OpenWeatherMap API Key"
+// 									type="password"
+// 									className="w-full rounded-lg border-neutral-700 bg-neutral-950 px-3 text-lg text-neutral-400 placeholder-stone-200 outline-none ring-2 ring-neutral-700 placeholder:font-bold focus:outline-stone-800 active:outline-stone-800"
+// 								/>
+// 							</div>
+// 							<div className="flex flex-row gap-x-4">
+// 								<SiSpotify className="h-10 w-10 text-green-400" />
+// 								<Input
+// 									placeholder="Spotify Client ID"
+// 									type="password"
+// 									className="w-full rounded-lg border-neutral-700 bg-neutral-950 px-3 text-lg text-neutral-400 placeholder-stone-200 outline-none ring-2 ring-neutral-700 placeholder:font-bold focus:outline-stone-800 active:outline-stone-800"
+// 								/>
+// 							</div>
+// 						</div>
+// 					</AlertDialogDescription>
+// 				</AlertDialogHeader>
+// 				<AlertDialogFooter>
+// 					{/* <AlertDialogCancel>Cancel</AlertDialogCancel> */}
+// 					<AlertDialogAction
+// 						className="border-2 border-neutral-700 bg-neutral-950"
+// 						onClick={() => saveKeys()}>
+// 						Save
+// 					</AlertDialogAction>
+// 				</AlertDialogFooter>
+// 			</AlertDialogContent>
+// 		</AlertDialog>
+// 	);
+// }
 export default function Settings({
 	setSpotify,
 	setTemp,
