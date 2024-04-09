@@ -13,14 +13,12 @@ import {
 } from 'react-icons/ti';
 import { AiOutlineLoading } from 'react-icons/ai';
 
-function Clock() {
+function Clock({ unit, weather }: { unit: string; weather: boolean }) {
 	const [currentTime, setCurrentTime] = useState(new Date());
 	const [weatherData, setWeatherData] = useState<WeatherApiResponse | null>(
 		null,
 	);
 	const [location, setLocation] = useState('');
-
-	// const API_KEY = ;
 
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition(fetchData, errors, {
@@ -29,12 +27,21 @@ function Clock() {
 			maximumAge: 0,
 		});
 
+		const weatherInt = setInterval(() => {
+			navigator.geolocation.getCurrentPosition(fetchData, errors, {
+				enableHighAccuracy: true,
+				timeout: 5000,
+				maximumAge: 0,
+			});
+		}, 60000);
+
 		const intervalId = setInterval(() => {
 			setCurrentTime(new Date());
 		}, 1000);
 
 		return () => {
 			clearInterval(intervalId);
+			clearInterval(weatherInt);
 		};
 	}, []);
 
@@ -88,51 +95,58 @@ function Clock() {
 	}
 
 	return (
-		<section className="gradtext fixed flex w-full flex-col items-end p-6 font-black">
+		<section className="gradtext fixed flex w-full flex-col items-end p-6 font-black text-neutral-300">
 			<div className=" text-5xl lg:text-[4.25rem]">
 				{formattedTime}
 				<p className="text-end text-[1.625rem]">{formattedDate}</p>
 			</div>
-			<div>
-				{weatherData ? (
-					<span className="flex w-full flex-row items-end justify-center text-end text-[1.625rem]">
-						{weatherData.weather[0].main == 'Clear' ? (
-							<TiWeatherSunny className="mr-2 fill-yellow-200 text-4xl" />
-						) : weatherData.weather[0].main == 'Clouds' ? (
-							weatherData.weather[0].description == 'few clouds' ? (
-								<TiWeatherPartlySunny className="mr-2 fill-yellow-100 text-4xl" />
+			{weather && (
+				<div>
+					{weatherData ? (
+						<span className="flex w-full flex-row items-end justify-center text-end text-[1.625rem]">
+							{weatherData.weather[0].main == 'Clear' ? (
+								<TiWeatherSunny className="mr-2 fill-yellow-200 text-4xl" />
+							) : weatherData.weather[0].main == 'Clouds' ? (
+								weatherData.weather[0].description == 'few clouds' ? (
+									<TiWeatherPartlySunny className="mr-2 fill-yellow-100 text-4xl" />
+								) : (
+									<TiWeatherCloudy className="mr-2 fill-neutral-300 text-4xl" />
+								)
+							) : ['Rain', 'Drizzle'].includes(weatherData.weather[0].main) ? (
+								[
+									'light intensity shower rain',
+									'shower rain',
+									'light rain',
+									'light intensity drizzle',
+									'light intensity drizzle rain',
+								].includes(weatherData.weather[0].description) ? (
+									<TiWeatherShower className="mr-2 fill-blue-400 text-4xl" />
+								) : (
+									<TiWeatherDownpour className="mr-2 fill-blue-400 text-4xl" />
+								)
+							) : weatherData.weather[0].main == 'Thunderstorm' ? (
+								<TiWeatherStormy className="mr-2 fill-yellow-300 text-4xl" />
+							) : weatherData.weather[0].main == 'Snow' ? (
+								<TiWeatherSnow className="mr-2 fill-slate-200 text-4xl" />
+							) : (weatherData.weather[0].id + '')[0] == '7' ? (
+								<TiWeatherWindyCloudy className="mr-2 fill-stone-400 text-4xl" />
 							) : (
-								<TiWeatherCloudy className="mr-2 fill-neutral-300 text-4xl" />
-							)
-						) : ['Rain', 'Drizzle'].includes(weatherData.weather[0].main) ? (
-							[
-								'light intensity shower rain',
-								'shower rain',
-								'light rain',
-								'light intensity drizzle',
-								'light intensity drizzle rain',
-							].includes(weatherData.weather[0].description) ? (
-								<TiWeatherShower className="mr-2 fill-blue-400 text-4xl" />
-							) : (
-								<TiWeatherDownpour className="mr-2 fill-blue-400 text-4xl" />
-							)
-						) : weatherData.weather[0].main == 'Thunderstorm' ? (
-							<TiWeatherStormy className="mr-2 fill-yellow-300 text-4xl" />
-						) : weatherData.weather[0].main == 'Snow' ? (
-							<TiWeatherSnow className="mr-2 fill-slate-200 text-4xl" />
-						) : (weatherData.weather[0].id + '')[0] == '7' ? (
-							<TiWeatherWindyCloudy className="mr-2 fill-stone-400 text-4xl" />
-						) : (
-							<TiDelete className="mr-2 fill-red-500 text-4xl" />
-						)}
-						<span>
-							{Math.round(weatherData.main.temp)}°C - {location}
+								<TiDelete className="mr-2 fill-red-500 text-4xl" />
+							)}
+							<span>
+								{Math.round(
+									unit == 'f'
+										? (weatherData.main.temp * 9) / 5 + 32
+										: weatherData.main.temp,
+								)}
+								°{unit.toUpperCase()} - {location}
+							</span>
 						</span>
-					</span>
-				) : (
-					<AiOutlineLoading className="w-full animate-spin items-end fill-neutral-300 text-[1.625rem]" />
-				)}
-			</div>
+					) : (
+						<AiOutlineLoading className="w-full animate-spin items-end fill-neutral-300 text-[1.625rem]" />
+					)}
+				</div>
+			)}
 		</section>
 	);
 }
