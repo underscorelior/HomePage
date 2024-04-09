@@ -5,6 +5,7 @@
 // TODO: Store previous device id to try and play from it.
 // TODO: Toast errors for failing to seek, heart, etc.
 // TODO: Complete force click for actions.
+// TODOL Dont insta redirect, instead add a big green button saying "click here to authenticate"
 // TODO: Refactor API code.
 import { useEffect, useState } from 'react';
 import {
@@ -32,8 +33,8 @@ import {
 import Heart from './Spotify/Heart';
 
 export default function Spotify() {
-	// let clientId = localStorage.getItem('spotify_client_id') || 'undefined';
 	const clientId = process.env.SPOTIFY_CLIENT_ID || '';
+
 	if (clientId === '') {
 		throw new Error('Missing Spotify Client ID');
 	}
@@ -55,13 +56,8 @@ export default function Spotify() {
 	const [heartClicked, setHeartClicked] = useState<boolean>(false);
 	const [lastFocus, setLastFocus] = useState<boolean>(false);
 	const [specialCheck, setSpecialCheck] = useState<number>(0);
-	const [forceCall, setForceCall] = useState<boolean>(false);
-
-	// const [forcedCallInProgress, setForcedCallInProgress] =
-	// 	useState<boolean>(false);
 
 	async function doStuff() {
-		setForceCall(false);
 		setApiCallInProgress(true);
 
 		const storedAccessToken =
@@ -107,7 +103,6 @@ export default function Spotify() {
 
 			setSinceAPICall(cooldown);
 			setApiCallInProgress(false);
-			// setForcedCallInProgress(false);
 		}
 	}
 
@@ -154,8 +149,7 @@ export default function Spotify() {
 				!apiCallInProgress &&
 				currentlyPlaying?.duration_ms !== undefined &&
 				playingProgress >= currentlyPlaying.duration_ms) ||
-			(sinceAPICall < 10 && !apiCallInProgress) ||
-			forceCall
+			(sinceAPICall < 10 && !apiCallInProgress)
 		) {
 			doStuff();
 		}
@@ -178,10 +172,6 @@ export default function Spotify() {
 			clearInterval(interval);
 		};
 	}, [doInterval, doAuth]);
-
-	function onAction() {
-		// getInfo();
-	}
 
 	return (
 		<>
@@ -215,7 +205,6 @@ export default function Spotify() {
 									onClick={() => {
 										heart(hearted, currentlyPlaying?.id);
 										setHeartClicked(true);
-										// setAfterAction(1);
 										setHearted(!hearted);
 									}}>
 									{hearted ? (
@@ -256,10 +245,10 @@ export default function Spotify() {
 												onChange={(e) => {
 													setSeekPosition(Number(e.target.value));
 												}}
-												onMouseUp={() => {
-													const a = seek(seekPosition);
-													a;
-													onAction();
+												onMouseUp={async () => {
+													if ((await seek(seekPosition)) === true) {
+														doStuff();
+													}
 												}}
 											/>
 										) : (
