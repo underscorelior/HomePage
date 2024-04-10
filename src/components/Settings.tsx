@@ -1,16 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-// import {
-// 	AlertDialog,
-// 	AlertDialogAction,
-// 	AlertDialogContent,
-// 	AlertDialogDescription,
-// 	AlertDialogFooter,
-// 	AlertDialogHeader,
-// 	AlertDialogTitle,
-// 	AlertDialogTrigger,
-// } from '@/shadcn/components/alert-dialog';
 import {
 	Popover,
 	PopoverContent,
@@ -36,52 +27,6 @@ import { TbTemperatureCelsius, TbTemperatureFahrenheit } from 'react-icons/tb';
 import { TiWeatherCloudy } from 'react-icons/ti';
 import { SiSpotify } from 'react-icons/si';
 
-// function ApiKeyPopup() {
-// 	function saveKeys() {}
-
-// 	return (
-// 		<AlertDialog>
-// 			<AlertDialogTrigger className="mx-auto mt-4 w-max rounded-lg border-2 border-neutral-700 p-3 font-semibold text-neutral-300 outline-none">
-// 				API Keys
-// 			</AlertDialogTrigger>
-// 			<AlertDialogContent className="border-2 border-neutral-700 bg-neutral-950">
-// 				<AlertDialogHeader>
-// 					<AlertDialogTitle className="pb-3 text-center text-3xl font-bold tracking-wide text-neutral-300">
-// 						API Keys
-// 					</AlertDialogTitle>
-// 					<AlertDialogDescription>
-// 						<div className="flex flex-col gap-y-4">
-// 							<div className="flex flex-row gap-x-4">
-// 								<TiWeatherCloudy className="h-10 w-10 text-orange-300" />
-// 								<Input
-// 									placeholder="OpenWeatherMap API Key"
-// 									type="password"
-// 									className="w-full rounded-lg border-neutral-700 bg-neutral-950 px-3 text-lg text-neutral-400 placeholder-stone-200 outline-none ring-2 ring-neutral-700 placeholder:font-bold focus:outline-stone-800 active:outline-stone-800"
-// 								/>
-// 							</div>
-// 							<div className="flex flex-row gap-x-4">
-// 								<SiSpotify className="h-10 w-10 text-green-400" />
-// 								<Input
-// 									placeholder="Spotify Client ID"
-// 									type="password"
-// 									className="w-full rounded-lg border-neutral-700 bg-neutral-950 px-3 text-lg text-neutral-400 placeholder-stone-200 outline-none ring-2 ring-neutral-700 placeholder:font-bold focus:outline-stone-800 active:outline-stone-800"
-// 								/>
-// 							</div>
-// 						</div>
-// 					</AlertDialogDescription>
-// 				</AlertDialogHeader>
-// 				<AlertDialogFooter>
-// 					{/* <AlertDialogCancel>Cancel</AlertDialogCancel> */}
-// 					<AlertDialogAction
-// 						className="border-2 border-neutral-700 bg-neutral-950"
-// 						onClick={() => saveKeys()}>
-// 						Save
-// 					</AlertDialogAction>
-// 				</AlertDialogFooter>
-// 			</AlertDialogContent>
-// 		</AlertDialog>
-// 	);
-// }
 export default function Settings({
 	setSpotify,
 	setTemp,
@@ -194,21 +139,57 @@ export default function Settings({
 						className="space-x-2"
 						defaultValue={toggleVal}
 						onValueChange={(value) => toggleValues(value)}>
-						<ToggleGroupItem
-							value="spotify"
-							className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-green-600/70 hover:bg-neutral-900 hover:text-green-500/90 data-[state=on]:bg-neutral-900 data-[state=on]:text-green-500 data-[state=on]:hover:bg-neutral-900 data-[state=on]:hover:text-green-600">
-							<SiSpotify className="size-7" />
-						</ToggleGroupItem>
-						<ToggleGroupItem
-							value="countdown"
-							className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-slate-600/70 hover:bg-neutral-900/60 hover:text-slate-600/90 data-[state=on]:bg-neutral-900 data-[state=on]:text-slate-500 data-[state=on]:hover:bg-neutral-900/60 data-[state=on]:hover:text-slate-500/90">
-							<FiCalendar className="size-7" />
-						</ToggleGroupItem>
-						{/* <ToggleGroupItem
-						value="minigames"
-						className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-red-800/70 hover:bg-neutral-800 hover:text-red-400 data-[state=on]:bg-neutral-900 data-[state=on]:text-red-600 data-[state=on]:hover:bg-neutral-800 data-[state=on]:hover:text-red-500">
-						<FaGamepad className="size-7" />
-						</ToggleGroupItem> */}
+						<Tooltip>
+							<TooltipTrigger>
+								<ContextMenu>
+									<ContextMenuTrigger>
+										<ToggleGroupItem
+											value="spotify"
+											className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-green-600/70 hover:bg-neutral-900 hover:text-green-500/90 data-[state=on]:bg-neutral-900 data-[state=on]:text-green-500 data-[state=on]:hover:bg-neutral-900 data-[state=on]:hover:text-green-600">
+											<SiSpotify className="size-7" />
+										</ToggleGroupItem>
+									</ContextMenuTrigger>
+									<ContextMenuContent className="mb-1 ml-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-950 p-4">
+										{/* Clear API keys. */}
+										{/* <div className="flex flex-row items-center gap-x-3">
+											<SiSpotify className="size-10 text-green-400" />
+											<Input
+												// placeholder="Spotify Client ID"
+												placeholder="Not Yet Implemented"
+												type="password"
+												className="w-full rounded-lg border-neutral-700 bg-neutral-950 px-3 text-lg text-neutral-400 placeholder-stone-200 outline-none ring-2 ring-neutral-700 placeholder:font-bold focus:outline-stone-800 active:outline-stone-800"
+											/>
+										</div> */}
+									</ContextMenuContent>
+								</ContextMenu>
+							</TooltipTrigger>
+							<TooltipContent className="m-1 border-2 border-neutral-700 bg-neutral-950 p-2">
+								<p className="font-mono text-xs font-semibold text-neutral-300">
+									Right click to edit Spotify settings.
+								</p>
+							</TooltipContent>
+						</Tooltip>
+						<Tooltip>
+							<TooltipTrigger>
+								<ContextMenu>
+									<ContextMenuTrigger>
+										<ToggleGroupItem
+											value="countdown"
+											className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-slate-600/70 hover:bg-neutral-900/60 hover:text-slate-600/90 data-[state=on]:bg-neutral-900 data-[state=on]:text-slate-500 data-[state=on]:hover:bg-neutral-900/60 data-[state=on]:hover:text-slate-500/90">
+											<FiCalendar className="size-7" />
+										</ToggleGroupItem>
+									</ContextMenuTrigger>
+									<ContextMenuContent className="mb-1 ml-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-950 p-4">
+										{/* Change timestamp for 2 different days + rename */}
+									</ContextMenuContent>
+								</ContextMenu>
+							</TooltipTrigger>
+							<TooltipContent className="m-1 border-2 border-neutral-700 bg-neutral-950 p-2">
+								<p className="font-mono text-xs font-semibold text-neutral-300">
+									Right click to edit countdown settings.
+								</p>
+							</TooltipContent>
+						</Tooltip>
 						<Tooltip>
 							<TooltipTrigger>
 								<ContextMenu>
@@ -245,7 +226,6 @@ export default function Settings({
 												className="text-md w-full rounded-lg border-neutral-700 bg-neutral-950 px-3 text-neutral-400 placeholder-stone-200 ring-1 ring-neutral-700 placeholder:font-bold focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-0"
 											/>
 										</div>
-										{/* <Toggle */}
 									</ContextMenuContent>
 								</ContextMenu>
 							</TooltipTrigger>
@@ -255,6 +235,12 @@ export default function Settings({
 								</p>
 							</TooltipContent>
 						</Tooltip>
+
+						{/* <ToggleGroupItem
+						value="minigames"
+						className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-red-800/70 hover:bg-neutral-800 hover:text-red-400 data-[state=on]:bg-neutral-900 data-[state=on]:text-red-600 data-[state=on]:hover:bg-neutral-800 data-[state=on]:hover:text-red-500">
+						<FaGamepad className="size-7" />
+						</ToggleGroupItem> */}
 					</ToggleGroup>
 
 					<button
@@ -265,7 +251,6 @@ export default function Settings({
 							(Use if the spotify widget isn't loading.)
 						</span>
 					</button>
-					{/* <ApiKeyPopup /> */}
 				</PopoverContent>
 			</Popover>
 		</TooltipProvider>
