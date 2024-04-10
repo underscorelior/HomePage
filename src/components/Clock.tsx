@@ -23,14 +23,14 @@ function Clock({ unit, weather }: { unit: string; weather: boolean }) {
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition(fetchData, errors, {
 			enableHighAccuracy: true,
-			timeout: 5000,
+			timeout: 10000,
 			maximumAge: 0,
 		});
 
 		const weatherInt = setInterval(() => {
 			navigator.geolocation.getCurrentPosition(fetchData, errors, {
 				enableHighAccuracy: true,
-				timeout: 5000,
+				timeout: 10000,
 				maximumAge: 0,
 			});
 		}, 60000);
