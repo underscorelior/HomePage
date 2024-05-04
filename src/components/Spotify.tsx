@@ -7,21 +7,9 @@
 // TODO: Complete force click for actions.
 // TODOL Dont insta redirect, instead add a big green button saying "click here to authenticate"
 // TODO: Refactor API code.
-import { useEffect, useState } from 'react';
-import {
-	redirectToAuthCodeFlow,
-	refreshToken,
-	pause,
-	player,
-	play,
-	next,
-	seek,
-	heart,
-	isHearted,
-	getAccessToken,
-	previous,
-	is_premium,
-} from '../utils/SpotifyPKCE';
+import { RedirContext } from '@/index';
+import { Button } from '@/shadcn/components/button';
+import { useContext, useEffect, useState } from 'react';
 import {
 	IoIosHeart,
 	IoIosHeartEmpty,
@@ -30,6 +18,22 @@ import {
 	IoIosSkipBackward,
 	IoIosSkipForward,
 } from 'react-icons/io';
+import { SiSpotify } from 'react-icons/si';
+import {
+	clearKeys,
+	getAccessToken,
+	heart,
+	is_premium,
+	isHearted,
+	next,
+	pause,
+	play,
+	player,
+	previous,
+	redirectToAuthCodeFlow,
+	refreshToken,
+	seek,
+} from '../utils/SpotifyPKCE';
 import Heart from './Spotify/Heart';
 
 export default function Spotify() {
@@ -41,7 +45,7 @@ export default function Spotify() {
 
 	const URL = process.env.CALLBACK_URL || 'http://localhost:5173';
 	const code = new URLSearchParams(window.location.search).get('code');
-	const cooldown = 2500;
+	const cooldown = 1500;
 
 	const [seekPosition, setSeekPosition] = useState<number>(0);
 	const [currentlyPlaying, setCurrentlyPlaying] = useState<TrackObject | null>(
@@ -56,10 +60,10 @@ export default function Spotify() {
 	const [heartClicked, setHeartClicked] = useState<boolean>(false);
 	const [lastFocus, setLastFocus] = useState<boolean>(false);
 	const [specialCheck, setSpecialCheck] = useState<number>(0);
+	const { redirNeeded, setRedirNeeded } = useContext(RedirContext);
 
 	async function doStuff() {
 		setApiCallInProgress(true);
-
 		const storedAccessToken =
 			localStorage.getItem('spotify_access_token') || 'undefined';
 
@@ -70,7 +74,7 @@ export default function Spotify() {
 			setIsPlaying(currentlyPlaying[1]);
 		} else {
 			if (storedAccessToken == 'undefined') {
-				redirectToAuthCodeFlow(clientId, URL);
+				setRedirNeeded(true);
 			} else {
 				if (
 					Date.now() >
@@ -119,7 +123,8 @@ export default function Spotify() {
 				setIsPlaying(currentlyPlaying[1]);
 			} else {
 				if (storedAccessToken == 'undefined') {
-					redirectToAuthCodeFlow(clientId, URL);
+					clearKeys();
+					setRedirNeeded(true);
 				} else {
 					if (
 						Date.now() >
@@ -160,6 +165,11 @@ export default function Spotify() {
 		const interval = setInterval(async () => {
 			const storedAccessToken =
 				localStorage.getItem('spotify_access_token') || 'undefined';
+
+			if (redirNeeded) {
+				setIsPlaying(false);
+				setCurrentlyPlaying(null);
+			}
 
 			if (storedAccessToken != 'undefined') {
 				doInterval();
@@ -202,10 +212,12 @@ export default function Spotify() {
 								</div>
 								<button
 									className="rounded-full"
-									onClick={() => {
-										heart(hearted, currentlyPlaying?.id);
+									onClick={async () => {
 										setHeartClicked(true);
 										setHearted(!hearted);
+										if (await heart(hearted, currentlyPlaying?.id)) {
+											doStuff();
+										}
 									}}>
 									{hearted ? (
 										heartClicked ? (
@@ -223,7 +235,7 @@ export default function Spotify() {
 								</button>
 							</div>
 							{isPlaying && (
-								<div className="flex items-center pb-3 sm:pb-4">
+								<div className="flex items-center pb-3">
 									<div className="relative h-3 w-full rounded-lg border border-neutral-900 bg-neutral-800/90">
 										<div
 											className="h-full rounded-lg bg-green-400"
@@ -295,25 +307,23 @@ export default function Spotify() {
 								<div className="flex justify-center gap-x-4">
 									<button
 										className="rounded-full"
-										onClick={() => {
-											const a = previous(
-												currentlyPlaying !== null,
-												playingProgress,
-											);
-											a;
-											setSinceAPICall(cooldown / 5);
-											setApiCallInProgress(false);
+										onClick={async () => {
+											if (
+												await previous(
+													currentlyPlaying !== null,
+													playingProgress,
+												)
+											) {
+												doStuff();
+											}
 										}}>
 										<IoIosSkipBackward className="h-6 w-6" />
 									</button>
 									<button
 										className="rounded-full"
-										onClick={() => {
-											if (isPremium) {
-												const a = isPlaying ? pause() : play();
-												a;
-												setSinceAPICall(cooldown / 5);
-												setApiCallInProgress(false);
+										onClick={async () => {
+											if ((isPlaying ? await pause() : await play()) === true) {
+												doStuff();
 											}
 										}}>
 										{isPlaying ? (
@@ -324,12 +334,9 @@ export default function Spotify() {
 									</button>
 									<button
 										className="rounded-full"
-										onClick={() => {
-											if (isPremium) {
-												const a = next();
-												a;
-												setSinceAPICall(cooldown / 5);
-												setApiCallInProgress(false);
+										onClick={async () => {
+											if (await next()) {
+												doStuff();
 											}
 										}}>
 										<IoIosSkipForward className="h-6 w-6" />
@@ -356,16 +363,28 @@ export default function Spotify() {
 									<div className="h-6 w-6 rounded-full bg-green-400/50" />
 								</div>
 							</div>
-							<div className="flex flex-col gap-y-1 pb-4 sm:pb-2">
-								<div className="relative h-3 w-full animate-pulse rounded-lg bg-neutral-700">
-									<div className="h-full rounded-lg bg-neutral-600" />
+							{redirNeeded ? (
+								<Button
+									onClick={() => {
+										setRedirNeeded(false);
+										redirectToAuthCodeFlow(clientId, URL);
+									}}
+									className="-my-0.5 mx-auto flex w-auto flex-row gap-x-2 border border-neutral-800 bg-neutral-950">
+									<SiSpotify className="size-5 text-green-500" />
+									Click to log in to Spotify.
+								</Button>
+							) : (
+								<div className="flex flex-col gap-y-1 pb-4 sm:pb-2">
+									<div className="relative h-3 w-full animate-pulse rounded-lg bg-neutral-700">
+										<div className="h-full rounded-lg bg-neutral-600" />
+									</div>
+									<div className="h-3 w-1/4 rounded-md bg-neutral-700" />
 								</div>
-								<div className="h-3 w-1/4 rounded-md bg-neutral-700" />
-							</div>
+							)}
 							<div className="flex justify-center gap-x-4">
 								{[...Array(3)].map((_, index) => (
 									<div key={index} className="animate-pulse rounded-full">
-										<div className="h-6 w-6 rounded-full bg-neutral-600" />
+										<div className="size-6 rounded-full bg-neutral-600" />
 									</div>
 								))}
 							</div>

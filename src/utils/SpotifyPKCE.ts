@@ -183,11 +183,12 @@ export async function pause() {
 		return false;
 	}
 
-	await fetch('https://api.spotify.com/v1/me/player/pause', {
+	const res = await fetch('https://api.spotify.com/v1/me/player/pause', {
 		method: 'PUT',
 		headers: { Authorization: `Bearer ${accessToken}` },
 		body: JSON.stringify({ device_id: deviceId }),
 	});
+	return res.status == 204;
 }
 
 export async function play() {
@@ -198,12 +199,12 @@ export async function play() {
 		return false;
 	}
 
-	await fetch('https://api.spotify.com/v1/me/player/play', {
+	const res = await fetch('https://api.spotify.com/v1/me/player/play', {
 		method: 'PUT',
 		headers: { Authorization: `Bearer ${accessToken}` },
 		body: JSON.stringify({ device_id: deviceId }),
 	});
-	return true;
+	return res.status == 204;
 }
 
 export async function next() {
@@ -214,11 +215,12 @@ export async function next() {
 		return false;
 	}
 
-	await fetch('https://api.spotify.com/v1/me/player/next', {
+	const res = await fetch('https://api.spotify.com/v1/me/player/next', {
 		method: 'POST',
 		headers: { Authorization: `Bearer ${accessToken}` },
 		body: JSON.stringify({ device_id: deviceId }),
 	});
+	return res.status == 204;
 }
 
 export async function is_premium() {
@@ -247,13 +249,14 @@ export async function previous(
 	if (currentlyPlaying && playingProgress > 5000) {
 		return seek(0);
 	}
-	await fetch('https://api.spotify.com/v1/me/player/previous', {
+	const res = await fetch('https://api.spotify.com/v1/me/player/previous', {
 		method: 'POST',
 		headers: { Authorization: `Bearer ${accessToken}` },
 		body: JSON.stringify({
 			device_id: deviceId,
 		}),
 	});
+	return res.status == 204;
 }
 
 export async function seek(position: number) {
@@ -264,7 +267,7 @@ export async function seek(position: number) {
 		return false;
 	}
 
-	await fetch(
+	const res = await fetch(
 		`https://api.spotify.com/v1/me/player/seek?position_ms=${position}`,
 		{
 			method: 'PUT',
@@ -273,22 +276,24 @@ export async function seek(position: number) {
 		},
 	);
 
-	return true;
+	return res.status == 204;
 }
 
 export async function heart(isHearted: boolean, trackId: string) {
 	const accessToken = localStorage.getItem('spotify_access_token') || '';
+	let method = 'PUT';
 	if (isHearted) {
-		await fetch(`https://api.spotify.com/v1/me/tracks?ids=${trackId}`, {
-			method: 'DELETE',
-			headers: { Authorization: `Bearer ${accessToken}` },
-		});
-	} else {
-		await fetch(`https://api.spotify.com/v1/me/tracks?ids=${trackId}`, {
-			method: 'PUT',
-			headers: { Authorization: `Bearer ${accessToken}` },
-		});
+		method = 'DELETE';
 	}
+	const res = await fetch(
+		`https://api.spotify.com/v1/me/tracks?ids=${trackId}`,
+		{
+			method: method,
+			headers: { Authorization: `Bearer ${accessToken}` },
+		},
+	);
+
+	return res.status == 200;
 }
 
 export async function isHearted(trackId: string) {
@@ -303,4 +308,11 @@ export async function isHearted(trackId: string) {
 
 	const res = await result.json();
 	return res[0];
+}
+
+export function clearKeys() {
+	localStorage.removeItem('spotify_verifier');
+	localStorage.removeItem('spotify_access_token');
+	localStorage.removeItem('spotify_refresh_token');
+	localStorage.removeItem('spotify_expires_in');
 }

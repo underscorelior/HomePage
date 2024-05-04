@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import {
@@ -8,24 +8,26 @@ import {
 	PopoverTrigger,
 } from '@/shadcn/components/popover';
 import {
-	ContextMenu,
-	ContextMenuContent,
-	ContextMenuTrigger,
-} from '@/shadcn/components/ui/context-menu';
-import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from '@/shadcn/components/tooltip';
+import {
+	ContextMenu,
+	ContextMenuContent,
+	ContextMenuTrigger,
+} from '@/shadcn/components/ui/context-menu';
 
 import { ToggleGroup, ToggleGroupItem } from '@/shadcn/components/toggle-group';
 import { Input } from '@/shadcn/components/ui/input';
 
+import { clearKeys } from '@/utils/SpotifyPKCE';
 import { FiCalendar, FiSettings } from 'react-icons/fi';
+import { SiSpotify } from 'react-icons/si';
 import { TbTemperatureCelsius, TbTemperatureFahrenheit } from 'react-icons/tb';
 import { TiWeatherCloudy } from 'react-icons/ti';
-import { SiSpotify } from 'react-icons/si';
+import { RedirContext } from '..';
 
 export default function Settings({
 	setSpotify,
@@ -39,6 +41,8 @@ export default function Settings({
 	setWeather: (s: boolean) => void;
 }) {
 	const [toggleVal, setToggleVal] = useState<string[]>([]);
+
+	const setRedirNeeded = useContext(RedirContext).setRedirNeeded;
 
 	// WTF IS GOING ON HERE?
 
@@ -102,10 +106,8 @@ export default function Settings({
 	}, []);
 
 	function resetSpotifyData(): void {
-		localStorage.removeItem('spotify_verifier');
-		localStorage.removeItem('spotify_access_token');
-		localStorage.removeItem('spotify_refresh_token');
-		localStorage.removeItem('spotify_expires_in');
+		clearKeys();
+		setRedirNeeded(true);
 		toast.success(`Successfully cleared spotify authentication data.`, {
 			style: {
 				border: '1px solid #171717',
@@ -150,16 +152,26 @@ export default function Settings({
 										</ToggleGroupItem>
 									</ContextMenuTrigger>
 									<ContextMenuContent className="mb-1 ml-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-950 p-4">
-										{/* Clear API keys. */}
-										{/* <div className="flex flex-row items-center gap-x-3">
+										<div className="flex flex-row items-center gap-x-3">
 											<SiSpotify className="size-10 text-green-400" />
 											<Input
 												// placeholder="Spotify Client ID"
+												disabled
 												placeholder="Not Yet Implemented"
 												type="password"
 												className="w-full rounded-lg border-neutral-700 bg-neutral-950 px-3 text-lg text-neutral-400 placeholder-stone-200 outline-none ring-2 ring-neutral-700 placeholder:font-bold focus:outline-stone-800 active:outline-stone-800"
 											/>
-										</div> */}
+										</div>
+										<button
+											onClick={() => resetSpotifyData()}
+											className="mx-auto flex w-auto flex-col rounded-lg border-2 border-neutral-700 p-3 text-center text-sm font-semibold text-neutral-300">
+											<p className="mx-auto w-full text-center">
+												Reset Spotify Auth Data
+											</p>
+											<span className="mx-auto text-center text-xs font-medium text-neutral-400">
+												(Use if the spotify widget isn't loading.)
+											</span>
+										</button>
 									</ContextMenuContent>
 								</ContextMenu>
 							</TooltipTrigger>
@@ -221,6 +233,7 @@ export default function Settings({
 											<TiWeatherCloudy className="size-10 text-amber-600" />
 											<Input
 												// placeholder="OpenWeatherMap API Key"
+												disabled
 												placeholder="Not Yet Implemented"
 												type="password"
 												className="text-md w-full rounded-lg border-neutral-700 bg-neutral-950 px-3 text-neutral-400 placeholder-stone-200 ring-1 ring-neutral-700 placeholder:font-bold focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-0"
@@ -242,15 +255,6 @@ export default function Settings({
 						<FaGamepad className="size-7" />
 						</ToggleGroupItem> */}
 					</ToggleGroup>
-
-					<button
-						onClick={() => resetSpotifyData()}
-						className="flex flex-col rounded-lg border-2 border-neutral-700 p-3 font-semibold text-neutral-300">
-						Reset Spotify Auth Data{' '}
-						<span className="text-xs font-medium text-neutral-400">
-							(Use if the spotify widget isn't loading.)
-						</span>
-					</button>
 				</PopoverContent>
 			</Popover>
 		</TooltipProvider>
