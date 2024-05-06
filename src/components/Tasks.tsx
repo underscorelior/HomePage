@@ -9,7 +9,7 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from '@/shadcn/components/popover';
+} from '@/shadcn/components/ui/popover';
 
 interface Task {
 	text: string;
@@ -46,7 +46,7 @@ function TaskCard({
 }) {
 	return (
 		<div className="m-3 flex h-12 min-w-0 flex-row items-center justify-between gap-x-2">
-			<div className="size-10 mx-auto flex items-center justify-center">
+			<div className="mx-auto flex size-10 items-center justify-center">
 				<span
 					className={
 						'h-full w-full rounded-full border-2 border-neutral-700 p-2'

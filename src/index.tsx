@@ -30,14 +30,12 @@ export function App() {
 				<Clock unit={temp} weather={weather} />
 				<div className="fixed bottom-0 flex h-max w-full justify-center">
 					<div className="fixed bottom-0 left-0 flex flex-row">
-						<div className="fixed bottom-0 left-0 flex flex-row">
-							<Settings
-								setSpotify={setSpotify}
-								setCountdown={setCountdown}
-								setTemp={setTemp}
-								setWeather={setWeather}
-							/>
-						</div>
+						<Settings
+							setSpotify={setSpotify}
+							setCountdown={setCountdown}
+							setTemp={setTemp}
+							setWeather={setWeather}
+						/>
 					</div>
 					{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
 					{countdown && <Countdown />}

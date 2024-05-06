@@ -6,20 +6,23 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from '@/shadcn/components/popover';
+} from '@/shadcn/components/ui/popover';
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
-} from '@/shadcn/components/tooltip';
+} from '@/shadcn/components/ui/tooltip';
 import {
 	ContextMenu,
 	ContextMenuContent,
 	ContextMenuTrigger,
 } from '@/shadcn/components/ui/context-menu';
 
-import { ToggleGroup, ToggleGroupItem } from '@/shadcn/components/toggle-group';
+import {
+	ToggleGroup,
+	ToggleGroupItem,
+} from '@/shadcn/components/ui/toggle-group';
 import { Input } from '@/shadcn/components/ui/input';
 
 import { clearKeys } from '@/utils/SpotifyPKCE';
@@ -81,24 +84,12 @@ export default function Settings({
 
 	function toggleValues(s: string[]) {
 		localStorage.setItem('is_spotify', s.includes('spotify').toString());
-
-		setToggleVal(s);
-		setSpotify(s.includes('spotify'));
-
 		localStorage.setItem('is_countdown', s.includes('countdown').toString());
-
-		setToggleVal(s);
-		setCountdown(s.includes('countdown'));
-
 		localStorage.setItem('is_weather', s.includes('weather').toString());
 
-		setToggleVal(s);
+		setSpotify(s.includes('spotify'));
+		setCountdown(s.includes('countdown'));
 		setWeather(s.includes('weather'));
-	}
-
-	function toggleTemp(s: string) {
-		localStorage.setItem('temp', s);
-		setTemp(s);
 	}
 
 	useEffect(() => {
@@ -217,15 +208,22 @@ export default function Settings({
 											type="single"
 											className="space-x-[0.375rem]"
 											defaultValue={localStorage.getItem('temp') || 'f'}
-											onValueChange={(value) => toggleTemp(value)}>
+											onValueChange={(v) => {
+												if (v) {
+													localStorage.setItem('temp', v);
+													setTemp(v);
+												}
+											}}>
 											<ToggleGroupItem
 												className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-zinc-400/70 hover:bg-neutral-900 hover:text-zinc-300/90 data-[state=on]:bg-neutral-900 data-[state=on]:text-zinc-300 data-[state=on]:hover:bg-neutral-900 data-[state=on]:hover:text-zinc-400"
-												value="f">
+												value="f"
+												disabled={localStorage.getItem('temp') == 'f'}>
 												<TbTemperatureFahrenheit className="size-5" />
 											</ToggleGroupItem>
 											<ToggleGroupItem
 												className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-zinc-400/70 hover:bg-neutral-900 hover:text-zinc-300/90 data-[state=on]:bg-neutral-900 data-[state=on]:text-zinc-300 data-[state=on]:hover:bg-neutral-900 data-[state=on]:hover:text-zinc-400"
-												value="c">
+												value="c"
+												disabled={localStorage.getItem('temp') == 'f'}>
 												<TbTemperatureCelsius className="size-5" />
 											</ToggleGroupItem>
 										</ToggleGroup>

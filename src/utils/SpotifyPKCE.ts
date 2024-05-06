@@ -296,7 +296,7 @@ export async function heart(isHearted: boolean, trackId: string) {
 	return res.status == 200;
 }
 
-export async function isHearted(trackId: string) {
+export async function is_hearted(trackId: string) {
 	const accessToken = localStorage.getItem('spotify_access_token') || '';
 	const result = await fetch(
 		`https://api.spotify.com/v1/me/tracks/contains?ids=${trackId}`,

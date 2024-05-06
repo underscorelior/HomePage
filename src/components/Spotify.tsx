@@ -8,7 +8,7 @@
 // TODOL Dont insta redirect, instead add a big green button saying "click here to authenticate"
 // TODO: Refactor API code.
 import { RedirContext } from '@/index';
-import { Button } from '@/shadcn/components/button';
+import { Button } from '@/shadcn/components/ui/button';
 import { useContext, useEffect, useState } from 'react';
 import {
 	IoIosHeart,
@@ -24,7 +24,7 @@ import {
 	getAccessToken,
 	heart,
 	is_premium,
-	isHearted,
+	is_hearted,
 	next,
 	pause,
 	play,
@@ -59,7 +59,10 @@ export default function Spotify() {
 	const [hearted, setHearted] = useState<boolean>(false);
 	const [heartClicked, setHeartClicked] = useState<boolean>(false);
 	const [lastFocus, setLastFocus] = useState<boolean>(false);
+
+	// Check for heart and premium
 	const [specialCheck, setSpecialCheck] = useState<number>(0);
+
 	const { redirNeeded, setRedirNeeded } = useContext(RedirContext);
 
 	async function doStuff() {
@@ -92,7 +95,7 @@ export default function Spotify() {
 					}
 
 					if (specialCheck == 0) {
-						const hearted = await isHearted(
+						const hearted = await is_hearted(
 							play[1] ? play[0].item.id : play[0].id || '',
 						);
 						setHearted(hearted);
@@ -247,7 +250,7 @@ export default function Spotify() {
 													'%',
 											}}
 										/>
-										{isPremium ? (
+										{isPremium && (
 											<input
 												className="absolute top-0 h-full w-full cursor-pointer opacity-0"
 												type="range"
@@ -263,8 +266,6 @@ export default function Spotify() {
 													}
 												}}
 											/>
-										) : (
-											''
 										)}
 										<div
 											className="absolute top-[50%] h-3 w-3 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-green-400"
