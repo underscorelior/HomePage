@@ -1,12 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-// TODO: Fix token being invalidated
 // TODO: Add to queue button, maybe a queue list, shuffle, repeat, volume controls.
-// TODO: Prevent loop by showing a toast as an error
 // TODO: Store previous device id to try and play from it.
 // TODO: Toast errors for failing to seek, heart, etc.
-// TODO: Complete force click for actions.
-// TODOL Dont insta redirect, instead add a big green button saying "click here to authenticate"
 // TODO: Refactor API code.
+// TODO: Use constant code style (camelCase)
 import { RedirContext } from '@/index';
 import { Button } from '@/shadcn/components/ui/button';
 import { useContext, useEffect, useState } from 'react';
@@ -23,8 +20,8 @@ import {
 	clearKeys,
 	getAccessToken,
 	heart,
-	is_premium,
 	is_hearted,
+	is_premium,
 	next,
 	pause,
 	play,
@@ -60,7 +57,7 @@ export default function Spotify() {
 	const [heartClicked, setHeartClicked] = useState<boolean>(false);
 	const [lastFocus, setLastFocus] = useState<boolean>(false);
 
-	// Check for heart and premium
+	// Check for heart and premium, should remove
 	const [specialCheck, setSpecialCheck] = useState<number>(0);
 
 	const { redirNeeded, setRedirNeeded } = useContext(RedirContext);
@@ -142,26 +139,36 @@ export default function Spotify() {
 		}
 	}
 
-	function doInterval() {
-		if (document.hasFocus() != lastFocus && document.hasFocus()) {
-			setSinceAPICall(0);
-			setApiCallInProgress(false);
-		}
-
-		setLastFocus(document.hasFocus());
-		if (isPlaying) {
-			setPlayingProgress(Math.round(100 * (playingProgress + 4.95 / 3)) / 100);
-		}
+	async function doInterval() {
 		if (
-			(isPlaying &&
-				!apiCallInProgress &&
-				currentlyPlaying?.duration_ms !== undefined &&
-				playingProgress >= currentlyPlaying.duration_ms) ||
-			(sinceAPICall < 10 && !apiCallInProgress)
+			Date.now() - 1000 >
+			((localStorage.getItem('spotify_expires_in') || 0) as number)
 		) {
-			doStuff();
+			await refreshToken(clientId, URL);
+			setSinceAPICall(cooldown / 15);
+		} else {
+			if (document.hasFocus() != lastFocus && document.hasFocus()) {
+				setSinceAPICall(0);
+				setApiCallInProgress(false);
+			}
+
+			setLastFocus(document.hasFocus());
+			if (isPlaying) {
+				setPlayingProgress(
+					Math.round(100 * (playingProgress + 4.95 / 3)) / 100,
+				);
+			}
+			if (
+				(isPlaying &&
+					!apiCallInProgress &&
+					currentlyPlaying?.duration_ms !== undefined &&
+					playingProgress >= currentlyPlaying.duration_ms) ||
+				(sinceAPICall < 10 && !apiCallInProgress)
+			) {
+				doStuff();
+			}
+			setSinceAPICall(sinceAPICall - 1);
 		}
-		setSinceAPICall(sinceAPICall - 1);
 	}
 
 	useEffect(() => {
@@ -175,7 +182,7 @@ export default function Spotify() {
 			}
 
 			if (storedAccessToken != 'undefined') {
-				doInterval();
+				await doInterval();
 			} else {
 				doAuth();
 			}

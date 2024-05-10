@@ -1,4 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+// TODO: Prevent tooltip from appearing when hovering over popover.
+// TODO: Make functions simpler
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
