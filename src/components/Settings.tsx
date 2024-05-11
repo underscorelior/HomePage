@@ -128,7 +128,7 @@ export default function Settings({
 				</PopoverTrigger>
 				<PopoverContent
 					onOpenAutoFocus={(e) => e.preventDefault()}
-					className="mb-1 ml-2 flex h-full w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-950 p-4">
+					className="mb-1 ml-2 flex h-full w-full flex-col gap-y-4 rounded-lg border-[2px] border-neutral-800 bg-neutral-950 p-4">
 					<ToggleGroup
 						type="multiple"
 						className="space-x-2"
