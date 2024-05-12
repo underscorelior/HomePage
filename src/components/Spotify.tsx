@@ -139,36 +139,26 @@ export default function Spotify() {
 		}
 	}
 
-	async function doInterval() {
-		if (
-			Date.now() - 1000 >
-			((localStorage.getItem('spotify_expires_in') || 0) as number)
-		) {
-			await refreshToken(clientId, URL);
-			setSinceAPICall(cooldown / 15);
-		} else {
-			if (document.hasFocus() != lastFocus && document.hasFocus()) {
-				setSinceAPICall(0);
-				setApiCallInProgress(false);
-			}
-
-			setLastFocus(document.hasFocus());
-			if (isPlaying) {
-				setPlayingProgress(
-					Math.round(100 * (playingProgress + 4.95 / 3)) / 100,
-				);
-			}
-			if (
-				(isPlaying &&
-					!apiCallInProgress &&
-					currentlyPlaying?.duration_ms !== undefined &&
-					playingProgress >= currentlyPlaying.duration_ms) ||
-				(sinceAPICall < 10 && !apiCallInProgress)
-			) {
-				doStuff();
-			}
-			setSinceAPICall(sinceAPICall - 1);
+	function doInterval() {
+		if (document.hasFocus() != lastFocus && document.hasFocus()) {
+			setSinceAPICall(0);
+			setApiCallInProgress(false);
 		}
+
+		setLastFocus(document.hasFocus());
+		if (isPlaying) {
+			setPlayingProgress(Math.round(100 * (playingProgress + 4.95 / 3)) / 100);
+		}
+		if (
+			(isPlaying &&
+				!apiCallInProgress &&
+				currentlyPlaying?.duration_ms !== undefined &&
+				playingProgress >= currentlyPlaying.duration_ms) ||
+			(sinceAPICall < 10 && !apiCallInProgress)
+		) {
+			doStuff();
+		}
+		setSinceAPICall(sinceAPICall - 1);
 	}
 
 	useEffect(() => {
@@ -182,7 +172,15 @@ export default function Spotify() {
 			}
 
 			if (storedAccessToken != 'undefined') {
-				await doInterval();
+				if (
+					Date.now() - 1000 >
+					((localStorage.getItem('spotify_expires_in') || 0) as number)
+				) {
+					await refreshToken(clientId, URL);
+					setSinceAPICall(cooldown / 7.5);
+				} else {
+					doInterval();
+				}
 			} else {
 				doAuth();
 			}
