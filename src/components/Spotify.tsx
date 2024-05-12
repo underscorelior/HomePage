@@ -172,15 +172,7 @@ export default function Spotify() {
 			}
 
 			if (storedAccessToken != 'undefined') {
-				if (
-					Date.now() - 1000 >
-					((localStorage.getItem('spotify_expires_in') || 0) as number)
-				) {
-					await refreshToken(clientId, URL);
-					setSinceAPICall(cooldown / 7.5);
-				} else {
-					doInterval();
-				}
+				doInterval();
 			} else {
 				doAuth();
 			}
