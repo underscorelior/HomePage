@@ -1,10 +1,11 @@
-// TOOD: Custom times and dates using settings.
+// TODO: Custom times and dates using settings.
 
 import { useEffect, useState } from 'react';
 
 function Countdown() {
-	const [junior, setJunior] = useState<string>('');
+	const [grad, setGrad] = useState<string>('');
 	const [hs, setHS] = useState<string>('');
+	const [apps, setApps] = useState<string>('');
 
 	function calcDiff(diff: number) {
 		diff -= Date.now();
@@ -26,8 +27,9 @@ function Countdown() {
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setJunior(calcDiff(1717698600000));
 			setHS(calcDiff(1748634300000));
+			setGrad(calcDiff(1749133800000));
+			setApps(calcDiff(1732953600000));
 		}, 1);
 
 		return () => {
@@ -36,22 +38,17 @@ function Countdown() {
 	}, []);
 	return (
 		<div className="fixed bottom-0 right-0 flex flex-col rounded-tl-lg border-l-2 border-t-2 border-neutral-800 bg-neutral-950 p-4 text-xl font-bold">
-			{/* <span className="animate-gradient bg-1000% flex flex-col bg-gradient-to-r from-blue-400 via-violet-400 to-blue-400 bg-clip-text text-transparent">
-				Junior Year Over:
-				<span className="text-end font-mono font-semibold">{junior}</span>
-			</span>
-
-			<span className="animate-gradient bg-1000% flex flex-col bg-gradient-to-r from-blue-400 via-violet-400 to-blue-400 bg-clip-text text-transparent">
-				End of HS:
-				<span className="text-end font-mono font-semibold">{hs}</span>
-			</span> */}
-			<span className="animate-gradient bg-1000% flex flex-col text-zinc-300">
-				Junior Year Over:
-				<span className="text-end font-mono font-semibold">{junior}</span>
+			<span className="animate-gradient bg-500% flex flex-col text-zinc-300">
+				College Apps (most):
+				<span className="text-end font-mono font-semibold">{apps}</span>
 			</span>
 			<span className="animate-gradient bg-500% flex flex-col text-zinc-300">
 				End of HS:
 				<span className="text-end font-mono font-semibold">{hs}</span>
+			</span>
+			<span className="animate-gradient bg-1000% flex flex-col text-zinc-300">
+				Graduation:
+				<span className="text-end font-mono font-semibold">{grad}</span>
 			</span>
 		</div>
 	);
