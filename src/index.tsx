@@ -38,7 +38,15 @@ export function App() {
 						/>
 					</div>
 					{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
-					{countdown && <Countdown />}
+					{countdown && (
+						<Countdown
+							cds={[
+								{ name: 'Start of School', timestamp: 1724081400000 },
+								{ name: 'College Apps', timestamp: 1732953600000 },
+								{ name: 'Graduation', timestamp: 1749133800000 },
+							]}
+						/>
+					)}
 				</div>
 			</div>
 		</RedirContext.Provider>

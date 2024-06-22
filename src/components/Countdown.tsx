@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 
-function Countdown() {
-	const [grad, setGrad] = useState<string>('');
-	const [hs, setHS] = useState<string>('');
-	const [apps, setApps] = useState<string>('');
+function Countdown({ cds }: { cds: { name: string; timestamp: number }[] }) {
+	const [countdowns, setCountdowns] = useState<
+		{ name: string; timestamp: number; cooldown: string }[]
+	>([]);
 
 	function calcDiff(diff: number) {
 		diff -= Date.now();
@@ -27,9 +27,12 @@ function Countdown() {
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setHS(calcDiff(1748634300000));
-			setGrad(calcDiff(1749133800000));
-			setApps(calcDiff(1732953600000));
+			setCountdowns(
+				cds.map((cd) => ({
+					...cd,
+					cooldown: calcDiff(cd.timestamp),
+				})),
+			);
 		}, 1);
 
 		return () => {
@@ -38,18 +41,14 @@ function Countdown() {
 	}, []);
 	return (
 		<div className="fixed bottom-0 right-0 flex flex-col rounded-tl-lg border-l-2 border-t-2 border-neutral-800 bg-neutral-950 p-4 text-xl font-bold">
-			<span className="animate-gradient bg-500% flex flex-col text-zinc-300">
-				College Apps (most):
-				<span className="text-end font-mono font-semibold">{apps}</span>
-			</span>
-			<span className="animate-gradient bg-500% flex flex-col text-zinc-300">
-				End of HS:
-				<span className="text-end font-mono font-semibold">{hs}</span>
-			</span>
-			<span className="animate-gradient bg-1000% flex flex-col text-zinc-300">
-				Graduation:
-				<span className="text-end font-mono font-semibold">{grad}</span>
-			</span>
+			{countdowns.map((cd, i) => (
+				<span className="flex flex-col text-zinc-300" key={i}>
+					{cd.name}:
+					<span className="text-end font-mono font-semibold">
+						{calcDiff(cd.timestamp)}
+					</span>
+				</span>
+			))}
 		</div>
 	);
 }
