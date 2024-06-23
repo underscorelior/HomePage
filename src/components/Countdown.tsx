@@ -38,13 +38,15 @@ function Countdown({ cds }: { cds: { name: string; timestamp: number }[] }) {
 		return () => {
 			clearInterval(interval);
 		};
-	}, []);
+	}, [cds]);
 	return (
-		<div className="fixed bottom-0 right-0 flex flex-col rounded-tl-lg border-l-2 border-t-2 border-neutral-800 bg-neutral-950 p-4 text-xl font-bold">
+		<div className="fixed bottom-0 right-0 flex flex-col rounded-tl-lg border-l-2 border-t-2 border-neutral-600 bg-neutral-50 p-4 text-xl font-bold dark:border-neutral-800 dark:bg-neutral-950">
 			{countdowns.map((cd, i) => (
-				<span className="flex flex-col text-zinc-300" key={i}>
+				<span
+					className="flex flex-col text-zinc-800 dark:text-zinc-300"
+					key={i}>
 					{cd.name}:
-					<span className="text-end font-mono font-semibold">
+					<span className="text-end font-mono text-lg font-semibold">
 						{calcDiff(cd.timestamp)}
 					</span>
 				</span>
