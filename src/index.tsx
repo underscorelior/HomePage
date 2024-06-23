@@ -1,3 +1,6 @@
+// TODO: Responsiveness
+// TODO: Offline version
+
 import { createContext, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Toaster } from 'react-hot-toast';
@@ -25,7 +28,7 @@ export function App() {
 
 	return (
 		<RedirContext.Provider value={{ redirNeeded, setRedirNeeded }}>
-			<div className="flex h-screen w-screen flex-col overflow-hidden bg-neutral-950">
+			<div className="flex h-screen w-screen flex-col overflow-hidden bg-neutral-50 dark:bg-neutral-950">
 				<Toaster />
 				<Clock unit={temp} weather={weather} />
 				<div className="fixed bottom-0 flex h-max w-full justify-center">
