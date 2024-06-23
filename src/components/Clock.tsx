@@ -95,7 +95,7 @@ function Clock({ unit, weather }: { unit: string; weather: boolean }) {
 	}
 
 	return (
-		<section className="gradtext fixed flex w-full flex-col items-end p-6 font-black text-neutral-300">
+		<section className="gradtext fixed flex w-full flex-col items-end p-6 font-black text-neutral-900 dark:text-neutral-300">
 			<div className=" text-5xl lg:text-[4.25rem]">
 				{formattedTime}
 				<p className="text-end text-[1.625rem]">{formattedDate}</p>
@@ -105,12 +105,12 @@ function Clock({ unit, weather }: { unit: string; weather: boolean }) {
 					{weatherData ? (
 						<span className="flex w-full flex-row items-end justify-center text-end text-[1.625rem]">
 							{weatherData.weather[0].main == 'Clear' ? (
-								<TiWeatherSunny className="mr-2 fill-yellow-200 text-4xl" />
+								<TiWeatherSunny className="mr-2 fill-yellow-400 text-4xl dark:fill-yellow-300 " />
 							) : weatherData.weather[0].main == 'Clouds' ? (
 								weatherData.weather[0].description == 'few clouds' ? (
-									<TiWeatherPartlySunny className="mr-2 fill-yellow-100 text-4xl" />
+									<TiWeatherPartlySunny className="mr-2 fill-yellow-300 text-4xl dark:fill-yellow-200" />
 								) : (
-									<TiWeatherCloudy className="mr-2 fill-neutral-300 text-4xl" />
+									<TiWeatherCloudy className="mr-2 fill-neutral-400 text-4xl dark:fill-neutral-300" />
 								)
 							) : ['Rain', 'Drizzle'].includes(weatherData.weather[0].main) ? (
 								[
@@ -125,11 +125,11 @@ function Clock({ unit, weather }: { unit: string; weather: boolean }) {
 									<TiWeatherDownpour className="mr-2 fill-blue-400 text-4xl" />
 								)
 							) : weatherData.weather[0].main == 'Thunderstorm' ? (
-								<TiWeatherStormy className="mr-2 fill-yellow-300 text-4xl" />
+								<TiWeatherStormy className="mr-2 fill-yellow-400 text-4xl dark:fill-yellow-300" />
 							) : weatherData.weather[0].main == 'Snow' ? (
-								<TiWeatherSnow className="mr-2 fill-slate-200 text-4xl" />
+								<TiWeatherSnow className="mr-2 fill-slate-400 text-4xl dark:fill-slate-200" />
 							) : (weatherData.weather[0].id + '')[0] == '7' ? (
-								<TiWeatherWindyCloudy className="mr-2 fill-stone-400 text-4xl" />
+								<TiWeatherWindyCloudy className="mr-2 fill-stone-500 text-4xl dark:fill-stone-400" />
 							) : (
 								<TiDelete className="mr-2 fill-red-500 text-4xl" />
 							)}
@@ -143,7 +143,7 @@ function Clock({ unit, weather }: { unit: string; weather: boolean }) {
 							</span>
 						</span>
 					) : (
-						<AiOutlineLoading className="w-full animate-spin items-end fill-neutral-300 text-[1.625rem]" />
+						<AiOutlineLoading className="w-full animate-spin items-end fill-neutral-600 text-[1.625rem] dark:fill-neutral-300" />
 					)}
 				</div>
 			)}
