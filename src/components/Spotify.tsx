@@ -186,7 +186,7 @@ export default function Spotify() {
 	return (
 		<>
 			{currentlyPlaying != null ? (
-				<div className="flex w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-800 bg-neutral-950 text-neutral-200 shadow-md sm:w-2/3 sm:max-w-xl">
+				<div className="flex w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-600 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
 					<div className="w-2/5 flex-shrink-0 sm:w-1/3">
 						<img
 							className="h-auto w-auto object-cover"
@@ -203,10 +203,10 @@ export default function Spotify() {
 						<div className="flex h-full w-full flex-col justify-between gap-y-2 px-5 py-4 sm:gap-y-4 sm:py-6">
 							<div className="flex w-[95%] items-center justify-between sm:mb-3 sm:w-full">
 								<div className="w-[75%] sm:w-[85%]">
-									<p className="text-md -mb-1 overflow-hidden text-ellipsis whitespace-nowrap font-medium text-neutral-200 sm:mb-0">
+									<p className="text-md -mb-1 overflow-hidden text-ellipsis whitespace-nowrap font-medium sm:mb-0">
 										{currentlyPlaying.name}
 									</p>
-									<p className="text-md overflow-hidden text-ellipsis whitespace-nowrap text-neutral-300">
+									<p className="text-md overflow-hidden text-ellipsis whitespace-nowrap text-neutral-800 dark:text-neutral-300">
 										{currentlyPlaying.artists[0].name}
 									</p>
 								</div>
@@ -236,9 +236,9 @@ export default function Spotify() {
 							</div>
 							{isPlaying && (
 								<div className="flex items-center pb-3">
-									<div className="relative h-3 w-full rounded-lg border border-neutral-900 bg-neutral-800/90">
+									<div className="relative h-3 w-full rounded-lg border-[1.5px] border-neutral-700 bg-neutral-200/90 dark:border-neutral-900 dark:bg-neutral-800/90">
 										<div
-											className="h-full rounded-lg bg-green-400"
+											className="h-full rounded-lg bg-green-500 dark:bg-green-400"
 											style={{
 												width:
 													((playingProgress % currentlyPlaying.duration_ms) /
@@ -265,7 +265,7 @@ export default function Spotify() {
 											/>
 										)}
 										<div
-											className="absolute top-[50%] h-3 w-3 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-green-400"
+											className="absolute top-[50%] size-4 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-green-500 dark:bg-green-400"
 											style={{
 												left:
 													((playingProgress % currentlyPlaying.duration_ms) /
@@ -275,7 +275,7 @@ export default function Spotify() {
 											}}
 										/>
 										<div className="mt-1">
-											<p className="font-mono text-xs font-light text-neutral-300">
+											<p className="font-mono text-xs font-light text-neutral-800 dark:text-neutral-300">
 												{Math.floor(
 													(playingProgress % currentlyPlaying.duration_ms) /
 														1000 /
@@ -346,16 +346,16 @@ export default function Spotify() {
 				</div>
 			) : (
 				// Skeleton
-				<div className="flex w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-800 bg-neutral-950 text-neutral-300 shadow-md sm:w-2/3 sm:max-w-xl">
+				<div className="flex w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-800 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:bg-neutral-950 dark:text-neutral-300">
 					<div className="w-2/5 sm:w-1/3">
-						<div className="aspect-square max-h-[calc(100%/30%)] w-full animate-pulse rounded-tl-md bg-neutral-800" />
+						<div className="aspect-square max-h-[calc(100%/30%)] w-full animate-pulse rounded-tl-md bg-neutral-200 dark:bg-neutral-800" />
 					</div>
 					<div className="flex h-full w-2/3 items-center justify-center gap-y-2 sm:gap-y-4">
 						<div className="flex h-full w-full flex-col justify-between gap-y-2 px-5 py-5 sm:gap-y-4 sm:p-6 sm:px-5">
 							<div className="mb-2 flex items-center justify-between sm:mb-2">
 								<div className="w-full animate-pulse pt-[6px] sm:w-[80%]">
-									<div className="mb-0.5 h-[14px] w-2/3 rounded-md bg-neutral-700 sm:mb-[10px]" />
-									<div className="h-[14px] w-1/3 rounded-md bg-neutral-700" />
+									<div className="mb-0.5 h-[14px] w-2/3 rounded-md bg-neutral-300 sm:mb-[10px] dark:bg-neutral-700" />
+									<div className="h-[14px] w-1/3 rounded-md bg-neutral-300 dark:bg-neutral-700" />
 								</div>
 								<div className="animate-pulse rounded-full">
 									<div className="h-6 w-6 rounded-full bg-green-400/50" />
@@ -367,16 +367,16 @@ export default function Spotify() {
 										setRedirNeeded(false);
 										redirectToAuthCodeFlow(clientId, URL);
 									}}
-									className="-my-0.5 mx-auto flex w-auto flex-row gap-x-2 border border-neutral-800 bg-neutral-950">
+									className="-my-0.5 mx-auto flex w-auto flex-row gap-x-2 border border-neutral-400 bg-neutral-50 text-neutral-800 hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-950">
 									<SiSpotify className="size-5 text-green-500" />
 									Click to log in to Spotify.
 								</Button>
 							) : (
 								<div className="flex flex-col gap-y-1 pb-4 sm:pb-2">
-									<div className="relative h-3 w-full animate-pulse rounded-lg bg-neutral-700">
+									<div className="relative h-3 w-full animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700">
 										<div className="h-full rounded-lg bg-neutral-600" />
 									</div>
-									<div className="h-3 w-1/4 rounded-md bg-neutral-700" />
+									<div className="h-3 w-1/4 rounded-md bg-neutral-300 dark:bg-neutral-700" />
 								</div>
 							)}
 							<div className="flex justify-center gap-x-4">

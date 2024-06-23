@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // TODO: Prevent tooltip from appearing when hovering over popover.
 // TODO: Make functions simpler
+// TODO: Fix broken weather switching
+
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -150,13 +152,13 @@ export default function Settings({
 									</ContextMenuTrigger>
 									<ContextMenuContent className="mb-1 ml-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
 										<div className="flex flex-row items-center gap-x-3">
-											<SiSpotify className="size-10 text-green-400" />
+											<SiSpotify className="size-10 text-green-500" />
 											<Input
 												// placeholder="Spotify Client ID"
 												disabled
 												placeholder="Not Yet Implemented"
 												type="password"
-												className="w-full rounded-lg border-neutral-700 bg-neutral-50 px-3 text-lg text-neutral-400 placeholder-stone-200 outline-none ring-2 ring-neutral-700 placeholder:font-bold focus:outline-stone-800 active:outline-stone-800 dark:bg-neutral-950"
+												className="w-full rounded-lg border-2 border-neutral-700 bg-neutral-50 px-3 text-lg text-neutral-600 placeholder-stone-600 outline-none ring-neutral-700 placeholder:font-medium focus:outline-stone-800 active:outline-stone-800 dark:border-neutral-500 dark:bg-neutral-950 dark:text-neutral-400 dark:placeholder-stone-200"
 											/>
 										</div>
 										<button
@@ -165,7 +167,7 @@ export default function Settings({
 											<p className="mx-auto w-full text-center">
 												Reset Spotify Auth Data
 											</p>
-											<span className="mx-auto text-center text-xs font-medium text-neutral-400">
+											<span className="mx-auto text-center text-xs font-medium text-neutral-600 dark:text-neutral-400">
 												(Use if the spotify widget isn't loading.)
 											</span>
 										</button>
@@ -225,13 +227,13 @@ export default function Settings({
 												}
 											}}>
 											<ToggleGroupItem
-												className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-zinc-400/70 hover:bg-neutral-900 hover:text-zinc-300/90 data-[state=on]:bg-neutral-900 data-[state=on]:text-zinc-300 data-[state=on]:hover:bg-neutral-900 data-[state=on]:hover:text-zinc-400"
+												className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-500 p-3 text-zinc-700/70 hover:text-zinc-800/90 dark:border-neutral-700 dark:text-zinc-400/70 dark:hover:bg-neutral-900 dark:hover:text-zinc-300/90 dark:data-[state=on]:bg-neutral-900 dark:data-[state=on]:text-zinc-300 dark:data-[state=on]:hover:bg-neutral-900 dark:data-[state=on]:hover:text-zinc-400"
 												value="f"
 												disabled={localStorage.getItem('temp') == 'f'}>
 												<TbTemperatureFahrenheit className="size-5" />
 											</ToggleGroupItem>
 											<ToggleGroupItem
-												className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-zinc-400/70 hover:bg-neutral-900 hover:text-zinc-300/90 data-[state=on]:bg-neutral-900 data-[state=on]:text-zinc-300 data-[state=on]:hover:bg-neutral-900 data-[state=on]:hover:text-zinc-400"
+												className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-500 p-3 text-zinc-700/70 hover:text-zinc-800/90 dark:border-neutral-700 dark:text-zinc-400/70 dark:hover:bg-neutral-900 dark:hover:text-zinc-300/90 dark:data-[state=on]:bg-neutral-900 dark:data-[state=on]:text-zinc-300 dark:data-[state=on]:hover:bg-neutral-900 dark:data-[state=on]:hover:text-zinc-400"
 												value="c"
 												disabled={localStorage.getItem('temp') == 'f'}>
 												<TbTemperatureCelsius className="size-5" />
@@ -244,7 +246,7 @@ export default function Settings({
 												disabled
 												placeholder="Not Yet Implemented"
 												type="password"
-												className="text-md w-full rounded-lg border-neutral-700 bg-neutral-50 px-3 text-neutral-400 placeholder-stone-200 ring-1 ring-neutral-700 placeholder:font-bold focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-0 dark:bg-neutral-950"
+												className="w-full rounded-lg border-2 border-neutral-700 bg-neutral-50 px-3 text-lg text-neutral-600 placeholder-stone-600 outline-none ring-neutral-700 placeholder:font-medium focus:outline-stone-800 active:outline-stone-800 dark:border-neutral-500 dark:bg-neutral-950 dark:text-neutral-400 dark:placeholder-stone-200"
 											/>
 										</div>
 									</ContextMenuContent>

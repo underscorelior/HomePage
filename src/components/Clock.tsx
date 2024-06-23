@@ -1,3 +1,5 @@
+// TODO: Try and get data from IP based location
+
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
