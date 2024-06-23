@@ -1,7 +1,21 @@
 // TODO: Custom times and dates using settings.
 
+import { Button } from '@/shadcn/components/ui/button';
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@/shadcn/components/ui/dialog';
+import { Input } from '@/shadcn/components/ui/input';
+import { Label } from '@/shadcn/components/ui/label';
 import { useEffect, useState } from 'react';
-import { TiCalendar } from 'react-icons/ti';
+import { TiCalendar, TiTrash } from 'react-icons/ti';
+import { FaTrashAlt } from 'react-icons/fa';
+import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
 
 function Countdown({ cds }: { cds: { name: string; timestamp: number }[] }) {
 	const [countdowns, setCountdowns] = useState<
@@ -66,14 +80,76 @@ export function CountdownItem({
 	timestamp: number;
 }) {
 	return (
-		<div className="flex flex-row items-end justify-center gap-4 rounded-lg border-[1.5px] px-3 py-2 dark:border-neutral-700">
-			<h3 className="font-medium">{name}</h3>
-			<p className="font-mono text-sm">
-				{new Date(timestamp).toLocaleString()}
-			</p>
-			<span className="font-3xl flex h-full w-auto items-center justify-center ">
-				<TiCalendar />
-			</span>
+		<div className="flex flex-row items-center justify-center gap-4 rounded-lg border-[1.5px] px-3 py-2 dark:border-neutral-700">
+			<div className="flex flex-col">
+				<h3 className="font-medium">{name}</h3>
+				<p className="font-mono text-sm">
+					{new Date(timestamp).toLocaleString()}
+				</p>
+			</div>
+			<CountdownEditPopup name={name} timestamp={timestamp} />
 		</div>
+	);
+}
+
+function CountdownEditPopup({
+	name,
+	timestamp,
+}: {
+	name: string;
+	timestamp: number;
+}) {
+	return (
+		// <Dialog>
+		// 	<DialogTrigger className="flex aspect-square size-auto rounded-lg border border-neutral-500 p-2">
+		// 		<TiCalendar />
+		// 	</DialogTrigger>
+		// 	<DialogContent>
+		// 		<DialogHeader>
+		// 			<DialogTitle className="text-center text-2xl font-semibold dark:text-neutral-100">
+		// 				Editing: {name}
+		// 			</DialogTitle>
+		// 		</DialogHeader>
+		// 		<DialogClose>{name}</DialogClose>
+		// 	</DialogContent>
+		// </Dialog>
+		<Dialog>
+			<DialogTrigger className="flex aspect-square size-auto rounded-lg border border-neutral-500 p-2">
+				<TiCalendar />
+			</DialogTrigger>
+			<DialogContent className="sm:max-w-[425px] dark:text-neutral-100">
+				<DialogHeader>
+					<DialogTitle>Editing: {name}</DialogTitle>
+				</DialogHeader>
+				<div className="grid gap-4 py-4">
+					<div className="grid grid-cols-4 items-center gap-4">
+						<Label htmlFor="name" className="text-right">
+							Name
+						</Label>
+						<Input id="name" defaultValue={name} className="col-span-3" />
+					</div>
+					<div className="grid grid-cols-4 items-center gap-4">
+						<Label htmlFor="time" className="text-right">
+							Time
+						</Label>
+
+						<DateTimePicker />
+					</div>
+				</div>
+				<DialogFooter className="flex w-full flex-row sm:justify-between">
+					<Button
+						variant={'outline'}
+						className="flex aspect-square h-full w-auto items-center justify-center self-start p-2 text-red-500/90 dark:hover:text-red-500">
+						<FaTrashAlt />
+					</Button>
+					<div className="flex gap-2">
+						<DialogClose>
+							<Button variant="ghost">Cancel</Button>
+						</DialogClose>
+						<Button type="submit">Save</Button>
+					</div>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
 	);
 }
