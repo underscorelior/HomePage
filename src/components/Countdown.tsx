@@ -1,6 +1,7 @@
 // TODO: Custom times and dates using settings.
 
 import { useEffect, useState } from 'react';
+import { TiCalendar } from 'react-icons/ti';
 
 function Countdown({ cds }: { cds: { name: string; timestamp: number }[] }) {
 	const [countdowns, setCountdowns] = useState<
@@ -56,3 +57,23 @@ function Countdown({ cds }: { cds: { name: string; timestamp: number }[] }) {
 }
 
 export default Countdown;
+
+export function CountdownItem({
+	name = 'Placeholder name',
+	timestamp = Date.now(),
+}: {
+	name: string;
+	timestamp: number;
+}) {
+	return (
+		<div className="flex flex-row items-end justify-center gap-4 rounded-lg border-[1.5px] px-3 py-2 dark:border-neutral-700">
+			<h3 className="font-medium">{name}</h3>
+			<p className="font-mono text-sm">
+				{new Date(timestamp).toLocaleString()}
+			</p>
+			<span className="font-3xl flex h-full w-auto items-center justify-center ">
+				<TiCalendar />
+			</span>
+		</div>
+	);
+}

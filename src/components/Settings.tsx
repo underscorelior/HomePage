@@ -35,7 +35,8 @@ import { SiSpotify } from 'react-icons/si';
 import { TbTemperatureCelsius, TbTemperatureFahrenheit } from 'react-icons/tb';
 import { TiWeatherCloudy } from 'react-icons/ti';
 import { RedirContext } from '..';
-import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
+// import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
+import { CountdownItem } from './Countdown';
 
 export default function Settings({
 	setSpotify,
@@ -158,7 +159,7 @@ export default function Settings({
 												disabled
 												placeholder="Not Yet Implemented"
 												type="password"
-												className="w-full rounded-lg border-2 border-neutral-700 bg-neutral-50 px-3 text-lg text-neutral-600 placeholder-stone-600 outline-none ring-neutral-700 placeholder:font-medium focus:outline-stone-800 active:outline-stone-800 dark:border-neutral-500 dark:bg-neutral-950 dark:text-neutral-400 dark:placeholder-stone-200"
+												className="w-full rounded-lg border-2 border-neutral-700 bg-neutral-50 px-3 text-lg text-neutral-600 outline-none ring-neutral-700 placeholder:font-medium placeholder:text-stone-600 focus:outline-stone-800 active:outline-stone-800 dark:border-neutral-500 dark:bg-neutral-950 dark:text-neutral-400 dark:placeholder-stone-200"
 											/>
 										</div>
 										<button
@@ -191,11 +192,9 @@ export default function Settings({
 										</ToggleGroupItem>
 									</ContextMenuTrigger>
 									<ContextMenuContent className="mb-1 ml-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
-										{/* Change timestamp for 2 different days + rename */}
-										{/* <DateTimePicker date={date} setDate={setDate} /> */}
-										<DateTimePicker granularity={'minute'} />
-										{/*TODO: Just make a custom elementwith 6 input */}
-										{/*Store stuff in the format of name, timestamp. Max of 3-4, max length of name */}
+										{/* <DateTimePicker granularity={'minute'} /> */}
+										<h1 className="text-2xl font-semibold">Countdowns:</h1>
+										<CountdownItem name="Placeholder" timestamp={Date.now()} />
 									</ContextMenuContent>
 								</ContextMenu>
 							</TooltipTrigger>
