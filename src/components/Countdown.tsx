@@ -122,7 +122,6 @@ function CountdownEditPopup({
 
 	function onSubmit() {
 		setOpen(false);
-		console.log('AAAAAAAAAAAAAAAAAAAAA');
 		setOuterTimestamp(ts);
 		setOuterName(cdName);
 	}
@@ -138,11 +137,14 @@ function CountdownEditPopup({
 						Editing: {name}
 					</DialogTitle>
 				</DialogHeader>
-				<div className="grid grid-cols-[15%,85%] grid-rows-2 items-center justify-start gap-y-4 py-4">
-					{/* <div className="flex flex-col gap-y-2 py-4"> */}
+				<div className="flex flex-col gap-y-2 py-4">
 					<Label htmlFor="name">Name</Label>
-					<Input id="name" defaultValue={name} />
-					{/* <Input id="name" className="mb-3" defaultValue={name} /> */}
+					<Input
+						id="name"
+						className="mb-3"
+						defaultValue={name}
+						onChange={(x) => setName(x.target.value)}
+					/>
 
 					<Label htmlFor="time">Time</Label>
 					<DateTimePicker
@@ -168,7 +170,9 @@ function CountdownEditPopup({
 					<DialogClose>
 						<Button variant="ghost">Cancel</Button>
 					</DialogClose>
-					<Button type="submit">Save</Button>
+					<Button type="submit" onClick={() => onSubmit()}>
+						Save
+					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
