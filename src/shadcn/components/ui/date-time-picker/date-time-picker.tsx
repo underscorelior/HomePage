@@ -47,9 +47,10 @@ const DateTimePicker = React.forwardRef<
 		<div
 			{...groupProps}
 			ref={ref}
+			id="time"
 			className={cn(
 				groupProps.className,
-				'ring-offset-background focus-within:ring-ring flex items-center rounded-md focus-within:ring-2 focus-within:ring-offset-2',
+				'flex items-center rounded-md focus-within:ring-[1.5px]',
 			)}>
 			<DateField {...fieldProps} />
 			<Popover open={open} onOpenChange={setOpen}>
@@ -63,7 +64,9 @@ const DateTimePicker = React.forwardRef<
 						<CalendarIcon className="h-5 w-5" />
 					</Button>
 				</PopoverTrigger>
-				<PopoverContent ref={contentRef} className="w-full">
+				<PopoverContent
+					ref={contentRef}
+					className="w-full border-neutral-200 bg-white p-6 shadow-lg dark:border-neutral-800 dark:bg-neutral-950">
 					<div {...dialogProps} className="space-y-3">
 						<Calendar {...calendarProps} />
 						{!!state.hasTime && (
