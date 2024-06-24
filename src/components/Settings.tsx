@@ -194,7 +194,10 @@ export default function Settings({
 									<ContextMenuContent className="mb-1 ml-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
 										{/* <DateTimePicker granularity={'minute'} /> */}
 										<h1 className="text-2xl font-semibold">Countdowns:</h1>
-										<CountdownItem name="Placeholder" timestamp={Date.now()} />
+										<CountdownItem
+											name="Placeholder"
+											timestamp={1724081400000}
+										/>
 									</ContextMenuContent>
 								</ContextMenu>
 							</TooltipTrigger>

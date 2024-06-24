@@ -80,15 +80,26 @@ export function CountdownItem({
 	name: string;
 	timestamp: number;
 }) {
+	const [ts, setTs] = useState<number>(timestamp);
+	const [cdName, setName] = useState<string>(name);
+
+	useEffect(() => {
+		setTs(ts);
+		console.log(ts + 'AAAAAAAAAAAAAAAAAAAA');
+	}, [ts]);
+
 	return (
 		<div className="flex flex-row items-center justify-center gap-4 rounded-lg border-[1.5px] border-neutral-500 px-3 py-2 dark:border-neutral-700">
 			<div className="flex flex-col">
-				<h3 className="font-medium">{name}</h3>
-				<p className="font-mono text-sm">
-					{new Date(timestamp).toLocaleString()}
-				</p>
+				<h3 className="font-medium">{cdName}</h3>
+				<p className="font-mono text-sm">{new Date(ts).toLocaleString()}</p>
 			</div>
-			<CountdownEditPopup name={name} timestamp={timestamp} />{' '}
+			<CountdownEditPopup
+				name={cdName}
+				timestamp={ts}
+				setOuterTimestamp={setTs}
+				setOuterName={setName}
+			/>
 			{/* Add delete on pressing shift */}
 		</div>
 	);
@@ -97,12 +108,27 @@ export function CountdownItem({
 function CountdownEditPopup({
 	name,
 	timestamp,
+	setOuterTimestamp,
+	setOuterName,
 }: {
 	name: string;
 	timestamp: number;
+	setOuterTimestamp: (timestamp: number) => void;
+	setOuterName: (name: string) => void;
 }) {
+	const [ts, setTimestamp] = useState<number>(timestamp);
+	const [cdName, setName] = useState<string>(name);
+	const [open, setOpen] = useState(false);
+
+	function onSubmit() {
+		setOpen(false);
+		console.log('AAAAAAAAAAAAAAAAAAAAA');
+		setOuterTimestamp(ts);
+		setOuterName(cdName);
+	}
+
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger className="flex aspect-square size-auto rounded-lg border border-neutral-400 p-2 dark:border-neutral-500">
 				<TiCalendar />
 			</DialogTrigger>
@@ -124,25 +150,25 @@ function CountdownEditPopup({
 							new Date(timestamp).toISOString(),
 							Intl.DateTimeFormat().resolvedOptions().timeZone,
 						)}
-						value={parseAbsolute(
-							new Date(timestamp).toISOString(),
+						minValue={parseAbsolute(
+							new Date().toISOString(),
 							Intl.DateTimeFormat().resolvedOptions().timeZone,
 						)}
 						granularity={'minute'}
+						onChange={(dv) => {
+							setTimestamp(
+								dv
+									.toDate(Intl.DateTimeFormat().resolvedOptions().timeZone)
+									.getTime(),
+							);
+						}}
 					/>
 				</div>
 				<DialogFooter className="flex w-full flex-row gap-2">
-					{/* <Button
-						variant={'outline'}
-						className="flex aspect-square h-full w-auto items-center justify-center self-start p-2 text-red-500/90 dark:hover:text-red-500">
-						<FaTrashAlt />
-					</Button> */}
-					{/* <div className="flex gap-2"> */}
 					<DialogClose>
 						<Button variant="ghost">Cancel</Button>
 					</DialogClose>
 					<Button type="submit">Save</Button>
-					{/* </div> */}
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
