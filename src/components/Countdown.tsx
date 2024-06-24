@@ -17,6 +17,7 @@ import { TiCalendar } from 'react-icons/ti';
 import { parseAbsolute } from '@internationalized/date';
 
 import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
+import { TbTrash } from 'react-icons/tb';
 
 function Countdown({ cds }: { cds: { name: string; timestamp: number }[] }) {
 	const [countdowns, setCountdowns] = useState<
@@ -74,8 +75,8 @@ function Countdown({ cds }: { cds: { name: string; timestamp: number }[] }) {
 export default Countdown;
 
 export function CountdownItem({
-	name = 'Placeholder name',
-	timestamp = Date.now(),
+	name,
+	timestamp,
 }: {
 	name: string;
 	timestamp: number;
@@ -85,7 +86,7 @@ export function CountdownItem({
 
 	useEffect(() => {
 		setTs(ts);
-		console.log(ts + 'AAAAAAAAAAAAAAAAAAAA');
+		setName(cdName);
 	}, [ts]);
 
 	return (
@@ -119,62 +120,94 @@ function CountdownEditPopup({
 	const [ts, setTimestamp] = useState<number>(timestamp);
 	const [cdName, setName] = useState<string>(name);
 	const [open, setOpen] = useState(false);
+	const [shift, setShift] = useState<boolean>(false);
+
+	useEffect(() => {
+		function handleKeyDown(event: KeyboardEvent) {
+			if (event.shiftKey && !open) {
+				setShift(true);
+			}
+		}
+
+		function handleKeyUp(event: KeyboardEvent) {
+			if (!event.shiftKey && !open) {
+				setShift(false);
+			}
+		}
+
+		window.addEventListener('keydown', handleKeyDown);
+		window.addEventListener('keyup', handleKeyUp);
+
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown);
+			window.removeEventListener('keyup', handleKeyUp);
+		};
+	}, []);
 
 	function onSubmit() {
+		// TODO: Check if valid on submit
 		setOpen(false);
 		setOuterTimestamp(ts);
 		setOuterName(cdName);
 	}
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger className="flex aspect-square size-auto rounded-lg border border-neutral-400 p-2 dark:border-neutral-500">
-				<TiCalendar />
-			</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px] dark:text-neutral-100">
-				<DialogHeader>
-					<DialogTitle className="text-2xl font-semibold dark:text-neutral-100">
-						Editing: {name}
-					</DialogTitle>
-				</DialogHeader>
-				<div className="flex flex-col gap-y-2 py-4">
-					<Label htmlFor="name">Name</Label>
-					<Input
-						id="name"
-						className="mb-3"
-						defaultValue={name}
-						onChange={(x) => setName(x.target.value)}
-					/>
+		<>
+			{!shift || open ? (
+				<Dialog open={open} onOpenChange={setOpen}>
+					<DialogTrigger className="flex aspect-square size-auto rounded-lg border border-neutral-400 p-2 dark:border-neutral-500">
+						<TiCalendar />
+					</DialogTrigger>
+					<DialogContent className="sm:max-w-[425px] dark:text-neutral-100">
+						<DialogHeader>
+							<DialogTitle className="text-2xl font-semibold dark:text-neutral-100">
+								Editing: {name}
+							</DialogTitle>
+						</DialogHeader>
+						<div className="flex flex-col gap-y-2 py-4">
+							<Label htmlFor="name">Name</Label>
+							<Input
+								id="name"
+								className="mb-3"
+								defaultValue={name}
+								onChange={(x) => setName(x.target.value)}
+							/>
 
-					<Label htmlFor="time">Time</Label>
-					<DateTimePicker
-						defaultValue={parseAbsolute(
-							new Date(timestamp).toISOString(),
-							Intl.DateTimeFormat().resolvedOptions().timeZone,
-						)}
-						minValue={parseAbsolute(
-							new Date().toISOString(),
-							Intl.DateTimeFormat().resolvedOptions().timeZone,
-						)}
-						granularity={'minute'}
-						onChange={(dv) => {
-							setTimestamp(
-								dv
-									.toDate(Intl.DateTimeFormat().resolvedOptions().timeZone)
-									.getTime(),
-							);
-						}}
-					/>
+							<Label htmlFor="time">Time</Label>
+							<DateTimePicker
+								defaultValue={parseAbsolute(
+									new Date(timestamp).toISOString(),
+									Intl.DateTimeFormat().resolvedOptions().timeZone,
+								)}
+								minValue={parseAbsolute(
+									new Date().toISOString(),
+									Intl.DateTimeFormat().resolvedOptions().timeZone,
+								)}
+								granularity={'minute'}
+								onChange={(dv) => {
+									setTimestamp(
+										dv
+											.toDate(Intl.DateTimeFormat().resolvedOptions().timeZone)
+											.getTime(),
+									);
+								}}
+							/>
+						</div>
+						<DialogFooter className="flex w-full flex-row gap-2">
+							<DialogClose>
+								<Button variant="ghost">Cancel</Button>
+							</DialogClose>
+							<Button type="submit" onClick={() => onSubmit()}>
+								Save
+							</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
+			) : (
+				<div className="flex aspect-square h-full w-auto rounded-lg border border-neutral-400 p-2 dark:border-neutral-500">
+					<TbTrash />
 				</div>
-				<DialogFooter className="flex w-full flex-row gap-2">
-					<DialogClose>
-						<Button variant="ghost">Cancel</Button>
-					</DialogClose>
-					<Button type="submit" onClick={() => onSubmit()}>
-						Save
-					</Button>
-				</DialogFooter>
-			</DialogContent>
-		</Dialog>
+			)}
+		</>
 	);
 }
