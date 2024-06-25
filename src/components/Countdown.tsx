@@ -271,11 +271,11 @@ function CountdownEditPopup({
 				// 		</AlertDialogFooter>
 				// 	</AlertDialogContent>
 				// </AlertDialog>
-				<Button
-					className="flex aspect-square h-full w-auto rounded-lg border border-neutral-400 bg-red-500 p-2 text-white dark:border-neutral-500"
+				<button
+					className="flex size-auto h-full w-auto rounded-lg border border-neutral-400 bg-red-500 p-2 text-white hover:bg-red-500/80 dark:border-neutral-500"
 					onClick={() => deleteCountdown()}>
 					<TbTrash />
-				</Button>
+				</button>
 			)}
 		</>
 	);
