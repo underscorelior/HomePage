@@ -207,12 +207,14 @@ export default function Settings({
 												/>
 											);
 										})}
-										<div className="flex h-full w-full justify-start pr-3">
-											<CountdownCreatePopup
-												setCountdowns={setCountdowns}
-												countdowns={countdowns}
-											/>
-										</div>
+										{countdowns.length < 3 && (
+											<div className="flex h-full w-full justify-start pr-3">
+												<CountdownCreatePopup
+													setCountdowns={setCountdowns}
+													countdowns={countdowns}
+												/>
+											</div>
+										)}
 									</ContextMenuContent>
 								</ContextMenu>
 							</TooltipTrigger>
