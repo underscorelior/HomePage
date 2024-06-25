@@ -18,10 +18,9 @@ import { Input } from '@/shadcn/components/ui/input';
 import { Label } from '@/shadcn/components/ui/label';
 import { parseAbsolute } from '@internationalized/date';
 import { useEffect, useState } from 'react';
-import { TiCalendar } from 'react-icons/ti';
 
 import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
-import { TbTrash } from 'react-icons/tb';
+import { TbCalendarCog, TbCalendarPlus, TbTrash } from 'react-icons/tb';
 
 function Countdown({ cds }: { cds: Countdown[] }) {
 	const [countdowns, setCountdowns] = useState<Countdown[]>([]);
@@ -205,7 +204,7 @@ function CountdownEditPopup({
 			{!shift || open ? (
 				<Dialog open={open} onOpenChange={setOpen}>
 					<DialogTrigger className="flex aspect-square size-auto rounded-lg border border-neutral-400 p-2 dark:border-neutral-500">
-						<TiCalendar />
+						<TbCalendarCog />
 					</DialogTrigger>
 					<DialogContent className="sm:max-w-[425px] dark:text-neutral-100">
 						<DialogHeader>
@@ -278,5 +277,74 @@ function CountdownEditPopup({
 				</button>
 			)}
 		</>
+	);
+}
+
+export function CountdownCreatePopup({
+	setCountdowns,
+	countdowns,
+}: {
+	setCountdowns: (s: Countdown[]) => void;
+	countdowns: Countdown[];
+}) {
+	const [timestamp, setTimestamp] = useState<number>(Date.now());
+	const [name, setName] = useState<string>('');
+
+	function saveCountdown() {
+		let cds = [...countdowns, { name: name, timestamp: timestamp }];
+		localStorage.setItem('countdowns', JSON.stringify(cds));
+		setCountdowns(cds);
+	}
+
+	return (
+		<Dialog>
+			<DialogTrigger className="aspect-square h-max w-max rounded-lg border border-neutral-500 p-3 dark:border-neutral-400">
+				<TbCalendarPlus />
+			</DialogTrigger>
+			<DialogContent className="sm:max-w-[425px] dark:text-neutral-100">
+				<DialogHeader>
+					<DialogTitle className="text-2xl font-semibold dark:text-neutral-100">
+						Create Countdown
+					</DialogTitle>
+				</DialogHeader>
+				<div className="flex flex-col gap-y-2 py-4">
+					<Label htmlFor="name">Name</Label>
+					<Input
+						id="name"
+						className="mb-3"
+						defaultValue={name}
+						onChange={(x) => setName(x.target.value)}
+					/>
+
+					<Label htmlFor="time">Time</Label>
+					<DateTimePicker
+						defaultValue={parseAbsolute(
+							new Date(timestamp).toISOString(),
+							Intl.DateTimeFormat().resolvedOptions().timeZone,
+						)}
+						minValue={parseAbsolute(
+							new Date().toISOString(),
+							Intl.DateTimeFormat().resolvedOptions().timeZone,
+						)}
+						granularity={'minute'}
+						onChange={(dv) => {
+							setTimestamp(
+								dv
+									.toDate(Intl.DateTimeFormat().resolvedOptions().timeZone)
+									.getTime(),
+							);
+						}}
+					/>
+				</div>
+				<DialogFooter className="flex w-full flex-row gap-2">
+					<DialogClose>
+						<Button variant="ghost">Cancel</Button>
+					</DialogClose>
+					<Button type="submit" onClick={() => saveCountdown()}>
+						Save
+					</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
 	);
 }
