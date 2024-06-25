@@ -35,7 +35,6 @@ import { SiSpotify } from 'react-icons/si';
 import { TbTemperatureCelsius, TbTemperatureFahrenheit } from 'react-icons/tb';
 import { TiWeatherCloudy } from 'react-icons/ti';
 import { RedirContext } from '..';
-// import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
 import { CountdownItem } from './Countdown';
 
 export default function Settings({
@@ -43,11 +42,15 @@ export default function Settings({
 	setTemp,
 	setCountdown,
 	setWeather,
+	setCountdowns,
+	countdowns,
 }: {
 	setSpotify: (s: boolean) => void;
 	setTemp: (s: string) => void;
 	setCountdown: (s: boolean) => void;
 	setWeather: (s: boolean) => void;
+	setCountdowns: (s: Countdown[]) => void;
+	countdowns: Countdown[];
 }) {
 	const [toggleVal, setToggleVal] = useState<string[]>([]);
 
@@ -192,12 +195,18 @@ export default function Settings({
 										</ToggleGroupItem>
 									</ContextMenuTrigger>
 									<ContextMenuContent className="mb-1 ml-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
-										{/* <DateTimePicker granularity={'minute'} /> */}
 										<h1 className="text-2xl font-semibold">Countdowns:</h1>
-										<CountdownItem
-											name="Placeholder"
-											timestamp={1724081400000}
-										/>
+										{countdowns.map((countdown, index) => {
+											return (
+												<CountdownItem
+													key={index}
+													name={countdown.name}
+													timestamp={countdown.timestamp}
+													setCountdowns={setCountdowns}
+													countdowns={countdowns}
+												/>
+											);
+										})}
 									</ContextMenuContent>
 								</ContextMenu>
 							</TooltipTrigger>

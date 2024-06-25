@@ -133,3 +133,8 @@ interface User {
 	type: string;
 	uri: string;
 }
+
+interface Countdown {
+	name: string;
+	timestamp: number;
+}

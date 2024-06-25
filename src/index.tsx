@@ -13,9 +13,13 @@ import './index.css';
 export const RedirContext = createContext<{
 	redirNeeded: boolean | null;
 	setRedirNeeded: (s: boolean) => void;
+	countdowns: Countdown[];
+	setCountdowns: (s: Countdown[]) => void;
 }>({
 	redirNeeded: null,
 	setRedirNeeded: () => undefined,
+	countdowns: [],
+	setCountdowns: () => undefined,
 });
 export function App() {
 	const [spotify, setSpotify] = useState<boolean>(false);
@@ -23,11 +27,15 @@ export function App() {
 	const [weather, setWeather] = useState<boolean>(false);
 
 	const [temp, setTemp] = useState<string>(localStorage.getItem('temp') || 'c');
+	const [countdowns, setCountdowns] = useState<Countdown[]>(
+		JSON.parse(localStorage.getItem('countdowns') || '[]'),
+	);
 
 	const [redirNeeded, setRedirNeeded] = useState<boolean>(false);
 
 	return (
-		<RedirContext.Provider value={{ redirNeeded, setRedirNeeded }}>
+		<RedirContext.Provider
+			value={{ redirNeeded, setRedirNeeded, countdowns, setCountdowns }}>
 			<div className="flex h-screen w-screen flex-col overflow-hidden bg-neutral-50 dark:bg-neutral-950">
 				<Toaster />
 				<Clock unit={temp} weather={weather} />
@@ -38,16 +46,19 @@ export function App() {
 							setCountdown={setCountdown}
 							setTemp={setTemp}
 							setWeather={setWeather}
+							setCountdowns={setCountdowns}
+							countdowns={countdowns}
 						/>
 					</div>
 					{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
 					{countdown && (
 						<Countdown
-							cds={[
-								{ name: 'Start of School', timestamp: 1724081400000 },
-								{ name: 'College Apps', timestamp: 1732953600000 },
-								{ name: 'Graduation', timestamp: 1749133800000 },
-							]}
+							// cds={[
+							// 	{ name: 'Start of School', timestamp: 1724081400000 },
+							// 	{ name: 'College Apps', timestamp: 1732953600000 },
+							// 	{ name: 'Graduation', timestamp: 1749133800000 },
+							// ]}
+							cds={countdowns}
 						/>
 					)}
 				</div>

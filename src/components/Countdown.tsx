@@ -19,10 +19,8 @@ import { parseAbsolute } from '@internationalized/date';
 import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
 import { TbTrash } from 'react-icons/tb';
 
-function Countdown({ cds }: { cds: { name: string; timestamp: number }[] }) {
-	const [countdowns, setCountdowns] = useState<
-		{ name: string; timestamp: number; cooldown: string }[]
-	>([]);
+function Countdown({ cds }: { cds: Countdown[] }) {
+	const [countdowns, setCountdowns] = useState<Countdown[]>([]);
 
 	function calcDiff(diff: number) {
 		diff -= Date.now();
@@ -77,9 +75,13 @@ export default Countdown;
 export function CountdownItem({
 	name,
 	timestamp,
+	setCountdowns,
+	countdowns,
 }: {
 	name: string;
 	timestamp: number;
+	setCountdowns: (s: Countdown[]) => void;
+	countdowns: Countdown[];
 }) {
 	const [ts, setTs] = useState<number>(timestamp);
 	const [cdName, setName] = useState<string>(name);
@@ -89,8 +91,23 @@ export function CountdownItem({
 		setName(cdName);
 	}, [ts]);
 
+	function syncCountdowns(newName: string, newTimestamp: number) {
+		let cds = countdowns.map((cd) => {
+			if (cd.name == name) {
+				return {
+					name: newName,
+					timestamp: newTimestamp,
+				};
+			} else {
+				return cd;
+			}
+		});
+		localStorage.setItem('countdowns', JSON.stringify(cds));
+		setCountdowns(cds);
+	}
+
 	return (
-		<div className="flex flex-row items-center justify-center gap-4 rounded-lg border-[1.5px] border-neutral-500 px-3 py-2 dark:border-neutral-700">
+		<div className="flex flex-row items-center justify-between gap-4 rounded-lg border-[1.5px] border-neutral-500 px-3 py-2 dark:border-neutral-700">
 			<div className="flex flex-col">
 				<h3 className="font-medium">{cdName}</h3>
 				<p className="font-mono text-sm">{new Date(ts).toLocaleString()}</p>
@@ -100,8 +117,8 @@ export function CountdownItem({
 				timestamp={ts}
 				setOuterTimestamp={setTs}
 				setOuterName={setName}
+				syncCountdowns={syncCountdowns}
 			/>
-			{/* Add delete on pressing shift */}
 		</div>
 	);
 }
@@ -111,11 +128,13 @@ function CountdownEditPopup({
 	timestamp,
 	setOuterTimestamp,
 	setOuterName,
+	syncCountdowns,
 }: {
 	name: string;
 	timestamp: number;
 	setOuterTimestamp: (timestamp: number) => void;
 	setOuterName: (name: string) => void;
+	syncCountdowns: (name: string, timestamp: number) => void;
 }) {
 	const [ts, setTimestamp] = useState<number>(timestamp);
 	const [cdName, setName] = useState<string>(name);
@@ -146,6 +165,7 @@ function CountdownEditPopup({
 
 	function onSubmit() {
 		// TODO: Check if valid on submit
+		syncCountdowns(cdName, ts);
 		setOpen(false);
 		setOuterTimestamp(ts);
 		setOuterName(cdName);
