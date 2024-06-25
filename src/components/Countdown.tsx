@@ -4,17 +4,6 @@
 // TODO: Handle invalid dates
 // TODO: Handle shift on multiple countdowns
 
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger,
-} from '@/shadcn/components/ui/alert-dialog';
 import { Button } from '@/shadcn/components/ui/button';
 import {
 	Dialog,
@@ -121,6 +110,18 @@ export function CountdownItem({
 		setCountdowns(cds);
 	}
 
+	function deleteCountdown() {
+		let cds: Countdown[] = [];
+		countdowns.map((cd) => {
+			if (cd.name != name) {
+				cds.push(cd);
+			}
+		});
+
+		localStorage.setItem('countdowns', JSON.stringify(cds));
+		setCountdowns(cds);
+	}
+
 	return (
 		<div className="flex flex-row items-center justify-between gap-4 rounded-lg border-[1.5px] border-neutral-500 px-3 py-2 dark:border-neutral-700">
 			<div className="flex flex-col">
@@ -142,6 +143,7 @@ export function CountdownItem({
 				setOuterTimestamp={setTs}
 				setOuterName={setName}
 				syncCountdowns={syncCountdowns}
+				deleteCountdown={deleteCountdown}
 			/>
 		</div>
 	);
@@ -153,17 +155,19 @@ function CountdownEditPopup({
 	setOuterTimestamp,
 	setOuterName,
 	syncCountdowns,
+	deleteCountdown,
 }: {
 	name: string;
 	timestamp: number;
 	setOuterTimestamp: (timestamp: number) => void;
 	setOuterName: (name: string) => void;
 	syncCountdowns: (name: string, timestamp: number) => void;
+	deleteCountdown: () => void;
 }) {
 	const [ts, setTimestamp] = useState<number>(timestamp);
 	const [cdName, setName] = useState<string>(name);
 	const [open, setOpen] = useState<boolean>(false);
-	const [alertOpen, setAlertOpen] = useState<boolean>(false);
+	// const [alertOpen, setAlertOpen] = useState<boolean>(false);
 	const [shift, setShift] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -174,7 +178,7 @@ function CountdownEditPopup({
 		}
 
 		function handleKeyUp(event: KeyboardEvent) {
-			if (!event.shiftKey && !alertOpen && !open) {
+			if (event.key == 'Shift' && !open) {
 				setShift(false);
 			}
 		}
@@ -249,24 +253,29 @@ function CountdownEditPopup({
 					</DialogContent>
 				</Dialog>
 			) : (
-				<AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
-					<AlertDialogTrigger className="flex aspect-square h-full w-auto rounded-lg border border-neutral-400 bg-red-500 p-2 text-white dark:border-neutral-500">
-						<TbTrash />
-					</AlertDialogTrigger>
-					<AlertDialogContent>
-						<AlertDialogHeader>
-							<AlertDialogTitle>Do you want to delete {name}?</AlertDialogTitle>
-							<AlertDialogDescription>
-								This action cannot be undone. This will permanently delete this
-								countdown.
-							</AlertDialogDescription>
-						</AlertDialogHeader>
-						<AlertDialogFooter>
-							<AlertDialogCancel>Cancel</AlertDialogCancel>
-							<AlertDialogAction>Continue</AlertDialogAction>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialog>
+				// <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
+				// 	<AlertDialogTrigger className="flex aspect-square h-full w-auto rounded-lg border border-neutral-400 bg-red-500 p-2 text-white dark:border-neutral-500">
+				// 		<TbTrash />
+				// 	</AlertDialogTrigger>
+				// 	<AlertDialogContent>
+				// 		<AlertDialogHeader>
+				// 			<AlertDialogTitle>Do you want to delete {name}?</AlertDialogTitle>
+				// 			<AlertDialogDescription>
+				// 				This action cannot be undone. This will permanently delete this
+				// 				countdown.
+				// 			</AlertDialogDescription>
+				// 		</AlertDialogHeader>
+				// 		<AlertDialogFooter>
+				// 			<AlertDialogCancel>Cancel</AlertDialogCancel>
+				// 			<AlertDialogAction>Continue</AlertDialogAction>
+				// 		</AlertDialogFooter>
+				// 	</AlertDialogContent>
+				// </AlertDialog>
+				<Button
+					className="flex aspect-square h-full w-auto rounded-lg border border-neutral-400 bg-red-500 p-2 text-white dark:border-neutral-500"
+					onClick={() => deleteCountdown()}>
+					<TbTrash />
+				</Button>
 			)}
 		</>
 	);
