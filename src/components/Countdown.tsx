@@ -1,8 +1,9 @@
-// TODO: Deleting, adding
 // TODO: Handle zero cds
 // TODO: Load from JSON
 // TODO: Handle invalid dates
 // TODO: Handle shift on multiple countdowns
+// TODO: Highlight active date on calendar
+// TODO: Sorting
 
 import { Button } from '@/shadcn/components/ui/button';
 import {
@@ -27,6 +28,10 @@ function Countdown({ cds }: { cds: Countdown[] }) {
 
 	function calcDiff(diff: number) {
 		diff -= Date.now();
+
+		if (diff <= 0) {
+			return 'Countdown reached! 🎉';
+		}
 
 		let days = Math.floor(diff / (1000 * 60 * 60 * 24)).toString();
 		let hours = Math.floor(
@@ -192,9 +197,8 @@ function CountdownEditPopup({
 	}, []);
 
 	function onSubmit() {
-		// TODO: Check if valid on submit
-		syncCountdowns(cdName, ts);
 		setOpen(false);
+		syncCountdowns(cdName, ts);
 		setOuterTimestamp(ts);
 		setOuterName(cdName);
 	}
@@ -289,15 +293,17 @@ export function CountdownCreatePopup({
 }) {
 	const [timestamp, setTimestamp] = useState<number>(Date.now());
 	const [name, setName] = useState<string>('');
+	const [open, setOpen] = useState<boolean>(false);
 
 	function saveCountdown() {
+		setOpen(false);
 		let cds = [...countdowns, { name: name, timestamp: timestamp }];
 		localStorage.setItem('countdowns', JSON.stringify(cds));
 		setCountdowns(cds);
 	}
 
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger className="aspect-square h-max w-max rounded-lg border-[1.5px] border-neutral-500 p-3 dark:border-neutral-600">
 				<TbCalendarPlus />
 			</DialogTrigger>

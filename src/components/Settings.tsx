@@ -194,8 +194,8 @@ export default function Settings({
 											<FiCalendar className="size-7" />
 										</ToggleGroupItem>
 									</ContextMenuTrigger>
-									<ContextMenuContent className="m-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
-										<h1 className="text-2xl font-semibold">Countdowns:</h1>
+									<ContextMenuContent className="m-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 pt-3 dark:bg-neutral-950">
+										<h1 className="text-xl font-semibold">Countdowns:</h1>
 										{countdowns.map((countdown, index) => {
 											return (
 												<CountdownItem
