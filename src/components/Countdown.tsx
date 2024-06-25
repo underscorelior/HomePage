@@ -298,7 +298,7 @@ export function CountdownCreatePopup({
 
 	return (
 		<Dialog>
-			<DialogTrigger className="aspect-square h-max w-max rounded-lg border border-neutral-500 p-3 dark:border-neutral-400">
+			<DialogTrigger className="aspect-square h-max w-max rounded-lg border-[1.5px] border-neutral-500 p-3 dark:border-neutral-600">
 				<TbCalendarPlus />
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px] dark:text-neutral-100">

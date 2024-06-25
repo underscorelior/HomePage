@@ -138,7 +138,7 @@ export default function Settings({
 				</PopoverTrigger>
 				<PopoverContent
 					onOpenAutoFocus={(e) => e.preventDefault()}
-					className="mb-1 ml-2 flex h-full w-full flex-col gap-y-4 rounded-lg border-[2px] border-neutral-800 bg-neutral-50 p-4 dark:bg-neutral-950">
+					className="mb-1 ml-2 flex h-full w-full flex-col gap-y-4 rounded-lg border-2 border-neutral-800 bg-neutral-50 p-4 dark:bg-neutral-950">
 					<ToggleGroup
 						type="multiple"
 						className="space-x-2"
@@ -154,7 +154,7 @@ export default function Settings({
 											<SiSpotify className="size-7" />
 										</ToggleGroupItem>
 									</ContextMenuTrigger>
-									<ContextMenuContent className="mb-1 ml-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
+									<ContextMenuContent className="m-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
 										<div className="flex flex-row items-center gap-x-3">
 											<SiSpotify className="size-10 text-green-500" />
 											<Input
@@ -194,7 +194,7 @@ export default function Settings({
 											<FiCalendar className="size-7" />
 										</ToggleGroupItem>
 									</ContextMenuTrigger>
-									<ContextMenuContent className="mb-1 ml-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
+									<ContextMenuContent className="m-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
 										<h1 className="text-2xl font-semibold">Countdowns:</h1>
 										{countdowns.map((countdown, index) => {
 											return (
@@ -234,7 +234,7 @@ export default function Settings({
 											<TiWeatherCloudy className="size-7" />
 										</ToggleGroupItem>
 									</ContextMenuTrigger>
-									<ContextMenuContent className="mb-1 ml-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
+									<ContextMenuContent className="m-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
 										<ToggleGroup
 											type="single"
 											className="space-x-[0.375rem]"

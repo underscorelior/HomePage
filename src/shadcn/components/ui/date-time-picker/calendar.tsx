@@ -49,7 +49,7 @@ function Calendar(props: CalendarProps<DateValue>) {
 
 	return (
 		<div {...calendarProps} className="space-y-4">
-			<div className="relative flex items-center justify-center pt-1">
+			<div className="relative flex items-center justify-center pt-1 dark:text-neutral-200">
 				<Button
 					{...prevButtonProps}
 					ref={prevButtonRef}
@@ -94,7 +94,7 @@ function CalendarGrid({ state, ...props }: CalendarGridProps) {
 				<tr className="flex">
 					{weekDays.map((day, index) => (
 						<th
-							className="text-muted-foreground w-9 rounded-md text-[0.8rem] font-normal"
+							className="text-muted-foreground w-9 rounded-md text-[0.8rem] font-normal dark:text-neutral-100"
 							key={index}>
 							{day}
 						</th>
@@ -146,7 +146,7 @@ function CalendarCell({ state, date }: CalendarCellProps) {
 			{...cellProps}
 			className={cn(
 				cellProps.className,
-				'[&:has([aria-selected])]:bg-accent relative p-0 text-center text-sm focus-within:relative focus-within:z-20 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md',
+				'[&:has([aria-selected])]:bg-accent relative p-0 text-center text-sm focus-within:relative focus-within:z-20 dark:text-neutral-100 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md',
 			)}>
 			<Button
 				{...buttonProps}
