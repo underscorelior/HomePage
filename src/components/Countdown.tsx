@@ -1,5 +1,20 @@
-// TODO: Custom times and dates using settings.
+// TODO: Deleting, adding
+// TODO: Handle zero cds
+// TODO: Load from JSON
+// TODO: Handle invalid dates
+// TODO: Handle shift on multiple countdowns
 
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from '@/shadcn/components/ui/alert-dialog';
 import { Button } from '@/shadcn/components/ui/button';
 import {
 	Dialog,
@@ -12,9 +27,9 @@ import {
 } from '@/shadcn/components/ui/dialog';
 import { Input } from '@/shadcn/components/ui/input';
 import { Label } from '@/shadcn/components/ui/label';
+import { parseAbsolute } from '@internationalized/date';
 import { useEffect, useState } from 'react';
 import { TiCalendar } from 'react-icons/ti';
-import { parseAbsolute } from '@internationalized/date';
 
 import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
 import { TbTrash } from 'react-icons/tb';
@@ -110,7 +125,16 @@ export function CountdownItem({
 		<div className="flex flex-row items-center justify-between gap-4 rounded-lg border-[1.5px] border-neutral-500 px-3 py-2 dark:border-neutral-700">
 			<div className="flex flex-col">
 				<h3 className="font-medium">{cdName}</h3>
-				<p className="font-mono text-sm">{new Date(ts).toLocaleString()}</p>
+				<p className="font-mono text-sm">
+					{new Date(ts).toLocaleString([], {
+						year: 'numeric',
+						month: '2-digit',
+						day: '2-digit',
+						hour12: true,
+						hour: '2-digit',
+						minute: '2-digit',
+					})}
+				</p>
 			</div>
 			<CountdownEditPopup
 				name={cdName}
@@ -138,7 +162,8 @@ function CountdownEditPopup({
 }) {
 	const [ts, setTimestamp] = useState<number>(timestamp);
 	const [cdName, setName] = useState<string>(name);
-	const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState<boolean>(false);
+	const [alertOpen, setAlertOpen] = useState<boolean>(false);
 	const [shift, setShift] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -149,7 +174,7 @@ function CountdownEditPopup({
 		}
 
 		function handleKeyUp(event: KeyboardEvent) {
-			if (!event.shiftKey && !open) {
+			if (!event.shiftKey && !alertOpen && !open) {
 				setShift(false);
 			}
 		}
@@ -224,9 +249,24 @@ function CountdownEditPopup({
 					</DialogContent>
 				</Dialog>
 			) : (
-				<div className="flex aspect-square h-full w-auto rounded-lg border border-neutral-400 p-2 dark:border-neutral-500">
-					<TbTrash />
-				</div>
+				<AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
+					<AlertDialogTrigger className="flex aspect-square h-full w-auto rounded-lg border border-neutral-400 bg-red-500 p-2 text-white dark:border-neutral-500">
+						<TbTrash />
+					</AlertDialogTrigger>
+					<AlertDialogContent>
+						<AlertDialogHeader>
+							<AlertDialogTitle>Do you want to delete {name}?</AlertDialogTitle>
+							<AlertDialogDescription>
+								This action cannot be undone. This will permanently delete this
+								countdown.
+							</AlertDialogDescription>
+						</AlertDialogHeader>
+						<AlertDialogFooter>
+							<AlertDialogCancel>Cancel</AlertDialogCancel>
+							<AlertDialogAction>Continue</AlertDialogAction>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialog>
 			)}
 		</>
 	);
