@@ -20,7 +20,7 @@ import { parseAbsolute } from '@internationalized/date';
 import { useEffect, useState } from 'react';
 
 import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
-import { TbCalendarCog, TbCalendarPlus, TbTrash } from 'react-icons/tb';
+import { TbCalendarCog, TbCalendarPlus, TbTrash, TbX } from 'react-icons/tb';
 
 import { BiExport, BiImport } from 'react-icons/bi';
 import { Checkbox } from '@/shadcn/components/ui/checkbox';
@@ -391,9 +391,11 @@ export function CountdownIO({
 	const [timestamp, setTimestamp] = useState<number>(Date.now());
 	const [name, setName] = useState<string>('');
 	const [importOpen, setImportOpen] = useState<boolean>(false);
+
 	const [exportOpen, setExportOpen] = useState<boolean>(false);
 	const [exportList, setExportList] = useState<Countdown[]>(countdowns);
-	const [exptJSON, setExptJSON] = useState(JSON.stringify(exportList));
+	const [exptJSON, setExptJSON] = useState<string>(JSON.stringify(exportList));
+	const [copy, setCopy] = useState<Boolean>(false);
 
 	function saveCountdown() {
 		// setOpen(false);
@@ -455,27 +457,44 @@ export function CountdownIO({
 					<BiExport />
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px] dark:text-neutral-100">
-					<DialogHeader>
+					<DialogHeader className="flex flex-row items-center justify-between">
 						<DialogTitle className="text-2xl font-semibold dark:text-neutral-100">
 							Export Countdowns to JSON
 						</DialogTitle>
+						<TbX className="" />
 					</DialogHeader>
-					<div className="flex flex-col gap-y-2 py-4">
-						{countdowns.map((cd) => {
-							return (
-								<span>
-									<Checkbox
-										id={cd.name}
-										defaultChecked
-										onCheckedChange={(c) => {
-											modifyFromName(cd.name, c);
-										}}
-									/>
-									<Label htmlFor={cd.name}>{cd.name}</Label>
-								</span>
-							);
-						})}
-						<Textarea value={exptJSON} readOnly />
+					<div className="flex flex-col gap-y-3 py-4">
+						<div className="flex flex-col gap-2">
+							{countdowns.map((cd) => {
+								return (
+									<span className="flex flex-row items-center gap-2">
+										<Checkbox
+											id={cd.name}
+											defaultChecked
+											onCheckedChange={(c) => {
+												modifyFromName(cd.name, c);
+											}}
+										/>
+										<Label htmlFor={cd.name} className="text-lg font-medium">
+											{cd.name}
+										</Label>
+									</span>
+								);
+							})}
+						</div>
+						<div className="flex flex-col gap-2">
+							<h3 className="pb-1 text-xl font-semibold">Output</h3>
+							<Textarea value={exptJSON} readOnly />
+							<Button
+								onClick={async () => {
+									navigator.clipboard.writeText(exptJSON);
+									setCopy(true);
+									await new Promise((r) => setTimeout(r, 2000));
+									setCopy(false);
+								}}>
+								{copy ? 'Copied!' : 'Copy to Clipboard'}
+							</Button>
+						</div>
 					</div>
 					<DialogFooter className="flex w-full flex-row gap-2">
 						<DialogClose>
