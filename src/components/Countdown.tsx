@@ -5,6 +5,7 @@
 // TODO: Cannot edit b/c it counts the things equal
 
 import { Button } from '@/shadcn/components/ui/button';
+import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
 import {
 	Dialog,
 	DialogClose,
@@ -14,17 +15,21 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/shadcn/components/ui/dialog';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from '@/shadcn/components/ui/tooltip';
 import { Input } from '@/shadcn/components/ui/input';
 import { Label } from '@/shadcn/components/ui/label';
 import { parseAbsolute } from '@internationalized/date';
 import { useEffect, useState } from 'react';
-
-import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
 import { TbCalendarCog, TbCalendarPlus, TbTrash, TbX } from 'react-icons/tb';
 
-import { BiExport, BiImport } from 'react-icons/bi';
 import { Checkbox } from '@/shadcn/components/ui/checkbox';
 import { Textarea } from '@/shadcn/components/ui/textarea';
+import { BiExport, BiImport } from 'react-icons/bi';
 
 function Countdown({ cds }: { cds: Countdown[] }) {
 	const [countdowns, setCountdowns] = useState<Countdown[]>([]);
@@ -485,15 +490,25 @@ export function CountdownIO({
 						<div className="flex flex-col gap-2">
 							<h3 className="pb-1 text-xl font-semibold">Output</h3>
 							<Textarea value={exptJSON} readOnly />
-							<Button
-								onClick={async () => {
-									navigator.clipboard.writeText(exptJSON);
-									setCopy(true);
-									await new Promise((r) => setTimeout(r, 2000));
-									setCopy(false);
-								}}>
-								{copy ? 'Copied!' : 'Copy to Clipboard'}
-							</Button>
+
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger>
+										<Button
+											onClick={async () => {
+												navigator.clipboard.writeText(exptJSON);
+												setCopy(true);
+												await new Promise((r) => setTimeout(r, 2000));
+												setCopy(false);
+											}}>
+											{copy ? 'Copied!' : 'Copy to Clipboard'}
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>Click to Copy</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						</div>
 					</div>
 					<DialogFooter className="flex w-full flex-row gap-2">
