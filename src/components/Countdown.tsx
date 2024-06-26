@@ -404,32 +404,6 @@ export function CountdownIO({
 		setName('');
 	}
 
-	function addFromName(name: string) {
-		let cds = exportList;
-		countdowns.map((cd) => {
-			if (cd.name === name) {
-				cds.push(cd);
-			}
-		});
-		cds.sort((a, b) => a.timestamp - b.timestamp);
-
-		setExportList(cds);
-		setExptJSON(JSON.stringify(cds));
-	}
-
-	function removeFromName(name: string) {
-		let cds: Countdown[] = [];
-		exportList.map((cd) => {
-			if (cd.name !== name) {
-				cds.push(cd);
-			}
-		});
-		cds.sort((a, b) => a.timestamp - b.timestamp);
-
-		setExportList(cds);
-		setExptJSON(JSON.stringify(cds));
-	}
-
 	return (
 		<div className="flex flex-row gap-1">
 			<Dialog open={importOpen} onOpenChange={setImportOpen}>
@@ -471,11 +445,26 @@ export function CountdownIO({
 										id={cd.name}
 										defaultChecked
 										onCheckedChange={(c) => {
+											let cds: Countdown[] = [];
+
 											if (c) {
-												addFromName(cd.name);
+												cds = exportList;
+												countdowns.map((cd) => {
+													if (cd.name === name) {
+														cds.push(cd);
+													}
+												});
 											} else {
-												removeFromName(cd.name);
+												exportList.map((cd) => {
+													if (cd.name !== name) {
+														cds.push(cd);
+													}
+												});
 											}
+
+											cds.sort((a, b) => a.timestamp - b.timestamp);
+											setExportList(cds);
+											setExptJSON(JSON.stringify(cds));
 										}}
 									/>
 									<Label htmlFor={cd.name}>{cd.name}</Label>
