@@ -2,6 +2,7 @@
 // TODO: Prevent tooltip from appearing when hovering over popover.
 // TODO: Make functions simpler
 // TODO: Fix broken weather switching
+// TODO: Try fixing the tooltip by putting it inside of the context menu trigger
 
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -154,7 +155,7 @@ export default function Settings({
 											<SiSpotify className="size-7" />
 										</ToggleGroupItem>
 									</ContextMenuTrigger>
-									<ContextMenuContent className="m-2 flex w-full flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
+									<ContextMenuContent className="m-2 flex w-full flex-col gap-y-4 rounded-lg border-[2px] border-neutral-700 bg-neutral-50 p-4 dark:bg-neutral-950">
 										<div className="flex flex-row items-center gap-x-3">
 											<SiSpotify className="size-10 text-green-500" />
 											<Input
@@ -194,7 +195,7 @@ export default function Settings({
 											<FiCalendar className="size-7" />
 										</ToggleGroupItem>
 									</ContextMenuTrigger>
-									<ContextMenuContent className="m-2 flex w-full min-w-[15dvw] flex-col gap-y-4 rounded-lg border-[3px] border-neutral-700 bg-neutral-50 p-4 pt-3 dark:bg-neutral-950">
+									<ContextMenuContent className="m-2 flex w-full min-w-[15dvw] flex-col gap-y-4 rounded-lg border-[2px] border-neutral-700 bg-neutral-50 p-4 pt-3 dark:bg-neutral-950">
 										<h1 className="text-xl font-semibold">Countdowns:</h1>
 										{countdowns.map((countdown, index) => {
 											return (

@@ -2,6 +2,7 @@
 // TODO: Handle shift on multiple countdowns
 // TODO: Highlight active date on calendar -- NOT SURE IF POSSIBLE
 // TODO: Sorting
+// TODO: Cannot edit b/c it counts the things equal
 
 import { Button } from '@/shadcn/components/ui/button';
 import {
@@ -22,6 +23,7 @@ import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-tim
 import { TbCalendarCog, TbCalendarPlus, TbTrash } from 'react-icons/tb';
 
 import { BiExport, BiImport } from 'react-icons/bi';
+import { Checkbox } from '@/shadcn/components/ui/checkbox';
 
 function Countdown({ cds }: { cds: Countdown[] }) {
 	const [countdowns, setCountdowns] = useState<Countdown[]>([]);
@@ -418,52 +420,15 @@ export function CountdownIO({
 				<DialogContent className="sm:max-w-[425px] dark:text-neutral-100">
 					<DialogHeader>
 						<DialogTitle className="text-2xl font-semibold dark:text-neutral-100">
-							Create Countdown
+							Import Countdowns from JSON
 						</DialogTitle>
 					</DialogHeader>
-					<div className="flex flex-col gap-y-2 py-4">
-						<Label htmlFor="name">Name</Label>
-						<Input
-							id="name"
-							className="mb-3"
-							defaultValue={name}
-							onChange={(x) => {
-								setName(x.target.value);
-							}}
-						/>
-
-						<Label htmlFor="time">Time</Label>
-						<DateTimePicker
-							defaultValue={parseAbsolute(
-								new Date(timestamp).toISOString(),
-								Intl.DateTimeFormat().resolvedOptions().timeZone,
-							)}
-							minValue={parseAbsolute(
-								new Date().toISOString(),
-								Intl.DateTimeFormat().resolvedOptions().timeZone,
-							)}
-							granularity={'minute'}
-							onChange={(dv) => {
-								setTimestamp(
-									dv
-										.toDate(Intl.DateTimeFormat().resolvedOptions().timeZone)
-										.getTime(),
-								);
-							}}
-						/>
-					</div>
+					<div className="flex flex-col gap-y-2 py-4"></div>
 					<DialogFooter className="flex w-full flex-row gap-2">
 						<DialogClose>
 							<Button variant="ghost">Cancel</Button>
 						</DialogClose>
-						<Button
-							type="submit"
-							onClick={() => saveCountdown()}
-							disabled={
-								Date.now() >= timestamp ||
-								nameExists() ||
-								name.trim().length == 0
-							}>
+						<Button type="submit" onClick={() => saveCountdown()}>
 							Save
 						</Button>
 					</DialogFooter>
@@ -476,52 +441,24 @@ export function CountdownIO({
 				<DialogContent className="sm:max-w-[425px] dark:text-neutral-100">
 					<DialogHeader>
 						<DialogTitle className="text-2xl font-semibold dark:text-neutral-100">
-							Create Countdown
+							Export Countdowns to JSON
 						</DialogTitle>
 					</DialogHeader>
 					<div className="flex flex-col gap-y-2 py-4">
-						<Label htmlFor="name">Name</Label>
-						<Input
-							id="name"
-							className="mb-3"
-							defaultValue={name}
-							onChange={(x) => {
-								setName(x.target.value);
-							}}
-						/>
-
-						<Label htmlFor="time">Time</Label>
-						<DateTimePicker
-							defaultValue={parseAbsolute(
-								new Date(timestamp).toISOString(),
-								Intl.DateTimeFormat().resolvedOptions().timeZone,
-							)}
-							minValue={parseAbsolute(
-								new Date().toISOString(),
-								Intl.DateTimeFormat().resolvedOptions().timeZone,
-							)}
-							granularity={'minute'}
-							onChange={(dv) => {
-								setTimestamp(
-									dv
-										.toDate(Intl.DateTimeFormat().resolvedOptions().timeZone)
-										.getTime(),
-								);
-							}}
-						/>
+						{countdowns.map((cd) => {
+							return (
+								<span>
+									<Checkbox id={cd.name} />
+									<Label htmlFor={cd.name}>{cd.name}</Label>
+								</span>
+							);
+						})}
 					</div>
 					<DialogFooter className="flex w-full flex-row gap-2">
 						<DialogClose>
 							<Button variant="ghost">Cancel</Button>
 						</DialogClose>
-						<Button
-							type="submit"
-							onClick={() => saveCountdown()}
-							disabled={
-								Date.now() >= timestamp ||
-								nameExists() ||
-								name.trim().length == 0
-							}>
+						<Button type="submit" onClick={() => saveCountdown()}>
 							Save
 						</Button>
 					</DialogFooter>
