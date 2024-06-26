@@ -30,7 +30,7 @@ function Countdown({ cds }: { cds: Countdown[] }) {
 		diff -= Date.now();
 
 		if (diff <= 0) {
-			return 'Countdown reached! 🎉';
+			return 'Completed! 🎉';
 		}
 
 		let days = Math.floor(diff / (1000 * 60 * 60 * 24)).toString();
@@ -69,7 +69,7 @@ function Countdown({ cds }: { cds: Countdown[] }) {
 					className="flex flex-col text-zinc-800 dark:text-zinc-300"
 					key={i}>
 					{cd.name}:
-					<span className="text-end font-mono text-lg font-semibold">
+					<span className="font-mono text-lg font-semibold">
 						{calcDiff(cd.timestamp)}
 					</span>
 				</span>
@@ -110,6 +110,7 @@ export function CountdownItem({
 				return cd;
 			}
 		});
+		cds.sort((a, b) => a.timestamp - b.timestamp);
 		localStorage.setItem('countdowns', JSON.stringify(cds));
 		setCountdowns(cds);
 	}
@@ -171,7 +172,6 @@ function CountdownEditPopup({
 	const [ts, setTimestamp] = useState<number>(timestamp);
 	const [cdName, setName] = useState<string>(name);
 	const [open, setOpen] = useState<boolean>(false);
-	// const [alertOpen, setAlertOpen] = useState<boolean>(false);
 	const [shift, setShift] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -256,24 +256,6 @@ function CountdownEditPopup({
 					</DialogContent>
 				</Dialog>
 			) : (
-				// <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
-				// 	<AlertDialogTrigger className="flex aspect-square h-full w-auto rounded-lg border border-neutral-400 bg-red-500 p-2 text-white dark:border-neutral-500">
-				// 		<TbTrash />
-				// 	</AlertDialogTrigger>
-				// 	<AlertDialogContent>
-				// 		<AlertDialogHeader>
-				// 			<AlertDialogTitle>Do you want to delete {name}?</AlertDialogTitle>
-				// 			<AlertDialogDescription>
-				// 				This action cannot be undone. This will permanently delete this
-				// 				countdown.
-				// 			</AlertDialogDescription>
-				// 		</AlertDialogHeader>
-				// 		<AlertDialogFooter>
-				// 			<AlertDialogCancel>Cancel</AlertDialogCancel>
-				// 			<AlertDialogAction>Continue</AlertDialogAction>
-				// 		</AlertDialogFooter>
-				// 	</AlertDialogContent>
-				// </AlertDialog>
 				<button
 					className="flex size-auto h-full w-auto rounded-lg border border-neutral-400 bg-red-500 p-2 text-white hover:bg-red-500/80 dark:border-neutral-500"
 					onClick={() => deleteCountdown()}>
