@@ -1,8 +1,6 @@
-// TODO: Handle zero cds
 // TODO: Load from JSON
-// TODO: Handle invalid dates
 // TODO: Handle shift on multiple countdowns
-// TODO: Highlight active date on calendar
+// TODO: Highlight active date on calendar -- NOT SURE IF POSSIBLE
 // TODO: Sorting
 
 import { Button } from '@/shadcn/components/ui/button';
@@ -149,6 +147,7 @@ export function CountdownItem({
 			<CountdownEditPopup
 				name={cdName}
 				timestamp={ts}
+				countdowns={countdowns}
 				setOuterTimestamp={setTs}
 				setOuterName={setName}
 				syncCountdowns={syncCountdowns}
@@ -161,6 +160,7 @@ export function CountdownItem({
 function CountdownEditPopup({
 	name,
 	timestamp,
+	countdowns,
 	setOuterTimestamp,
 	setOuterName,
 	syncCountdowns,
@@ -168,6 +168,7 @@ function CountdownEditPopup({
 }: {
 	name: string;
 	timestamp: number;
+	countdowns: Countdown[];
 	setOuterTimestamp: (timestamp: number) => void;
 	setOuterName: (name: string) => void;
 	syncCountdowns: (name: string, timestamp: number) => void;
@@ -205,6 +206,16 @@ function CountdownEditPopup({
 		syncCountdowns(cdName, ts);
 		setOuterTimestamp(ts);
 		setOuterName(cdName);
+	}
+
+	function nameExists(): boolean {
+		let ret = false;
+		countdowns.map((cd) => {
+			if (cd.name === cdName) {
+				ret = true;
+			}
+		});
+		return ret;
 	}
 
 	return (
@@ -253,7 +264,12 @@ function CountdownEditPopup({
 							<DialogClose>
 								<Button variant="ghost">Cancel</Button>
 							</DialogClose>
-							<Button type="submit" onClick={() => onSubmit()}>
+							<Button
+								type="submit"
+								onClick={() => onSubmit()}
+								disabled={
+									Date.now() >= ts || nameExists() || cdName.trim().length == 0
+								}>
 								Save
 							</Button>
 						</DialogFooter>
@@ -286,6 +302,18 @@ export function CountdownCreatePopup({
 		let cds = [...countdowns, { name: name, timestamp: timestamp }];
 		localStorage.setItem('countdowns', JSON.stringify(cds));
 		setCountdowns(cds);
+		setTimestamp(Date.now());
+		setName('');
+	}
+
+	function nameExists(): boolean {
+		let ret = false;
+		countdowns.map((cd) => {
+			if (cd.name === name) {
+				ret = true;
+			}
+		});
+		return ret;
 	}
 
 	return (
@@ -305,7 +333,9 @@ export function CountdownCreatePopup({
 						id="name"
 						className="mb-3"
 						defaultValue={name}
-						onChange={(x) => setName(x.target.value)}
+						onChange={(x) => {
+							setName(x.target.value);
+						}}
 					/>
 
 					<Label htmlFor="time">Time</Label>
@@ -332,7 +362,12 @@ export function CountdownCreatePopup({
 					<DialogClose>
 						<Button variant="ghost">Cancel</Button>
 					</DialogClose>
-					<Button type="submit" onClick={() => saveCountdown()}>
+					<Button
+						type="submit"
+						onClick={() => saveCountdown()}
+						disabled={
+							Date.now() >= timestamp || nameExists() || name.trim().length == 0
+						}>
 						Save
 					</Button>
 				</DialogFooter>
