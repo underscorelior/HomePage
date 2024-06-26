@@ -15,17 +15,23 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/shadcn/components/ui/dialog';
+import { Input } from '@/shadcn/components/ui/input';
+import { Label } from '@/shadcn/components/ui/label';
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from '@/shadcn/components/ui/tooltip';
-import { Input } from '@/shadcn/components/ui/input';
-import { Label } from '@/shadcn/components/ui/label';
 import { parseAbsolute } from '@internationalized/date';
 import { useEffect, useState } from 'react';
-import { TbCalendarCog, TbCalendarPlus, TbTrash, TbX } from 'react-icons/tb';
+import {
+	TbCalendarCog,
+	TbCalendarPlus,
+	TbCheck,
+	TbClipboard,
+	TbTrash,
+} from 'react-icons/tb';
 
 import { Checkbox } from '@/shadcn/components/ui/checkbox';
 import { Textarea } from '@/shadcn/components/ui/textarea';
@@ -466,7 +472,6 @@ export function CountdownIO({
 						<DialogTitle className="text-2xl font-semibold dark:text-neutral-100">
 							Export Countdowns to JSON
 						</DialogTitle>
-						<TbX className="" />
 					</DialogHeader>
 					<div className="flex flex-col gap-y-3 py-4">
 						<div className="flex flex-col gap-2">
@@ -487,37 +492,37 @@ export function CountdownIO({
 								);
 							})}
 						</div>
-						<div className="flex flex-col gap-2">
+						<div className="flex flex-col gap-1">
 							<h3 className="pb-1 text-xl font-semibold">Output</h3>
 							<Textarea value={exptJSON} readOnly />
-
-							<TooltipProvider>
-								<Tooltip>
-									<TooltipTrigger>
-										<Button
-											onClick={async () => {
-												navigator.clipboard.writeText(exptJSON);
-												setCopy(true);
-												await new Promise((r) => setTimeout(r, 2000));
-												setCopy(false);
-											}}>
-											{copy ? 'Copied!' : 'Copy to Clipboard'}
-										</Button>
-									</TooltipTrigger>
-									<TooltipContent>
-										<p>Click to Copy</p>
-									</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
 						</div>
 					</div>
 					<DialogFooter className="flex w-full flex-row gap-2">
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger
+									className="flex aspect-square size-auto items-center justify-center rounded-lg border-[1.5px] border-neutral-500 p-2 dark:border-neutral-600"
+									onClick={async () => {
+										navigator.clipboard.writeText(exptJSON);
+										setCopy(true);
+										await new Promise((r) => setTimeout(r, 2000));
+										setCopy(false);
+									}}>
+									{copy ? (
+										<TbCheck className="size-[125%]" />
+									) : (
+										<TbClipboard className="size-[125%]" />
+									)}
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>Click to Copy</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
+
 						<DialogClose>
-							<Button variant="ghost">Cancel</Button>
+							<Button>Close</Button>
 						</DialogClose>
-						<Button type="submit" onClick={() => saveCountdown()}>
-							Save
-						</Button>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
