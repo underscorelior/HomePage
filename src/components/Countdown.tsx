@@ -24,6 +24,7 @@ import { TbCalendarCog, TbCalendarPlus, TbTrash } from 'react-icons/tb';
 
 import { BiExport, BiImport } from 'react-icons/bi';
 import { Checkbox } from '@/shadcn/components/ui/checkbox';
+import { Textarea } from '@/shadcn/components/ui/textarea';
 
 function Countdown({ cds }: { cds: Countdown[] }) {
 	const [countdowns, setCountdowns] = useState<Countdown[]>([]);
@@ -391,6 +392,8 @@ export function CountdownIO({
 	const [name, setName] = useState<string>('');
 	const [importOpen, setImportOpen] = useState<boolean>(false);
 	const [exportOpen, setExportOpen] = useState<boolean>(false);
+	const [exportList, setExportList] = useState<Countdown[]>(countdowns);
+	const [exptJSON, setExptJSON] = useState(JSON.stringify(exportList));
 
 	function saveCountdown() {
 		// setOpen(false);
@@ -401,14 +404,30 @@ export function CountdownIO({
 		setName('');
 	}
 
-	function nameExists(): boolean {
-		let ret = false;
+	function addFromName(name: string) {
+		let cds = exportList;
 		countdowns.map((cd) => {
 			if (cd.name === name) {
-				ret = true;
+				cds.push(cd);
 			}
 		});
-		return ret;
+		cds.sort((a, b) => a.timestamp - b.timestamp);
+
+		setExportList(cds);
+		setExptJSON(JSON.stringify(cds));
+	}
+
+	function removeFromName(name: string) {
+		let cds: Countdown[] = [];
+		exportList.map((cd) => {
+			if (cd.name !== name) {
+				cds.push(cd);
+			}
+		});
+		cds.sort((a, b) => a.timestamp - b.timestamp);
+
+		setExportList(cds);
+		setExptJSON(JSON.stringify(cds));
 	}
 
 	return (
@@ -448,11 +467,22 @@ export function CountdownIO({
 						{countdowns.map((cd) => {
 							return (
 								<span>
-									<Checkbox id={cd.name} />
+									<Checkbox
+										id={cd.name}
+										defaultChecked
+										onCheckedChange={(c) => {
+											if (c) {
+												addFromName(cd.name);
+											} else {
+												removeFromName(cd.name);
+											}
+										}}
+									/>
 									<Label htmlFor={cd.name}>{cd.name}</Label>
 								</span>
 							);
 						})}
+						<Textarea value={exptJSON} readOnly />
 					</div>
 					<DialogFooter className="flex w-full flex-row gap-2">
 						<DialogClose>
