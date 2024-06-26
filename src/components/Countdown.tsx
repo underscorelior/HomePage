@@ -21,6 +21,8 @@ import { useEffect, useState } from 'react';
 import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
 import { TbCalendarCog, TbCalendarPlus, TbTrash } from 'react-icons/tb';
 
+import { BiExport, BiImport } from 'react-icons/bi';
+
 function Countdown({ cds }: { cds: Countdown[] }) {
 	const [countdowns, setCountdowns] = useState<Countdown[]>([]);
 
@@ -373,5 +375,158 @@ export function CountdownCreatePopup({
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
+	);
+}
+
+export function CountdownIO({
+	setCountdowns,
+	countdowns,
+}: {
+	setCountdowns: (s: Countdown[]) => void;
+	countdowns: Countdown[];
+}) {
+	const [timestamp, setTimestamp] = useState<number>(Date.now());
+	const [name, setName] = useState<string>('');
+	const [importOpen, setImportOpen] = useState<boolean>(false);
+	const [exportOpen, setExportOpen] = useState<boolean>(false);
+
+	function saveCountdown() {
+		// setOpen(false);
+		let cds = [...countdowns, { name: name, timestamp: timestamp }];
+		localStorage.setItem('countdowns', JSON.stringify(cds));
+		setCountdowns(cds);
+		setTimestamp(Date.now());
+		setName('');
+	}
+
+	function nameExists(): boolean {
+		let ret = false;
+		countdowns.map((cd) => {
+			if (cd.name === name) {
+				ret = true;
+			}
+		});
+		return ret;
+	}
+
+	return (
+		<div className="flex flex-row gap-1">
+			<Dialog open={importOpen} onOpenChange={setImportOpen}>
+				<DialogTrigger className="aspect-square h-max w-max rounded-lg border-[1.5px] border-neutral-500 p-3 dark:border-neutral-600">
+					<BiImport />
+				</DialogTrigger>
+				<DialogContent className="sm:max-w-[425px] dark:text-neutral-100">
+					<DialogHeader>
+						<DialogTitle className="text-2xl font-semibold dark:text-neutral-100">
+							Create Countdown
+						</DialogTitle>
+					</DialogHeader>
+					<div className="flex flex-col gap-y-2 py-4">
+						<Label htmlFor="name">Name</Label>
+						<Input
+							id="name"
+							className="mb-3"
+							defaultValue={name}
+							onChange={(x) => {
+								setName(x.target.value);
+							}}
+						/>
+
+						<Label htmlFor="time">Time</Label>
+						<DateTimePicker
+							defaultValue={parseAbsolute(
+								new Date(timestamp).toISOString(),
+								Intl.DateTimeFormat().resolvedOptions().timeZone,
+							)}
+							minValue={parseAbsolute(
+								new Date().toISOString(),
+								Intl.DateTimeFormat().resolvedOptions().timeZone,
+							)}
+							granularity={'minute'}
+							onChange={(dv) => {
+								setTimestamp(
+									dv
+										.toDate(Intl.DateTimeFormat().resolvedOptions().timeZone)
+										.getTime(),
+								);
+							}}
+						/>
+					</div>
+					<DialogFooter className="flex w-full flex-row gap-2">
+						<DialogClose>
+							<Button variant="ghost">Cancel</Button>
+						</DialogClose>
+						<Button
+							type="submit"
+							onClick={() => saveCountdown()}
+							disabled={
+								Date.now() >= timestamp ||
+								nameExists() ||
+								name.trim().length == 0
+							}>
+							Save
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+			<Dialog open={exportOpen} onOpenChange={setExportOpen}>
+				<DialogTrigger className="aspect-square h-max w-max rounded-lg border-[1.5px] border-neutral-500 p-3 dark:border-neutral-600">
+					<BiExport />
+				</DialogTrigger>
+				<DialogContent className="sm:max-w-[425px] dark:text-neutral-100">
+					<DialogHeader>
+						<DialogTitle className="text-2xl font-semibold dark:text-neutral-100">
+							Create Countdown
+						</DialogTitle>
+					</DialogHeader>
+					<div className="flex flex-col gap-y-2 py-4">
+						<Label htmlFor="name">Name</Label>
+						<Input
+							id="name"
+							className="mb-3"
+							defaultValue={name}
+							onChange={(x) => {
+								setName(x.target.value);
+							}}
+						/>
+
+						<Label htmlFor="time">Time</Label>
+						<DateTimePicker
+							defaultValue={parseAbsolute(
+								new Date(timestamp).toISOString(),
+								Intl.DateTimeFormat().resolvedOptions().timeZone,
+							)}
+							minValue={parseAbsolute(
+								new Date().toISOString(),
+								Intl.DateTimeFormat().resolvedOptions().timeZone,
+							)}
+							granularity={'minute'}
+							onChange={(dv) => {
+								setTimestamp(
+									dv
+										.toDate(Intl.DateTimeFormat().resolvedOptions().timeZone)
+										.getTime(),
+								);
+							}}
+						/>
+					</div>
+					<DialogFooter className="flex w-full flex-row gap-2">
+						<DialogClose>
+							<Button variant="ghost">Cancel</Button>
+						</DialogClose>
+						<Button
+							type="submit"
+							onClick={() => saveCountdown()}
+							disabled={
+								Date.now() >= timestamp ||
+								nameExists() ||
+								name.trim().length == 0
+							}>
+							Save
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</div>
 	);
 }

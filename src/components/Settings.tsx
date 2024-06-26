@@ -35,7 +35,7 @@ import { SiSpotify } from 'react-icons/si';
 import { TbTemperatureCelsius, TbTemperatureFahrenheit } from 'react-icons/tb';
 import { TiWeatherCloudy } from 'react-icons/ti';
 import { RedirContext } from '..';
-import { CountdownCreatePopup, CountdownItem } from './Countdown';
+import { CountdownCreatePopup, CountdownIO, CountdownItem } from './Countdown';
 
 export default function Settings({
 	setSpotify,
@@ -208,7 +208,11 @@ export default function Settings({
 											);
 										})}
 										{countdowns.length < 3 && (
-											<div className="flex h-full w-full justify-start pr-3">
+											<div className="flex h-full w-full justify-start gap-1 pr-3">
+												<CountdownIO
+													setCountdowns={setCountdowns}
+													countdowns={countdowns}
+												/>
 												<CountdownCreatePopup
 													setCountdowns={setCountdowns}
 													countdowns={countdowns}
