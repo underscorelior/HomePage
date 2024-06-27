@@ -54,6 +54,7 @@ export default function Settings({
 	countdowns: Countdown[];
 }) {
 	const [toggleVal, setToggleVal] = useState<string[]>([]);
+	const [countOpen, setCountOpen] = useState<boolean>(false);
 
 	const setRedirNeeded = useContext(RedirContext).setRedirNeeded;
 
@@ -205,6 +206,8 @@ export default function Settings({
 													timestamp={countdown.timestamp}
 													setCountdowns={setCountdowns}
 													countdowns={countdowns}
+													globalOpen={countOpen}
+													setGlobalOpen={setCountOpen}
 												/>
 											);
 										})}
@@ -213,10 +216,12 @@ export default function Settings({
 												<CountdownIO
 													setCountdowns={setCountdowns}
 													countdowns={countdowns}
+													setGlobalOpen={setCountOpen}
 												/>
 												<CountdownCreatePopup
 													setCountdowns={setCountdowns}
 													countdowns={countdowns}
+													setGlobalOpen={setCountOpen}
 												/>
 											</div>
 										)}

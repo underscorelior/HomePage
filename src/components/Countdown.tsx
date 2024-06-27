@@ -102,11 +102,15 @@ export function CountdownItem({
 	timestamp,
 	setCountdowns,
 	countdowns,
+	globalOpen,
+	setGlobalOpen,
 }: {
 	name: string;
 	timestamp: number;
 	setCountdowns: (s: Countdown[]) => void;
 	countdowns: Countdown[];
+	globalOpen: boolean;
+	setGlobalOpen: (x: boolean) => void;
 }) {
 	const [ts, setTs] = useState<number>(timestamp);
 	const [cdName, setName] = useState<string>(name);
@@ -167,6 +171,8 @@ export function CountdownItem({
 				setOuterName={setName}
 				syncCountdowns={syncCountdowns}
 				deleteCountdown={deleteCountdown}
+				globalOpen={globalOpen}
+				setGlobalOpen={setGlobalOpen}
 			/>
 		</div>
 	);
@@ -180,6 +186,8 @@ function CountdownEditPopup({
 	setOuterName,
 	syncCountdowns,
 	deleteCountdown,
+	globalOpen,
+	setGlobalOpen,
 }: {
 	name: string;
 	timestamp: number;
@@ -188,6 +196,8 @@ function CountdownEditPopup({
 	setOuterName: (name: string) => void;
 	syncCountdowns: (name: string, timestamp: number) => void;
 	deleteCountdown: () => void;
+	globalOpen: boolean;
+	setGlobalOpen: (x: boolean) => void;
 }) {
 	const [ts, setTimestamp] = useState<number>(timestamp);
 	const [cdName, setName] = useState<string>(name);
@@ -196,13 +206,13 @@ function CountdownEditPopup({
 
 	useEffect(() => {
 		function handleKeyDown(event: KeyboardEvent) {
-			if (event.shiftKey && !open) {
+			if (event.shiftKey && !open && !globalOpen) {
 				setShift(true);
 			}
 		}
 
 		function handleKeyUp(event: KeyboardEvent) {
-			if (event.key == 'Shift' && !open) {
+			if (event.key == 'Shift' && !open && !globalOpen) {
 				setShift(false);
 			}
 		}
@@ -236,7 +246,12 @@ function CountdownEditPopup({
 	return (
 		<>
 			{!shift || open ? (
-				<Dialog open={open} onOpenChange={setOpen}>
+				<Dialog
+					open={open}
+					onOpenChange={(x) => {
+						setOpen(x);
+						setGlobalOpen(x);
+					}}>
 					<DialogTrigger className="flex aspect-square size-auto rounded-lg border border-neutral-400 p-2 dark:border-neutral-500">
 						<TbCalendarCog />
 					</DialogTrigger>
@@ -304,9 +319,11 @@ function CountdownEditPopup({
 export function CountdownCreatePopup({
 	setCountdowns,
 	countdowns,
+	setGlobalOpen,
 }: {
 	setCountdowns: (s: Countdown[]) => void;
 	countdowns: Countdown[];
+	setGlobalOpen: (x: boolean) => void;
 }) {
 	const [timestamp, setTimestamp] = useState<number>(Date.now());
 	const [name, setName] = useState<string>('');
@@ -332,7 +349,12 @@ export function CountdownCreatePopup({
 	}
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog
+			open={open}
+			onOpenChange={(x) => {
+				setOpen(x);
+				setGlobalOpen(x);
+			}}>
 			<DialogTrigger className="aspect-square h-max w-max rounded-lg border-[1.5px] border-neutral-500 p-3 dark:border-neutral-600">
 				<TbCalendarPlus />
 			</DialogTrigger>
@@ -394,9 +416,11 @@ export function CountdownCreatePopup({
 export function CountdownIO({
 	setCountdowns,
 	countdowns,
+	setGlobalOpen,
 }: {
 	setCountdowns: (s: Countdown[]) => void;
 	countdowns: Countdown[];
+	setGlobalOpen: (x: boolean) => void;
 }) {
 	const [importOpen, setImportOpen] = useState<boolean>(false);
 	const [inJSON, setInJSON] = useState<string>('');
@@ -441,7 +465,12 @@ export function CountdownIO({
 
 	return (
 		<div className="flex flex-row gap-1">
-			<Dialog open={importOpen} onOpenChange={setImportOpen}>
+			<Dialog
+				open={importOpen}
+				onOpenChange={(x) => {
+					setImportOpen(x);
+					setGlobalOpen(x);
+				}}>
 				<DialogTrigger className="aspect-square h-max w-max rounded-lg border-[1.5px] border-neutral-500 p-3 dark:border-neutral-600">
 					<BiImport />
 				</DialogTrigger>
@@ -484,7 +513,12 @@ export function CountdownIO({
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
-			<Dialog open={exportOpen} onOpenChange={setExportOpen}>
+			<Dialog
+				open={exportOpen}
+				onOpenChange={(x) => {
+					setExportOpen(x);
+					setGlobalOpen(x);
+				}}>
 				<DialogTrigger className="aspect-square h-max w-max rounded-lg border-[1.5px] border-neutral-500 p-3 dark:border-neutral-600">
 					<BiExport />
 				</DialogTrigger>
