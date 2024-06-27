@@ -1,4 +1,3 @@
-// TODO: Handle shift on multiple countdowns
 // TODO: Highlight active date on calendar -- NOT SURE IF POSSIBLE
 // TODO: Sorting
 
@@ -206,13 +205,13 @@ function CountdownEditPopup({
 
 	useEffect(() => {
 		function handleKeyDown(event: KeyboardEvent) {
-			if (event.shiftKey && !open && !globalOpen) {
+			if (event.shiftKey && (!open || !globalOpen)) {
 				setShift(true);
 			}
 		}
 
 		function handleKeyUp(event: KeyboardEvent) {
-			if (event.key == 'Shift' && !open && !globalOpen) {
+			if (event.key == 'Shift' && (!open || !globalOpen)) {
 				setShift(false);
 			}
 		}
@@ -245,7 +244,7 @@ function CountdownEditPopup({
 
 	return (
 		<>
-			{!shift || open ? (
+			{!shift || open || globalOpen ? (
 				<Dialog
 					open={open}
 					onOpenChange={(x) => {
