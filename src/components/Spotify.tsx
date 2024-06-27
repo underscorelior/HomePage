@@ -4,6 +4,7 @@
 // TODO: Toast errors for failing to seek, heart, etc.
 // TODO: Refactor API code.
 // TODO: Use constant code style (camelCase)
+// TODO: Fix light mode toast
 import { RedirContext } from '@/index';
 import { Button } from '@/shadcn/components/ui/button';
 import { useContext, useEffect, useState } from 'react';

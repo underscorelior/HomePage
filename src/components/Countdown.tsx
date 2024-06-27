@@ -1,4 +1,3 @@
-// TODO: Load from JSON
 // TODO: Handle shift on multiple countdowns
 // TODO: Highlight active date on calendar -- NOT SURE IF POSSIBLE
 // TODO: Sorting
@@ -36,6 +35,7 @@ import {
 import { Checkbox } from '@/shadcn/components/ui/checkbox';
 import { Textarea } from '@/shadcn/components/ui/textarea';
 import { BiExport, BiImport } from 'react-icons/bi';
+import toast from 'react-hot-toast';
 
 function Countdown({ cds }: { cds: Countdown[] }) {
 	const [countdowns, setCountdowns] = useState<Countdown[]>([]);
@@ -399,9 +399,8 @@ export function CountdownIO({
 	setCountdowns: (s: Countdown[]) => void;
 	countdowns: Countdown[];
 }) {
-	const [timestamp, setTimestamp] = useState<number>(Date.now());
-	const [name, setName] = useState<string>('');
 	const [importOpen, setImportOpen] = useState<boolean>(false);
+	const [inJSON, setInJSON] = useState<string>('');
 
 	const [exportOpen, setExportOpen] = useState<boolean>(false);
 	const [exportList, setExportList] = useState<Countdown[]>(countdowns);
@@ -409,12 +408,13 @@ export function CountdownIO({
 	const [copy, setCopy] = useState<Boolean>(false);
 
 	function saveCountdown() {
-		// setOpen(false);
-		let cds = [...countdowns, { name: name, timestamp: timestamp }];
-		localStorage.setItem('countdowns', JSON.stringify(cds));
-		setCountdowns(cds);
-		setTimestamp(Date.now());
-		setName('');
+		try {
+			setCountdowns(JSON.parse(inJSON));
+			localStorage.setItem('countdowns', inJSON);
+			setImportOpen(false);
+		} catch {
+			toast.error('The inputted JSON is invalid! Try again.');
+		}
 	}
 
 	function modifyFromName(name: string, c: boolean | string) {
@@ -452,14 +452,36 @@ export function CountdownIO({
 							Import Countdowns from JSON
 						</DialogTitle>
 					</DialogHeader>
-					<div className="flex flex-col gap-y-2 py-4"></div>
+					<div className="flex flex-col gap-y-2 py-4">
+						<Textarea
+							placeholder="Input JSON here. Format: [{name: '', timestamp: #}, ...]"
+							onChange={(e) => setInJSON(e.target.value)}
+						/>
+					</div>
 					<DialogFooter className="flex w-full flex-row gap-2">
 						<DialogClose>
 							<Button variant="ghost">Cancel</Button>
 						</DialogClose>
-						<Button type="submit" onClick={() => saveCountdown()}>
-							Save
-						</Button>
+
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger>
+									<Button
+										variant="destructive"
+										type="submit"
+										onClick={() => {
+											saveCountdown();
+										}}>
+										Save
+									</Button>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p className="max-w-[20dvh] text-center">
+										WARNING! This will override all of your current countdowns.
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
