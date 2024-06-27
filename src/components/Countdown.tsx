@@ -1,7 +1,6 @@
 // TODO: Handle shift on multiple countdowns
 // TODO: Highlight active date on calendar -- NOT SURE IF POSSIBLE
 // TODO: Sorting
-// TODO: Cannot edit b/c it counts the things equal
 
 import { Button } from '@/shadcn/components/ui/button';
 import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
@@ -227,7 +226,7 @@ function CountdownEditPopup({
 	function nameExists(): boolean {
 		let ret = false;
 		countdowns.map((cd) => {
-			if (cd.name === cdName) {
+			if (cd.name === cdName && cdName !== name) {
 				ret = true;
 			}
 		});
