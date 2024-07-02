@@ -77,7 +77,9 @@ function Countdown({ cds }: { cds: Countdown[] }) {
 	return (
 		<div className="fixed bottom-0 right-0 flex max-w-[20%] flex-col rounded-tl-lg border-l-2 border-t-2 border-neutral-600 bg-neutral-50 p-4 text-xl font-bold dark:border-neutral-800 dark:bg-neutral-950">
 			{countdowns.length == 0 ? (
-				<h3>There are no currently active countdowns.</h3>
+				<h3 className="text-zinc-800 dark:text-zinc-300">
+					There are no currently active countdowns.
+				</h3>
 			) : (
 				countdowns.map((cd, i) => (
 					<span
@@ -117,10 +119,10 @@ export function CountdownItem({
 	useEffect(() => {
 		setTs(ts);
 		setName(cdName);
-	}, [ts]);
+	}, [ts, cdName]);
 
 	function syncCountdowns(newName: string, newTimestamp: number) {
-		let cds = countdowns.map((cd) => {
+		const cds = countdowns.map((cd) => {
 			if (cd.name == name) {
 				return {
 					name: newName,
@@ -136,7 +138,7 @@ export function CountdownItem({
 	}
 
 	function deleteCountdown() {
-		let cds: Countdown[] = [];
+		const cds: Countdown[] = [];
 		countdowns.map((cd) => {
 			if (cd.name != name) {
 				cds.push(cd);
@@ -223,7 +225,7 @@ function CountdownEditPopup({
 			window.removeEventListener('keydown', handleKeyDown);
 			window.removeEventListener('keyup', handleKeyUp);
 		};
-	}, []);
+	}, [globalOpen, open]);
 
 	function onSubmit() {
 		setOpen(false);
@@ -330,7 +332,7 @@ export function CountdownCreatePopup({
 
 	function saveCountdown() {
 		setOpen(false);
-		let cds = [...countdowns, { name: name, timestamp: timestamp }];
+		const cds = [...countdowns, { name: name, timestamp: timestamp }];
 		localStorage.setItem('countdowns', JSON.stringify(cds));
 		setCountdowns(cds);
 		setTimestamp(Date.now());
@@ -427,7 +429,7 @@ export function CountdownIO({
 	const [exportOpen, setExportOpen] = useState<boolean>(false);
 	const [exportList, setExportList] = useState<Countdown[]>(countdowns);
 	const [exptJSON, setExptJSON] = useState<string>(JSON.stringify(exportList));
-	const [copy, setCopy] = useState<Boolean>(false);
+	const [copy, setCopy] = useState<boolean>(false);
 
 	function saveCountdown() {
 		try {
