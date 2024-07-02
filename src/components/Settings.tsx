@@ -35,8 +35,10 @@ import { FiCalendar, FiSettings } from 'react-icons/fi';
 import { SiSpotify } from 'react-icons/si';
 import { TbTemperatureCelsius, TbTemperatureFahrenheit } from 'react-icons/tb';
 import { TiWeatherCloudy } from 'react-icons/ti';
+import { MdSync } from 'react-icons/md';
 import { RedirContext } from '..';
 import { CountdownCreatePopup, CountdownIO, CountdownItem } from './Countdown';
+import { CreateSyncCode, LoadSyncCode } from './Sync';
 
 export default function Settings({
 	setSpotify,
@@ -294,6 +296,22 @@ export default function Settings({
 						<FaGamepad className="size-7" />
 						</ToggleGroupItem> */}
 					</ToggleGroup>
+					<div className="w-full">
+						<Popover>
+							<PopoverTrigger className="flex w-full justify-end pr-1">
+								<div className="flex aspect-square size-max rounded-lg border-2 border-neutral-500 bg-neutral-100 p-2 text-stone-700 hover:bg-neutral-100/80 hover:text-stone-700/90 dark:border-neutral-700 dark:bg-neutral-900/70 dark:text-stone-300 dark:hover:bg-neutral-900/90 dark:hover:text-stone-300/90">
+									<MdSync className="size-5" />
+								</div>
+							</PopoverTrigger>
+							<PopoverContent className="m-2 flex w-full min-w-[15dvw] flex-col gap-y-4 rounded-lg border-[2px] border-neutral-700 bg-neutral-50 p-4 pt-3 dark:bg-neutral-950 dark:text-neutral-100">
+								<h1 className="text-lg font-semibold">Sync:</h1>
+								<div className="mx-auto flex flex-row gap-2 text-sm">
+									<CreateSyncCode />
+									<LoadSyncCode />
+								</div>
+							</PopoverContent>
+						</Popover>
+					</div>
 				</PopoverContent>
 			</Popover>
 		</TooltipProvider>
