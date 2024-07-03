@@ -26,7 +26,6 @@ export function CreateSyncCode() {
 
 	useEffect(() => {
 		async function getCode() {
-			console.log('S');
 			setCode(await handleCreate());
 		}
 		getCode();

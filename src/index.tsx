@@ -26,7 +26,7 @@ export function App() {
 	const [countdown, setCountdown] = useState<boolean>(false);
 	const [weather, setWeather] = useState<boolean>(false);
 
-	const [temp, setTemp] = useState<string>(localStorage.getItem('temp') || 'c');
+	const [unit, setUnit] = useState<string>(localStorage.getItem('unit') || 'c');
 	const [countdowns, setCountdowns] = useState<Countdown[]>(
 		JSON.parse(localStorage.getItem('countdowns') || '[]'),
 	);
@@ -38,29 +38,20 @@ export function App() {
 			value={{ redirNeeded, setRedirNeeded, countdowns, setCountdowns }}>
 			<div className="flex h-screen w-screen flex-col overflow-hidden bg-neutral-50 dark:bg-neutral-950">
 				<Toaster />
-				<Clock unit={temp} weather={weather} />
+				<Clock unit={unit} weather={weather} />
 				<div className="fixed bottom-0 flex h-max w-full justify-center">
 					<div className="fixed bottom-0 left-0 flex flex-row">
 						<Settings
 							setSpotify={setSpotify}
 							setCountdown={setCountdown}
-							setTemp={setTemp}
+							setUnit={setUnit}
 							setWeather={setWeather}
 							setCountdowns={setCountdowns}
 							countdowns={countdowns}
 						/>
 					</div>
 					{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
-					{countdown && (
-						<Countdown
-							// cds={[
-							// 	{ name: 'Start of School', timestamp: 1724081400000 },
-							// 	{ name: 'College Apps', timestamp: 1732953600000 },
-							// 	{ name: 'Graduation', timestamp: 1749133800000 },
-							// ]}
-							cds={countdowns}
-						/>
-					)}
+					{countdown && <Countdown cds={countdowns} />}
 				</div>
 			</div>
 		</RedirContext.Provider>

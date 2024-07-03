@@ -42,14 +42,14 @@ import { CreateSyncCode, LoadSyncCode } from './Sync';
 
 export default function Settings({
 	setSpotify,
-	setTemp,
+	setUnit,
 	setCountdown,
 	setWeather,
 	setCountdowns,
 	countdowns,
 }: {
 	setSpotify: (s: boolean) => void;
-	setTemp: (s: string) => void;
+	setUnit: (s: string) => void;
 	setCountdown: (s: boolean) => void;
 	setWeather: (s: boolean) => void;
 	setCountdowns: (s: Countdown[]) => void;
@@ -250,23 +250,23 @@ export default function Settings({
 										<ToggleGroup
 											type="single"
 											className="space-x-[0.375rem]"
-											defaultValue={localStorage.getItem('temp') || 'f'}
+											defaultValue={localStorage.getItem('unit') || 'f'}
 											onValueChange={(v) => {
 												if (v) {
-													localStorage.setItem('temp', v);
-													setTemp(v);
+													localStorage.setItem('unit', v);
+													setUnit(v);
 												}
 											}}>
 											<ToggleGroupItem
 												className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-500 p-3 text-zinc-700/70 hover:text-zinc-800/90 dark:border-neutral-700 dark:text-zinc-400/70 dark:hover:bg-neutral-900 dark:hover:text-zinc-300/90 dark:data-[state=on]:bg-neutral-900 dark:data-[state=on]:text-zinc-300 dark:data-[state=on]:hover:bg-neutral-900 dark:data-[state=on]:hover:text-zinc-400"
 												value="f"
-												disabled={localStorage.getItem('temp') == 'f'}>
+												disabled={localStorage.getItem('unit') == 'f'}>
 												<TbTemperatureFahrenheit className="size-5" />
 											</ToggleGroupItem>
 											<ToggleGroupItem
 												className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-500 p-3 text-zinc-700/70 hover:text-zinc-800/90 dark:border-neutral-700 dark:text-zinc-400/70 dark:hover:bg-neutral-900 dark:hover:text-zinc-300/90 dark:data-[state=on]:bg-neutral-900 dark:data-[state=on]:text-zinc-300 dark:data-[state=on]:hover:bg-neutral-900 dark:data-[state=on]:hover:text-zinc-400"
 												value="c"
-												disabled={localStorage.getItem('temp') == 'f'}>
+												disabled={localStorage.getItem('unit') == 'f'}>
 												<TbTemperatureCelsius className="size-5" />
 											</ToggleGroupItem>
 										</ToggleGroup>
