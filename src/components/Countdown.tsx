@@ -496,7 +496,6 @@ export function CountdownIO({
 							<Tooltip>
 								<TooltipTrigger>
 									<Button
-										variant="destructive"
 										type="submit"
 										onClick={() => {
 											saveCountdown();
