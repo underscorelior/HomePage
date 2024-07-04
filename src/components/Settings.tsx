@@ -51,7 +51,6 @@ export default function Settings({
 	setCountdown,
 	setWeather,
 	setCountdowns,
-	setRerender,
 	countdowns,
 }: {
 	setSpotify: (s: boolean) => void;
@@ -59,7 +58,6 @@ export default function Settings({
 	setCountdown: (s: boolean) => void;
 	setWeather: (s: boolean) => void;
 	setCountdowns: (s: Countdown[]) => void;
-	setRerender: (s: boolean) => void;
 	countdowns: Countdown[];
 }) {
 	const [toggleVal, setToggleVal] = useState<string[]>([]);
@@ -152,8 +150,6 @@ export default function Settings({
 
 		setUnit(localStorage.getItem('unit') || 'f');
 		setCountdowns(JSON.parse(localStorage.getItem('countdowns') || '[]'));
-
-		setRerender(true);
 	}
 
 	return (

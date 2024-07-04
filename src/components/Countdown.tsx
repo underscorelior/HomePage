@@ -34,6 +34,7 @@ import { Checkbox } from '@/shadcn/components/ui/checkbox';
 import { Textarea } from '@/shadcn/components/ui/textarea';
 import { BiExport, BiImport } from 'react-icons/bi';
 import toast from 'react-hot-toast';
+import { handleUpdate } from '@/utils/sync';
 
 function Countdown({ cds }: { cds: Countdown[] }) {
 	const [countdowns, setCountdowns] = useState<Countdown[]>([]);
@@ -101,16 +102,16 @@ export default Countdown;
 export function CountdownItem({
 	name,
 	timestamp,
-	setCountdowns,
 	countdowns,
 	globalOpen,
+	setCountdowns,
 	setGlobalOpen,
 }: {
 	name: string;
 	timestamp: number;
-	setCountdowns: (s: Countdown[]) => void;
 	countdowns: Countdown[];
 	globalOpen: boolean;
+	setCountdowns: (s: Countdown[]) => void;
 	setGlobalOpen: (x: boolean) => void;
 }) {
 	const [ts, setTs] = useState<number>(timestamp);
@@ -121,7 +122,7 @@ export function CountdownItem({
 		setName(cdName);
 	}, [ts, cdName]);
 
-	function syncCountdowns(newName: string, newTimestamp: number) {
+	async function syncCountdowns(newName: string, newTimestamp: number) {
 		const cds = countdowns.map((cd) => {
 			if (cd.name == name) {
 				return {
@@ -135,9 +136,11 @@ export function CountdownItem({
 		cds.sort((a, b) => a.timestamp - b.timestamp);
 		localStorage.setItem('countdowns', JSON.stringify(cds));
 		setCountdowns(cds);
+
+		await handleUpdate(localStorage.getItem('code') || '');
 	}
 
-	function deleteCountdown() {
+	async function deleteCountdown() {
 		const cds: Countdown[] = [];
 		countdowns.map((cd) => {
 			if (cd.name != name) {
@@ -147,6 +150,8 @@ export function CountdownItem({
 
 		localStorage.setItem('countdowns', JSON.stringify(cds));
 		setCountdowns(cds);
+
+		await handleUpdate(localStorage.getItem('code') || '');
 	}
 
 	return (
@@ -227,11 +232,12 @@ function CountdownEditPopup({
 		};
 	}, [globalOpen, open]);
 
-	function onSubmit() {
+	async function onSubmit() {
 		setOpen(false);
-		syncCountdowns(cdName, ts);
+		await syncCountdowns(cdName, ts);
 		setOuterTimestamp(ts);
 		setOuterName(cdName);
+		setGlobalOpen(false);
 	}
 
 	function nameExists(): boolean {
@@ -297,7 +303,7 @@ function CountdownEditPopup({
 							</DialogClose>
 							<Button
 								type="submit"
-								onClick={() => onSubmit()}
+								onClick={async () => onSubmit()}
 								disabled={
 									Date.now() >= ts || nameExists() || cdName.trim().length == 0
 								}>
@@ -309,7 +315,7 @@ function CountdownEditPopup({
 			) : (
 				<button
 					className="flex size-auto h-full w-auto rounded-lg border border-neutral-400 bg-red-500 p-2 text-white hover:bg-red-500/80 dark:border-neutral-500"
-					onClick={() => deleteCountdown()}>
+					onClick={async () => await deleteCountdown()}>
 					<TbTrash />
 				</button>
 			)}
@@ -330,13 +336,15 @@ export function CountdownCreatePopup({
 	const [name, setName] = useState<string>('');
 	const [open, setOpen] = useState<boolean>(false);
 
-	function saveCountdown() {
+	async function saveCountdown() {
 		setOpen(false);
+		setGlobalOpen(false);
 		const cds = [...countdowns, { name: name, timestamp: timestamp }];
 		localStorage.setItem('countdowns', JSON.stringify(cds));
 		setCountdowns(cds);
 		setTimestamp(Date.now());
 		setName('');
+		await handleUpdate(localStorage.getItem('code') || '');
 	}
 
 	function nameExists(): boolean {
@@ -402,7 +410,7 @@ export function CountdownCreatePopup({
 					</DialogClose>
 					<Button
 						type="submit"
-						onClick={() => saveCountdown()}
+						onClick={async () => saveCountdown()}
 						disabled={
 							Date.now() >= timestamp || nameExists() || name.trim().length == 0
 						}>
@@ -431,11 +439,12 @@ export function CountdownIO({
 	const [exptJSON, setExptJSON] = useState<string>(JSON.stringify(exportList));
 	const [copy, setCopy] = useState<boolean>(false);
 
-	function saveCountdown() {
+	async function saveCountdown() {
 		try {
 			setCountdowns(JSON.parse(inJSON));
 			localStorage.setItem('countdowns', inJSON);
 			setImportOpen(false);
+			await handleUpdate(localStorage.getItem('code') || '');
 		} catch {
 			toast.error('The inputted JSON is invalid! Try again.');
 		}
@@ -497,7 +506,7 @@ export function CountdownIO({
 								<TooltipTrigger>
 									<Button
 										type="submit"
-										onClick={() => {
+										onClick={async () => {
 											saveCountdown();
 										}}>
 										Save
