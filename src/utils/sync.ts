@@ -24,12 +24,16 @@ export async function handleCreate(): Promise<string> {
 	else return 'An error has occurred' + out.message;
 }
 
-export async function handleUpdate(code: string, data: DBUser) {
+export async function handleUpdate(code: string, data?: DBUser | object) {
+	if (!data) {
+		data = exportData();
+	}
+	console.log(JSON.stringify({ code: code, data: JSON.stringify(data) }));
+
 	const res = await fetch(
-		'https://homepage-backend-seven.vercel.app/api/sync/update',
+		`https://homepage-backend-seven.vercel.app/api/sync/update?code=${code}&data=${JSON.stringify(data)}`,
 		{
-			method: 'GET',
-			body: JSON.stringify({ code: code, data: JSON.stringify(data) }),
+			method: 'POST',
 		},
 	);
 
@@ -41,15 +45,64 @@ export async function handleUpdate(code: string, data: DBUser) {
 
 export async function handleGet(code: string): Promise<UserData | string> {
 	const res = await fetch(
-		'https://homepage-backend-seven.vercel.app/api/sync/get',
+		`https://homepage-backend-seven.vercel.app/api/sync/get?code=${code}`,
 		{
-			method: 'GET',
-			body: JSON.stringify({ code: code }),
+			method: 'POST',
 		},
 	);
 
 	const out = await res.json();
-
-	if (res.status == 200) return out.code;
+	console.log(out);
+	if (res.status == 200) return out;
 	else return 'An error has occurred' + out.message;
+}
+
+export function exportData() {
+	const countdown: { countdowns?: Countdown[]; enabled?: boolean } = {};
+	if (localStorage.getItem('is_countdown')) {
+		countdown.enabled = localStorage.getItem('is_countdown') === 'true';
+	}
+	if (localStorage.getItem('countdowns')) {
+		countdown.countdowns = JSON.parse(
+			localStorage.getItem('countdowns') || '[]',
+		);
+	}
+
+	const weather: { unit?: 'f' | 'c'; enabled?: boolean } = {};
+	if (localStorage.getItem('is_weather')) {
+		weather.enabled = localStorage.getItem('is_weather') === 'true';
+	}
+	if (localStorage.getItem('unit')) {
+		weather.unit = (localStorage.getItem('unit') as 'f' | 'c') || 'f';
+	}
+
+	const spotify: { enabled?: boolean } = {};
+	if (localStorage.getItem('is_spotify')) {
+		spotify.enabled = localStorage.getItem('is_spotify') === 'true';
+	}
+
+	const out = { countdown, weather, spotify };
+
+	return out;
+}
+
+export async function updateData(code?: string, data?: UserData) {
+	if (!data && code) {
+		data = JSON.parse(JSON.stringify(await handleGet(code)));
+		console.log('A', data);
+	}
+	console.log(data);
+	if (data) {
+		localStorage.setItem('is_countdown', data.countdown.enabled + '');
+		localStorage.setItem(
+			'countdowns',
+			JSON.stringify(data.countdown.countdowns),
+		);
+
+		localStorage.setItem('is_weather', data.weather.enabled + '');
+		localStorage.setItem('unit', data.weather.unit);
+
+		localStorage.setItem('is_spotify', data.spotify.enabled + '');
+	}
+	console.log(data?.countdown.enabled, localStorage.getItem('is_countdown'));
 }

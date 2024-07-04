@@ -1,13 +1,13 @@
 import { Button } from '@/shadcn/components/ui/button';
 import {
-	DialogContent,
 	Dialog,
-	DialogTrigger,
-	DialogHeader,
+	DialogClose,
+	DialogContent,
 	DialogDescription,
 	DialogFooter,
+	DialogHeader,
 	DialogTitle,
-	DialogClose,
+	DialogTrigger,
 } from '@/shadcn/components/ui/dialog';
 import { Textarea } from '@/shadcn/components/ui/textarea';
 import {
@@ -16,22 +16,30 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from '@/shadcn/components/ui/tooltip';
-import { handleCreate } from '@/utils/sync';
+import { handleCreate, handleUpdate, updateData } from '@/utils/sync';
 import { useEffect, useState } from 'react';
 import { TbCheck, TbClipboard } from 'react-icons/tb';
 
 export function CreateSyncCode() {
 	const [code, setCode] = useState<string>('');
 	const [copy, setCopy] = useState<boolean>(false);
+	const [open, setOpen] = useState<boolean>(false);
 
 	useEffect(() => {
 		async function getCode() {
-			setCode(await handleCreate());
+			const code = await handleCreate();
+			setCode(code);
+			localStorage.setItem('code', code);
+			await handleUpdate(code);
 		}
-		getCode();
-	}, []);
+		if (open) getCode();
+	}, [open]);
 	return (
-		<Dialog>
+		<Dialog
+			open={open}
+			onOpenChange={(x) => {
+				setOpen(x);
+			}}>
 			<DialogTrigger>
 				<Button>Create New Code</Button>
 			</DialogTrigger>
@@ -81,10 +89,14 @@ export function CreateSyncCode() {
 	);
 }
 
-export function LoadSyncCode() {
+export function LoadSyncCode({ updatePage }: { updatePage: () => void }) {
 	const [code, setCode] = useState<string>('');
 
-	function submitCode() {}
+	async function submitCode() {
+		await updateData(code);
+		localStorage.setItem('code', code);
+		updatePage();
+	}
 
 	return (
 		<Dialog>
@@ -113,7 +125,7 @@ export function LoadSyncCode() {
 							<TooltipTrigger>
 								<Button
 									type="submit"
-									onClick={() => {
+									onClick={async () => {
 										submitCode();
 									}}>
 									Submit
@@ -127,7 +139,7 @@ export function LoadSyncCode() {
 						</Tooltip>
 					</TooltipProvider>
 				</DialogFooter>
-			</DialogContent>{' '}
+			</DialogContent>
 		</Dialog>
 	);
 }
