@@ -35,6 +35,19 @@ export async function redirectToAuthCodeFlow(
 	clientId: string,
 	callbackUrl: string,
 ) {
+	const scopes = [
+		'user-read-private',
+		// 'user-read-email',
+		'user-read-playback-state',
+		'user-modify-playback-state',
+		'user-read-currently-playing',
+		// 'user-read-playback-position',
+		// 'user-top-read',
+		'user-read-recently-played',
+		'user-library-read',
+		'user-library-modify',
+	];
+
 	const verifier =
 		localStorage.getItem('spotify_verifier') || generateCodeVerifier(128);
 	const challenge = await generateCodeChallenge(verifier);
@@ -45,10 +58,7 @@ export async function redirectToAuthCodeFlow(
 	params.append('client_id', clientId);
 	params.append('response_type', 'code');
 	params.append('redirect_uri', callbackUrl + '/callback');
-	params.append(
-		'scope',
-		'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-playback-position user-top-read user-read-recently-played user-library-read user-library-modify',
-	);
+	params.append('scope', scopes.join(' '));
 
 	params.append('code_challenge_method', 'S256');
 	params.append('code_challenge', challenge);
