@@ -5,6 +5,7 @@
 // TODO: Refactor API code.
 // TODO: Use constant code style (camelCase)
 // TODO: Fix light mode toast
+
 import { RedirContext } from '@/index';
 import { Button } from '@/shadcn/components/ui/button';
 import { useContext, useEffect, useState } from 'react';
@@ -189,16 +190,18 @@ export default function Spotify() {
 			{currentlyPlaying != null ? (
 				<div className="flex w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-600 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
 					<div className="w-2/5 flex-shrink-0 sm:w-1/3">
-						<img
-							className="h-auto w-auto object-cover"
-							src={currentlyPlaying.album.images[0].url}
-							alt={currentlyPlaying.album.name}
-							style={{
-								aspectRatio: '100/100',
-								objectFit: 'cover',
-							}}
-							width="100"
-						/>
+						<a href={currentlyPlaying.uri} target="_blank" rel="noreferrer">
+							<img
+								className="h-auto w-auto object-cover"
+								src={currentlyPlaying.album.images[0].url}
+								alt={currentlyPlaying.album.name}
+								style={{
+									aspectRatio: '100/100',
+									objectFit: 'cover',
+								}}
+								width="100"
+							/>
+						</a>
 					</div>
 					<div className="flex h-full w-3/5 items-center justify-center gap-y-4 sm:mx-auto sm:w-2/3">
 						<div className="flex h-full w-full flex-col justify-between gap-y-2 px-5 py-4 sm:gap-y-4 sm:py-6">
