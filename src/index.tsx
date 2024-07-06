@@ -33,12 +33,11 @@ export function App() {
 
 	const [redirNeeded, setRedirNeeded] = useState<boolean>(false);
 
-	const [dark, setDark] = useState<boolean>(false);
+	const [dark, setDark] = useState<boolean>(localStorage.theme === 'dark');
 
 	useEffect(() => {
-		if (!localStorage.theme)
-			localStorage.setItem('theme', dark ? 'dark' : 'light');
-		else setDark(localStorage.theme === 'dark');
+		localStorage.setItem('theme', dark ? 'dark' : 'light');
+
 		if (
 			localStorage.theme === 'dark' ||
 			(!('theme' in localStorage) &&
@@ -53,26 +52,28 @@ export function App() {
 	return (
 		<RedirContext.Provider
 			value={{ redirNeeded, setRedirNeeded, countdowns, setCountdowns }}>
-			<div className="flex h-screen w-screen flex-col overflow-hidden bg-neutral-50 dark:bg-neutral-950">
-				<Toaster />
-				<Clock unit={unit} weather={weather} />
-				<div className="fixed bottom-0 flex h-max w-full justify-center">
-					<div className="fixed bottom-0 left-0 flex flex-row">
-						<Settings
-							setSpotify={setSpotify}
-							setCountdown={setCountdown}
-							setUnit={setUnit}
-							setWeather={setWeather}
-							setCountdowns={setCountdowns}
-							setDark={setDark}
-							dark={dark}
-							countdowns={countdowns}
-						/>
+			{(dark || !dark) && (
+				<div className="flex h-screen w-screen flex-col overflow-hidden bg-neutral-50 dark:bg-neutral-950">
+					<Toaster />
+					<Clock unit={unit} weather={weather} />
+					<div className="fixed bottom-0 flex h-max w-full justify-center">
+						<div className="fixed bottom-0 left-0 flex flex-row">
+							<Settings
+								setSpotify={setSpotify}
+								setCountdown={setCountdown}
+								setUnit={setUnit}
+								setWeather={setWeather}
+								setCountdowns={setCountdowns}
+								setDark={setDark}
+								dark={dark}
+								countdowns={countdowns}
+							/>
+						</div>
+						{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
+						{countdown && <Countdown cds={countdowns} />}
 					</div>
-					{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
-					{countdown && <Countdown cds={countdowns} />}
 				</div>
-			</div>
+			)}
 		</RedirContext.Provider>
 	);
 }
