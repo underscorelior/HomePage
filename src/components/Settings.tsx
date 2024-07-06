@@ -44,6 +44,7 @@ import { TiWeatherCloudy } from 'react-icons/ti';
 import { RedirContext } from '..';
 import { CountdownCreatePopup, CountdownIO, CountdownItem } from './Countdown';
 import { CreateSyncCode, LoadSyncCode } from './Sync';
+import { IoIosMoon, IoIosSunny } from 'react-icons/io';
 
 export default function Settings({
 	setSpotify,
@@ -51,6 +52,8 @@ export default function Settings({
 	setCountdown,
 	setWeather,
 	setCountdowns,
+	setDark,
+	dark,
 	countdowns,
 }: {
 	setSpotify: (s: boolean) => void;
@@ -58,6 +61,8 @@ export default function Settings({
 	setCountdown: (s: boolean) => void;
 	setWeather: (s: boolean) => void;
 	setCountdowns: (s: Countdown[]) => void;
+	setDark: (s: boolean) => void;
+	dark: boolean;
 	countdowns: Countdown[];
 }) {
 	const [toggleVal, setToggleVal] = useState<string[]>([]);
@@ -325,9 +330,30 @@ export default function Settings({
 						<FaGamepad className="size-7" />
 						</ToggleGroupItem> */}
 					</ToggleGroup>
-					<div className="w-full">
+					<div className="flex w-full flex-row">
+						<Button
+							className="ml-auto flex aspect-square size-max rounded-lg border-2 border-neutral-500 bg-neutral-100 p-2 text-stone-700 hover:bg-neutral-100/80 hover:text-stone-700/90 dark:border-neutral-700 dark:bg-neutral-900/70 dark:text-stone-300 dark:hover:bg-neutral-900/90 dark:hover:text-stone-300/90"
+							onClick={() => {
+								setDark(!dark);
+							}}>
+							{dark ? (
+								<IoIosSunny
+									className="size-5"
+									onClick={() => {
+										setDark(false);
+									}}
+								/>
+							) : (
+								<IoIosMoon
+									className="size-5"
+									onClick={() => {
+										setDark(true);
+									}}
+								/>
+							)}
+						</Button>
 						<Popover>
-							<PopoverTrigger className="ml-auto flex justify-end pr-1">
+							<PopoverTrigger className="ml-1 flex justify-end pr-1">
 								<div className="flex aspect-square size-max rounded-lg border-2 border-neutral-500 bg-neutral-100 p-2 text-stone-700 hover:bg-neutral-100/80 hover:text-stone-700/90 dark:border-neutral-700 dark:bg-neutral-900/70 dark:text-stone-300 dark:hover:bg-neutral-900/90 dark:hover:text-stone-300/90">
 									<MdSync className="size-5" />
 								</div>

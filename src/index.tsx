@@ -1,7 +1,7 @@
 // TODO: Responsiveness
 // TODO: Offline version
 
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Toaster } from 'react-hot-toast';
 import Clock from './components/Clock';
@@ -33,6 +33,23 @@ export function App() {
 
 	const [redirNeeded, setRedirNeeded] = useState<boolean>(false);
 
+	const [dark, setDark] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (!localStorage.theme)
+			localStorage.setItem('theme', dark ? 'dark' : 'light');
+		else setDark(localStorage.theme === 'dark');
+		if (
+			localStorage.theme === 'dark' ||
+			(!('theme' in localStorage) &&
+				window.matchMedia('(prefers-color-scheme: dark)').matches)
+		) {
+			document.documentElement.classList.add('dark');
+		} else {
+			document.documentElement.classList.remove('dark');
+		}
+	}, [dark]);
+
 	return (
 		<RedirContext.Provider
 			value={{ redirNeeded, setRedirNeeded, countdowns, setCountdowns }}>
@@ -47,6 +64,8 @@ export function App() {
 							setUnit={setUnit}
 							setWeather={setWeather}
 							setCountdowns={setCountdowns}
+							setDark={setDark}
+							dark={dark}
 							countdowns={countdowns}
 						/>
 					</div>
