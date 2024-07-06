@@ -52,12 +52,15 @@ function Clock({ unit, weather }: { unit: string; weather: boolean }) {
 		const crd = pos.coords;
 		try {
 			const response = await axios.get(
-				`${process.env.BACKEND_URL}/api/weather?lat=${crd.latitude}&lon=${crd.longitude}`,
+				`https://api.openweathermap.org/data/2.5/weather?lat=${crd.latitude}
+				&lon=${crd.longitude}&units=metric
+				&appid=${localStorage.getItem('owm-key') || process.env.WEATHER_KEY}`,
 			);
 			const locationResponse = await axios.get(
 				`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${crd.latitude}&longitude=${crd.longitude}&localityLanguage=en`,
 			);
-			setWeatherData(response.data.response);
+
+			setWeatherData(response.data);
 			setLocation(
 				locationResponse.data.locality +
 					', ' +
