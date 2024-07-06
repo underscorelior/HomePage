@@ -1,5 +1,3 @@
-// TODO: Allow for customization of backend URL
-
 type DBUser = {
 	code: string | null;
 	countdown: JSON | null;
@@ -11,12 +9,9 @@ type DBUser = {
 };
 
 export async function handleCreate(): Promise<string> {
-	const res = await fetch(
-		'https://homepage-backend-seven.vercel.app/api/sync/create',
-		{
-			method: 'GET',
-		},
-	);
+	const res = await fetch(`${import.meta.env.BACKEND_URL}/api/sync/create`, {
+		method: 'GET',
+	});
 
 	const out = await res.json();
 
@@ -28,10 +23,9 @@ export async function handleUpdate(code: string, data?: DBUser | object) {
 	if (!data) {
 		data = exportData();
 	}
-	console.log(JSON.stringify({ code: code, data: JSON.stringify(data) }));
 
 	const res = await fetch(
-		`https://homepage-backend-seven.vercel.app/api/sync/update?code=${code}&data=${JSON.stringify(data)}`,
+		`${import.meta.env.BACKEND_URL}/api/sync/update?code=${code}&data=${JSON.stringify(data)}`,
 		{
 			method: 'POST',
 		},
@@ -45,14 +39,13 @@ export async function handleUpdate(code: string, data?: DBUser | object) {
 
 export async function handleGet(code: string): Promise<UserData | string> {
 	const res = await fetch(
-		`https://homepage-backend-seven.vercel.app/api/sync/get?code=${code}`,
+		`${import.meta.env.BACKEND_URL}/api/sync/get?code=${code}`,
 		{
 			method: 'POST',
 		},
 	);
 
 	const out = await res.json();
-	console.log(out);
 	if (res.status == 200) return out;
 	else return 'An error has occurred' + out.message;
 }
@@ -89,9 +82,8 @@ export function exportData() {
 export async function updateData(code?: string, data?: UserData) {
 	if (!data && code) {
 		data = JSON.parse(JSON.stringify(await handleGet(code)));
-		console.log('A', data);
 	}
-	console.log(data);
+
 	if (data) {
 		localStorage.setItem('is_countdown', data.countdown.enabled + '');
 		localStorage.setItem(
@@ -104,5 +96,4 @@ export async function updateData(code?: string, data?: UserData) {
 
 		localStorage.setItem('is_spotify', data.spotify.enabled + '');
 	}
-	console.log(data?.countdown.enabled, localStorage.getItem('is_countdown'));
 }

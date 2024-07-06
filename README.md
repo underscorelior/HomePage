@@ -4,14 +4,14 @@
 
 - [x] Show Time & Date
 - [x] Show Weather
-- [ ] Basic offline version
 - [x] Settings
-- [ ] Minigames - (Snake, 2048, minesweeper, tetris, etc.)
 - [x] Spotify
 - [x] Allow for toggling of elements
+- [x] Sync
+- [ ] Basic offline version
+- [ ] Minigames - (Snake, 2048, minesweeper, tetris, etc.)
 
 ### If possible:
 
 - [ ] Schoology - Upcoming assignments, grade graph, graded assignments
-- [ ] Fidelity stats
-- [ ] Sync
+- [ ] Fidelity/stocks stats

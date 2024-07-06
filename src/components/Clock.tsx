@@ -1,4 +1,5 @@
 // TODO: Try and get data from IP based location
+// TODO: Add night indicator
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
