@@ -294,19 +294,19 @@ export default function Settings({
 										updatePage();
 									}}>
 									<ToggleGroupItem
-										className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-500 p-3 text-zinc-700/70 hover:text-zinc-800/90 dark:border-neutral-700 dark:text-zinc-400/70 dark:hover:bg-neutral-900 dark:hover:text-zinc-300/90 dark:data-[state=on]:bg-neutral-900 dark:data-[state=on]:text-zinc-300 dark:data-[state=on]:hover:bg-neutral-900 dark:data-[state=on]:hover:text-zinc-400"
+										className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-500 p-3 text-zinc-800/90 hover:text-zinc-800/90 dark:border-neutral-700 dark:text-zinc-400/70 dark:hover:bg-neutral-900 dark:hover:text-zinc-300/90 dark:data-[state=on]:bg-neutral-900 dark:data-[state=on]:text-zinc-300 dark:data-[state=on]:hover:bg-neutral-900 dark:data-[state=on]:hover:text-zinc-400"
 										value="f"
 										disabled={localStorage.getItem('unit') == 'f'}>
 										<TbTemperatureFahrenheit className="size-5" />
 									</ToggleGroupItem>
 									<ToggleGroupItem
-										className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-500 p-3 text-zinc-700/70 hover:text-zinc-800/90 dark:border-neutral-700 dark:text-zinc-400/70 dark:hover:bg-neutral-900 dark:hover:text-zinc-300/90 dark:data-[state=on]:bg-neutral-900 dark:data-[state=on]:text-zinc-300 dark:data-[state=on]:hover:bg-neutral-900 dark:data-[state=on]:hover:text-zinc-400"
+										className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-500 p-3 text-zinc-800/90 hover:text-zinc-800/90 dark:border-neutral-700 dark:text-zinc-400/70 dark:hover:bg-neutral-900 dark:hover:text-zinc-300/90 dark:data-[state=on]:bg-neutral-900 dark:data-[state=on]:text-zinc-300 dark:data-[state=on]:hover:bg-neutral-900 dark:data-[state=on]:hover:text-zinc-400"
 										value="c"
-										disabled={localStorage.getItem('unit') == 'f'}>
+										disabled={localStorage.getItem('unit') == 'c'}>
 										<TbTemperatureCelsius className="size-5" />
 									</ToggleGroupItem>
 								</ToggleGroup>
-								<div className="flex flex-row items-center gap-x-3">
+								{/* <div className="flex flex-row items-center gap-x-3">
 									<TiWeatherCloudy className="size-10 text-amber-600" />
 									<Input
 										// placeholder="OpenWeatherMap API Key"
@@ -315,7 +315,7 @@ export default function Settings({
 										type="password"
 										className="w-full rounded-lg border-2 border-neutral-700 bg-neutral-50 px-3 text-lg text-neutral-600 placeholder-stone-600 outline-none ring-neutral-700 placeholder:font-medium focus:outline-stone-800 active:outline-stone-800 dark:border-neutral-500 dark:bg-neutral-950 dark:text-neutral-400 dark:placeholder-stone-200"
 									/>
-								</div>
+								</div> */}
 							</ContextMenuContent>
 						</ContextMenu>
 
