@@ -43,6 +43,7 @@ export default defineConfig(({ command, mode }) => {
 			'process.env.WEATHER_KEY': JSON.stringify(env.WEATHER_KEY),
 			'process.env.SPOTIFY_CLIENT_ID': JSON.stringify(env.SPOTIFY_CLIENT_ID),
 			'process.env.CALLBACK_URL': JSON.stringify(env.CALLBACK_URL),
+			'process.env.BACKEND_URL': JSON.stringify(env.BACKEND_URL),
 		},
 		plugins: [react(), VitePWA(pwaConfig)],
 		server: {
