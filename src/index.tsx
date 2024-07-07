@@ -9,6 +9,13 @@ import Countdown from './components/Countdown';
 import Settings from './components/Settings';
 import Spotify from './components/Spotify';
 import './index.css';
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from '@/shadcn/components/ui/carousel';
 
 export const RedirContext = createContext<{
 	redirNeeded: boolean | null;
@@ -56,7 +63,31 @@ export function App() {
 				<div className="flex h-screen w-screen flex-col overflow-hidden bg-neutral-50 dark:bg-neutral-950">
 					<Toaster />
 					<Clock unit={unit} weather={weather} />
-					<div className="fixed bottom-0 flex h-max w-full justify-center">
+					<div className="fixed bottom-0 w-full">
+						<Carousel>
+							<CarouselItem>
+								<CarouselContent>
+									{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
+								</CarouselContent>
+							</CarouselItem>
+							<CarouselItem>
+								<CarouselContent>
+									<Settings
+										setSpotify={setSpotify}
+										setCountdown={setCountdown}
+										setUnit={setUnit}
+										setWeather={setWeather}
+										setCountdowns={setCountdowns}
+										setDark={setDark}
+										dark={dark}
+										countdowns={countdowns}
+									/>
+									{countdown && <Countdown cds={countdowns} />}
+								</CarouselContent>
+							</CarouselItem>
+						</Carousel>
+					</div>
+					{/* <div className="fixed bottom-0 flex h-max w-full justify-center">
 						<div className="fixed bottom-0 left-0 flex flex-row">
 							<Settings
 								setSpotify={setSpotify}
@@ -71,7 +102,7 @@ export function App() {
 						</div>
 						{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
 						{countdown && <Countdown cds={countdowns} />}
-					</div>
+					</div> */}
 				</div>
 			)}
 		</RedirContext.Provider>

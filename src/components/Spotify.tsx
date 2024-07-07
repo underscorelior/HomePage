@@ -181,8 +181,8 @@ export default function Spotify() {
 	return (
 		<>
 			{currentlyPlaying != null ? (
-				<div className="flex w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-600 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
-					<div className="w-2/5 flex-shrink-0 sm:w-1/3">
+				<div className="w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-600 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
+					<div className="hidden w-2/5 flex-shrink-0 sm:flex sm:w-1/3">
 						<a href={currentlyPlaying.uri} target="_blank" rel="noreferrer">
 							<img
 								className="h-auto w-auto object-cover"
@@ -196,10 +196,10 @@ export default function Spotify() {
 							/>
 						</a>
 					</div>
-					<div className="flex h-full w-3/5 items-center justify-center gap-y-4 sm:mx-auto sm:w-2/3">
-						<div className="flex h-full w-full flex-col justify-between gap-y-2 px-5 py-4 sm:gap-y-4 sm:py-6">
+					<div className="flex h-full w-full items-center justify-center gap-y-4 sm:mx-auto sm:w-2/3">
+						<div className="flex h-full w-full flex-col justify-between gap-y-2 px-4 py-3 sm:gap-y-4 sm:py-6">
 							<div className="flex w-[95%] items-center justify-between sm:mb-3 sm:w-full">
-								<div className="w-[75%] sm:w-[85%]">
+								<div className="sm:w-[85%]">
 									<p className="text-md -mb-1 overflow-hidden text-ellipsis whitespace-nowrap font-medium sm:mb-0">
 										{currentlyPlaying.name}
 									</p>

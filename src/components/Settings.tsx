@@ -161,7 +161,7 @@ export default function Settings({
 		<TooltipProvider>
 			<Popover>
 				<PopoverTrigger
-					className="m-4 mr-2 w-full"
+					className="m-3 mr-2 w-full sm:m-4"
 					onClick={() => checkValues()}>
 					<div className="flex h-14 w-14 items-center justify-center rounded-lg bg-neutral-50 p-4 ring-2 ring-neutral-600 transition-all duration-200 ease-in-out hover:bg-neutral-200 dark:bg-neutral-950 dark:ring-neutral-800 hover:dark:bg-neutral-900">
 						<FiSettings
