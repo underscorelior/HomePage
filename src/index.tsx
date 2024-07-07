@@ -26,9 +26,9 @@ export function App() {
 	const [countdown, setCountdown] = useState<boolean>(false);
 	const [weather, setWeather] = useState<boolean>(false);
 
-	const [unit, setUnit] = useState<string>(localStorage.getItem('unit') || 'c');
+	const [unit, setUnit] = useState<string>(localStorage.unit || 'f');
 	const [countdowns, setCountdowns] = useState<Countdown[]>(
-		JSON.parse(localStorage.getItem('countdowns') || '[]'),
+		JSON.parse(localStorage.countdowns || '[]'),
 	);
 
 	const [redirNeeded, setRedirNeeded] = useState<boolean>(false);

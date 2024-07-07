@@ -1,5 +1,4 @@
 // TODO: Highlight active date on calendar -- NOT SURE IF POSSIBLE
-// TODO: Sorting
 
 import { Button } from '@/shadcn/components/ui/button';
 import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
@@ -137,7 +136,7 @@ export function CountdownItem({
 		localStorage.setItem('countdowns', JSON.stringify(cds));
 		setCountdowns(cds);
 
-		await handleUpdate(localStorage.getItem('code') || '');
+		await handleUpdate(localStorage.code || '');
 	}
 
 	async function deleteCountdown() {
@@ -151,7 +150,7 @@ export function CountdownItem({
 		localStorage.setItem('countdowns', JSON.stringify(cds));
 		setCountdowns(cds);
 
-		await handleUpdate(localStorage.getItem('code') || '');
+		await handleUpdate(localStorage.code || '');
 	}
 
 	return (
@@ -344,7 +343,7 @@ export function CountdownCreatePopup({
 		setCountdowns(cds);
 		setTimestamp(Date.now());
 		setName('');
-		await handleUpdate(localStorage.getItem('code') || '');
+		await handleUpdate(localStorage.code || '');
 	}
 
 	function nameExists(): boolean {
@@ -444,7 +443,7 @@ export function CountdownIO({
 			setCountdowns(JSON.parse(inJSON));
 			localStorage.setItem('countdowns', inJSON);
 			setImportOpen(false);
-			await handleUpdate(localStorage.getItem('code') || '');
+			await handleUpdate(localStorage.code || '');
 		} catch {
 			toast.error('The inputted JSON is invalid! Try again.');
 		}

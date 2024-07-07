@@ -66,8 +66,7 @@ export default function Spotify() {
 
 	async function doStuff() {
 		setApiCallInProgress(true);
-		const storedAccessToken =
-			localStorage.getItem('spotify_access_token') || 'undefined';
+		const storedAccessToken = localStorage.spotify_access_token || 'undefined';
 
 		if (code && storedAccessToken == 'undefined') {
 			await getAccessToken(clientId, code, URL);
@@ -78,10 +77,7 @@ export default function Spotify() {
 			if (storedAccessToken == 'undefined') {
 				setRedirNeeded(true);
 			} else {
-				if (
-					Date.now() >
-					((localStorage.getItem('spotify_expires_in') || 0) as number)
-				) {
+				if (Date.now() > ((localStorage.spotify_expires_in || 0) as number)) {
 					await refreshToken(clientId, URL);
 					setSinceAPICall(cooldown / 10);
 				} else {
@@ -116,7 +112,7 @@ export default function Spotify() {
 		if (!apiCallInProgress) {
 			setApiCallInProgress(true);
 			const storedAccessToken =
-				localStorage.getItem('spotify_access_token') || 'undefined';
+				localStorage.spotify_access_token || 'undefined';
 
 			if (code && storedAccessToken == 'undefined') {
 				await getAccessToken(clientId, code, URL);
@@ -128,10 +124,7 @@ export default function Spotify() {
 					clearKeys();
 					setRedirNeeded(true);
 				} else {
-					if (
-						Date.now() >
-						((localStorage.getItem('spotify_expires_in') || 0) as number)
-					) {
+					if (Date.now() > ((localStorage.spotify_expires_in || 0) as number)) {
 						await refreshToken(clientId, URL);
 						setSinceAPICall(cooldown / 10);
 					}
@@ -166,7 +159,7 @@ export default function Spotify() {
 	useEffect(() => {
 		const interval = setInterval(async () => {
 			const storedAccessToken =
-				localStorage.getItem('spotify_access_token') || 'undefined';
+				localStorage.spotify_access_token || 'undefined';
 
 			if (redirNeeded) {
 				setIsPlaying(false);

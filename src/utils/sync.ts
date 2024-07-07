@@ -52,34 +52,29 @@ export async function handleGet(code: string): Promise<UserData | string> {
 
 export function exportData() {
 	const countdown: { countdowns?: Countdown[]; enabled?: boolean } = {};
-	if (localStorage.getItem('is_countdown')) {
-		countdown.enabled = localStorage.getItem('is_countdown') === 'true';
+	if (localStorage.is_countdown) {
+		countdown.enabled = localStorage.is_countdown === 'true';
 	}
-	if (localStorage.getItem('countdowns')) {
-		countdown.countdowns = JSON.parse(
-			localStorage.getItem('countdowns') || '[]',
-		);
+	if (localStorage.countdown) {
+		countdown.countdowns = JSON.parse(localStorage.countdowns || '[]');
 	}
 
 	const weather: { unit?: 'f' | 'c'; enabled?: boolean } = {};
-	if (localStorage.getItem('is_weather')) {
-		weather.enabled = localStorage.getItem('is_weather') === 'true';
+	if (localStorage.is_weather) {
+		weather.enabled = localStorage.is_weather === 'true';
 	}
-	if (localStorage.getItem('unit')) {
-		weather.unit = (localStorage.getItem('unit') as 'f' | 'c') || 'f';
+	if (localStorage.unit) {
+		weather.unit = (localStorage.unit as 'f' | 'c') || 'f';
 	}
 
 	const spotify: { enabled?: boolean } = {};
-	if (localStorage.getItem('is_spotify')) {
-		spotify.enabled = localStorage.getItem('is_spotify') === 'true';
+	if (localStorage.is_spotify) {
+		spotify.enabled = localStorage.is_spotify === 'true';
 	}
 
 	let theme: 'dark' | 'light' = 'light';
-	if (
-		localStorage.getItem('theme') === 'dark' ||
-		localStorage.getItem('theme') === 'light'
-	) {
-		theme = localStorage.getItem('theme') as 'dark' | 'light';
+	if (localStorage.theme === 'dark' || localStorage.theme === 'light') {
+		theme = localStorage.theme as 'dark' | 'light';
 	}
 
 	const out = { countdown, weather, spotify, theme };

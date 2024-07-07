@@ -70,7 +70,7 @@ function TaskCard({
 export default function Tasks() {
 	const [tasks, setTasks] = useState<Task[]>([]);
 	const [selectedColor, setSelectedColor] = useState<Color>(
-		(localStorage.getItem('selectedColor') as Color) || 'sky',
+		(localStorage.selectedColor as Color) || 'sky',
 	);
 
 	function createTask(text: string, color: Color) {
@@ -120,7 +120,7 @@ export default function Tasks() {
 	}
 
 	useEffect(() => {
-		const tasks = localStorage.getItem('tasks');
+		const tasks = localStorage.tasks;
 		if (tasks) {
 			setTasks(JSON.parse(tasks));
 		}

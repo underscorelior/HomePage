@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // TODO: Make functions simpler
-// TODO: Fix broken weather switching
 
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -115,13 +114,13 @@ export default function Settings({
 		setCountdown(s.includes('countdown'));
 		setWeather(s.includes('weather'));
 
-		await handleUpdate(localStorage.getItem('code') || '');
+		await handleUpdate(localStorage.code || '');
 		updatePage();
 	}
 
 	useEffect(() => {
 		async function get() {
-			await updateData(localStorage.getItem('code') || '');
+			await updateData(localStorage.code || '');
 			updatePage();
 		}
 
@@ -149,13 +148,13 @@ export default function Settings({
 	}
 
 	function updatePage() {
-		setSpotify(localStorage.getItem('is_spotify') === 'true');
-		setCountdown(localStorage.getItem('is_countdown') === 'true');
-		setWeather(localStorage.getItem('is_weather') === 'true');
+		setSpotify(localStorage.is_spotify === 'true');
+		setCountdown(localStorage.is_countdown === 'true');
+		setWeather(localStorage.is_weather === 'true');
 
-		setUnit(localStorage.getItem('unit') || 'f');
-		setCountdowns(JSON.parse(localStorage.getItem('countdowns') || '[]'));
-		setDark(localStorage.getItem('theme') === 'dark');
+		setUnit(localStorage.unit || 'f');
+		setCountdowns(JSON.parse(localStorage.countdowns || '[]'));
+		setDark(localStorage.theme === 'dark');
 	}
 
 	return (
@@ -290,25 +289,25 @@ export default function Settings({
 								<ToggleGroup
 									type="single"
 									className="space-x-[0.375rem]"
-									defaultValue={localStorage.getItem('unit') || 'f'}
+									defaultValue={localStorage.unit || 'f'}
 									onValueChange={async (v) => {
 										if (v) {
 											localStorage.setItem('unit', v);
 											setUnit(v);
 										}
-										await handleUpdate(localStorage.getItem('code') || '');
+										await handleUpdate(localStorage.code || '');
 										updatePage();
 									}}>
 									<ToggleGroupItem
 										className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-500 p-3 text-zinc-800/90 hover:text-zinc-800/90 dark:border-neutral-700 dark:text-zinc-400/70 dark:hover:bg-neutral-900 dark:hover:text-zinc-300/90 dark:data-[state=on]:bg-neutral-900 dark:data-[state=on]:text-zinc-300 dark:data-[state=on]:hover:bg-neutral-900 dark:data-[state=on]:hover:text-zinc-400"
 										value="f"
-										disabled={localStorage.getItem('unit') == 'f'}>
+										disabled={localStorage.unit == 'f'}>
 										<TbTemperatureFahrenheit className="size-5" />
 									</ToggleGroupItem>
 									<ToggleGroupItem
 										className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-500 p-3 text-zinc-800/90 hover:text-zinc-800/90 dark:border-neutral-700 dark:text-zinc-400/70 dark:hover:bg-neutral-900 dark:hover:text-zinc-300/90 dark:data-[state=on]:bg-neutral-900 dark:data-[state=on]:text-zinc-300 dark:data-[state=on]:hover:bg-neutral-900 dark:data-[state=on]:hover:text-zinc-400"
 										value="c"
-										disabled={localStorage.getItem('unit') == 'c'}>
+										disabled={localStorage.unit == 'c'}>
 										<TbTemperatureCelsius className="size-5" />
 									</ToggleGroupItem>
 								</ToggleGroup>
@@ -327,7 +326,7 @@ export default function Settings({
 
 						{/* <ToggleGroupItem
 						value="minigames"
-						className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-red-800/70 hover:bg-neutral-200 dark:bg-neutral-800 hover:text-red-400 data-[state=on]:bg-neutral-900 data-[state=on]:text-red-600 data-[state=on]:hover:bg-neutral-200 dark:bg-neutral-800 data-[state=on]:hover:text-red-500">
+						className="flex aspect-square h-auto w-auto items-center justify-center rounded-lg border-2 border-neutral-700 p-3 text-red-800/70 hover:bg-neutral-200 hover:text-red-400 data-[state=on]:bg-neutral-900 data-[state=on]:text-red-600 data-[state=on]:hover:bg-neutral-200 dark:bg-neutral-800 data-[state=on]:hover:text-red-500">
 						<FaGamepad className="size-7" />
 						</ToggleGroupItem> */}
 					</ToggleGroup>
@@ -337,7 +336,7 @@ export default function Settings({
 							onClick={async () => {
 								setDark(!dark);
 								await new Promise((r) => setTimeout(r, 1));
-								await handleUpdate(localStorage.getItem('code') || '');
+								await handleUpdate(localStorage.code || '');
 								updatePage();
 							}}>
 							{dark ? (
@@ -355,14 +354,12 @@ export default function Settings({
 							<PopoverContent className="m-2 flex w-full min-w-[15dvw] flex-col gap-y-4 rounded-lg border-[2px] border-neutral-700 bg-neutral-50 p-4 pt-3 dark:bg-neutral-950 dark:text-neutral-100">
 								<h1 className="text-lg font-semibold">Sync:</h1>
 								<div className="mx-auto flex flex-row gap-2 text-sm">
-									{localStorage.getItem('code') ? (
+									{localStorage.code ? (
 										<div className="flex flex-col gap-2">
 											<div className="flex flex-row gap-2">
 												<Button
 													onClick={async () => {
-														await handleUpdate(
-															localStorage.getItem('code') || '',
-														);
+														await handleUpdate(localStorage.code || '');
 														updatePage();
 													}}>
 													Push Update To Database
@@ -370,26 +367,21 @@ export default function Settings({
 												<Button
 													variant={'outline'}
 													onClick={async () => {
-														await updateData(
-															localStorage.getItem('code') || '',
-														);
+														await updateData(localStorage.code || '');
 														updatePage();
 													}}>
 													Pull from Database
 												</Button>
 											</div>
 											<div className="flex flex-row gap-2">
-												<Input
-													readOnly
-													value={localStorage.getItem('code') || ''}
-												/>
+												<Input readOnly value={localStorage.code || ''} />
 												<TooltipProvider>
 													<Tooltip>
 														<TooltipTrigger
 															className="flex aspect-square size-auto items-center justify-center rounded-lg border-[1px] border-neutral-300 bg-white p-2 dark:border-neutral-600"
 															onClick={async () => {
 																navigator.clipboard.writeText(
-																	localStorage.getItem('code') || '',
+																	localStorage.code || '',
 																);
 																setCopy(true);
 																await new Promise((r) => setTimeout(r, 2000));

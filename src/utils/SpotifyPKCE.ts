@@ -48,8 +48,7 @@ export async function redirectToAuthCodeFlow(
 		'user-library-modify',
 	];
 
-	const verifier =
-		localStorage.getItem('spotify_verifier') || generateCodeVerifier(128);
+	const verifier = localStorage.spotify_verifier || generateCodeVerifier(128);
 	const challenge = await generateCodeChallenge(verifier);
 
 	localStorage.setItem('spotify_verifier', verifier);
@@ -67,7 +66,7 @@ export async function redirectToAuthCodeFlow(
 }
 
 export const refreshToken = async (clientId: string, URL: string) => {
-	const refreshToken = localStorage.getItem('spotify_verifier') || '';
+	const refreshToken = localStorage.spotify_verifier || '';
 	const url = 'https://accounts.spotify.com/api/token';
 
 	const payload = {
@@ -98,10 +97,10 @@ export async function getAccessToken(
 	code: string,
 	URL: string,
 ) {
-	const verifier = localStorage.getItem('spotify_verifier') || '';
+	const verifier = localStorage.spotify_verifier || '';
 
-	const at = localStorage.getItem('spotify_access_token') || 'undefined';
-	if (at !== 'undefined') return localStorage.getItem('spotify_access_token');
+	const at = localStorage.spotify_access_token || 'undefined';
+	if (at !== 'undefined') return localStorage.spotify_access_token;
 	const params = new URLSearchParams();
 	params.append('client_id', clientId);
 	params.append('grant_type', 'authorization_code');
@@ -186,7 +185,7 @@ export async function player(accessToken: string) {
 }
 
 export async function pause() {
-	const accessToken = localStorage.getItem('spotify_access_token') || '';
+	const accessToken = localStorage.spotify_access_token || '';
 
 	const deviceId = await getActiveDeviceId(accessToken, 1);
 	if (!deviceId) {
@@ -202,7 +201,7 @@ export async function pause() {
 }
 
 export async function play() {
-	const accessToken = localStorage.getItem('spotify_access_token') || '';
+	const accessToken = localStorage.spotify_access_token || '';
 
 	const deviceId = await getActiveDeviceId(accessToken, 1);
 	if (!deviceId) {
@@ -218,7 +217,7 @@ export async function play() {
 }
 
 export async function next() {
-	const accessToken = localStorage.getItem('spotify_access_token') || '';
+	const accessToken = localStorage.spotify_access_token || '';
 
 	const deviceId = await getActiveDeviceId(accessToken, 2);
 	if (!deviceId) {
@@ -234,7 +233,7 @@ export async function next() {
 }
 
 export async function is_premium() {
-	const accessToken = localStorage.getItem('spotify_access_token') || '';
+	const accessToken = localStorage.spotify_access_token || '';
 
 	const result = await fetch('https://api.spotify.com/v1/me', {
 		method: 'GET',
@@ -249,7 +248,7 @@ export async function previous(
 	currentlyPlaying: boolean,
 	playingProgress: number,
 ) {
-	const accessToken = localStorage.getItem('spotify_access_token') || '';
+	const accessToken = localStorage.spotify_access_token || '';
 
 	const deviceId = await getActiveDeviceId(accessToken, 2);
 	if (!deviceId) {
@@ -270,7 +269,7 @@ export async function previous(
 }
 
 export async function seek(position: number) {
-	const accessToken = localStorage.getItem('spotify_access_token') || '';
+	const accessToken = localStorage.spotify_access_token || '';
 
 	const deviceId = await getActiveDeviceId(accessToken, 3);
 	if (!deviceId) {
@@ -290,7 +289,7 @@ export async function seek(position: number) {
 }
 
 export async function heart(isHearted: boolean, trackId: string) {
-	const accessToken = localStorage.getItem('spotify_access_token') || '';
+	const accessToken = localStorage.spotify_access_token || '';
 	let method = 'PUT';
 	if (isHearted) {
 		method = 'DELETE';
@@ -307,7 +306,7 @@ export async function heart(isHearted: boolean, trackId: string) {
 }
 
 export async function is_hearted(trackId: string) {
-	const accessToken = localStorage.getItem('spotify_access_token') || '';
+	const accessToken = localStorage.spotify_access_token || '';
 	const result = await fetch(
 		`https://api.spotify.com/v1/me/tracks/contains?ids=${trackId}`,
 		{
