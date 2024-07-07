@@ -378,7 +378,7 @@ export default function Settings({
 												<TooltipProvider>
 													<Tooltip>
 														<TooltipTrigger
-															className="flex aspect-square size-auto items-center justify-center rounded-lg border-[1px] border-neutral-300 bg-white p-2 dark:border-neutral-600"
+															className="flex aspect-square size-auto items-center justify-center rounded-lg border-[1.5px] border-neutral-500 p-2 dark:border-neutral-800"
 															onClick={async () => {
 																navigator.clipboard.writeText(
 																	localStorage.code || '',

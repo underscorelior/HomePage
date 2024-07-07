@@ -55,7 +55,7 @@ export function exportData() {
 	if (localStorage.is_countdown) {
 		countdown.enabled = localStorage.is_countdown === 'true';
 	}
-	if (localStorage.countdown) {
+	if (localStorage.countdowns) {
 		countdown.countdowns = JSON.parse(localStorage.countdowns || '[]');
 	}
 
@@ -91,7 +91,7 @@ export async function updateData(code?: string, data?: UserData) {
 		localStorage.setItem('is_countdown', data.countdown.enabled + '');
 		localStorage.setItem(
 			'countdowns',
-			JSON.stringify(data.countdown.countdowns),
+			JSON.stringify(data.countdown.countdowns || []),
 		);
 
 		localStorage.setItem('is_weather', data.weather.enabled + '');
