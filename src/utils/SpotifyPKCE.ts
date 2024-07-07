@@ -80,6 +80,7 @@ export const refreshToken = async (clientId: string, URL: string) => {
 			client_id: clientId,
 		}),
 	};
+
 	const body = await fetch(url, payload);
 	const response = await body.json();
 	localStorage.setItem('spotify_access_token', response.access_token);
@@ -101,18 +102,37 @@ export async function getAccessToken(
 
 	const at = localStorage.spotify_access_token || 'undefined';
 	if (at !== 'undefined') return localStorage.spotify_access_token;
-	const params = new URLSearchParams();
-	params.append('client_id', clientId);
-	params.append('grant_type', 'authorization_code');
-	params.append('code', code);
-	params.append('redirect_uri', URL + '/callback');
-	params.append('code_verifier', verifier);
 
-	const result = await fetch('https://accounts.spotify.com/api/token', {
+	let result = await fetch('https://accounts.spotify.com/api/token', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-		body: params,
+		body: new URLSearchParams({
+			client_id: clientId,
+			grant_type: 'authorization_code',
+			code,
+			redirect_uri: URL + '/callback',
+			code_verifier: verifier,
+		}),
 	});
+	// console.log(code);
+	await new Promise((r) => setTimeout(r, 50));
+	const { access_token: a } = await result.json();
+	if (!a) {
+		result = await fetch('https://accounts.spotify.com/api/token', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: new URLSearchParams({
+				client_id: clientId,
+				grant_type: 'authorization_code',
+				code,
+				redirect_uri: URL + '/callback',
+				code_verifier: verifier,
+			}),
+		});
+	}
+
+	await new Promise((r) => setTimeout(r, 10));
+
 	const { access_token, refresh_token, expires_in } = await result.json();
 
 	localStorage.setItem('spotify_verifier', refresh_token);
@@ -121,6 +141,8 @@ export async function getAccessToken(
 		'spotify_expires_in',
 		(Date.now() + ((expires_in || 0) as number) * 1000) as unknown as string,
 	);
+	// await new Promise((r) => setTimeout(r, 1000));
+
 	window.location.href = URL;
 	return access_token;
 }
@@ -136,18 +158,6 @@ async function getActiveDeviceId(accessToken: string, type: number) {
 	if (!activeDevice) {
 		toast.error(
 			`Failed to ${type == 1 ? 'play/pause' : type == 2 ? 'skip' : 'seek'}`,
-			{
-				style: {
-					border: '1px solid #171717',
-					padding: '12px',
-					color: '#d4d4d4',
-					backgroundColor: '#0a0a0a',
-				},
-				iconTheme: {
-					primary: '#dc2626',
-					secondary: '#171717',
-				},
-			},
 		);
 		return false;
 	}

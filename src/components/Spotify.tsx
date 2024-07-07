@@ -364,7 +364,7 @@ export default function Spotify() {
 										setRedirNeeded(false);
 										redirectToAuthCodeFlow(clientId, URL);
 									}}
-									className="-my-0.5 mx-auto flex w-auto flex-row gap-x-2 border border-neutral-400 bg-neutral-50 text-neutral-800 hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-950">
+									className="-my-0.5 mx-auto flex w-auto flex-row gap-x-2 border border-neutral-400 bg-neutral-50 text-neutral-800 hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:bg-neutral-900">
 									<SiSpotify className="size-5 text-green-500" />
 									Click to log in to Spotify.
 								</Button>

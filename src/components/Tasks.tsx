@@ -75,18 +75,7 @@ export default function Tasks() {
 
 	function createTask(text: string, color: Color) {
 		if (!text) {
-			toast.error("Can't create empty task!", {
-				style: {
-					border: '1px solid #313244',
-					padding: '16px',
-					color: '#cdd6f4',
-					backgroundColor: '#181825',
-				},
-				iconTheme: {
-					primary: '#f38ba8',
-					secondary: '#1e1e2e',
-				},
-			});
+			toast.error("Can't create empty task!");
 			return;
 		}
 

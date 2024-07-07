@@ -132,19 +132,7 @@ export default function Settings({
 	function resetSpotifyData(): void {
 		clearKeys();
 		setRedirNeeded(true);
-		toast.success(`Successfully cleared spotify authentication data.`, {
-			style: {
-				border: '1px solid #171717',
-				padding: '12px',
-				color: '#d4d4d4',
-				backgroundColor: '#0a0a0a',
-				textAlign: 'center',
-			},
-			iconTheme: {
-				primary: '#16a34a',
-				secondary: '#171717',
-			},
-		});
+		toast.success(`Successfully cleared spotify authentication data.`);
 	}
 
 	function updatePage() {
