@@ -1,4 +1,3 @@
-// TODO: Responsiveness
 // TODO: Offline version
 
 import { createContext, useEffect, useState } from 'react';
@@ -13,8 +12,6 @@ import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
-	CarouselNext,
-	CarouselPrevious,
 } from '@/shadcn/components/ui/carousel';
 
 export const RedirContext = createContext<{
@@ -63,7 +60,7 @@ export function App() {
 				<div className="flex h-screen w-screen flex-col overflow-hidden bg-neutral-50 dark:bg-neutral-950">
 					<Toaster />
 					<Clock unit={unit} weather={weather} />
-					<div className="fixed bottom-0 w-full">
+					<div className="fixed bottom-0 flex w-full sm:hidden">
 						<Carousel
 							opts={{
 								loop: true,
@@ -90,7 +87,7 @@ export function App() {
 							</CarouselContent>
 						</Carousel>
 					</div>
-					{/* <div className="fixed bottom-0 flex h-max w-full justify-center">
+					<div className="fixed bottom-0 hidden h-max w-full justify-center sm:flex">
 						<div className="fixed bottom-0 left-0 flex flex-row">
 							<Settings
 								setSpotify={setSpotify}
@@ -105,7 +102,7 @@ export function App() {
 						</div>
 						{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
 						{countdown && <Countdown cds={countdowns} />}
-					</div> */}
+					</div>
 				</div>
 			)}
 		</RedirContext.Provider>
