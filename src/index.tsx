@@ -64,27 +64,30 @@ export function App() {
 					<Toaster />
 					<Clock unit={unit} weather={weather} />
 					<div className="fixed bottom-0 w-full">
-						<Carousel>
-							<CarouselItem>
-								<CarouselContent>
+						<Carousel
+							opts={{
+								loop: true,
+							}}>
+							<CarouselContent className="flex items-end">
+								<CarouselItem>
 									{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
-								</CarouselContent>
-							</CarouselItem>
-							<CarouselItem>
-								<CarouselContent>
-									<Settings
-										setSpotify={setSpotify}
-										setCountdown={setCountdown}
-										setUnit={setUnit}
-										setWeather={setWeather}
-										setCountdowns={setCountdowns}
-										setDark={setDark}
-										dark={dark}
-										countdowns={countdowns}
-									/>
-									{countdown && <Countdown cds={countdowns} />}
-								</CarouselContent>
-							</CarouselItem>
+								</CarouselItem>
+								<CarouselItem>
+									<div className="flex flex-row items-end justify-between">
+										<Settings
+											setSpotify={setSpotify}
+											setCountdown={setCountdown}
+											setUnit={setUnit}
+											setWeather={setWeather}
+											setCountdowns={setCountdowns}
+											setDark={setDark}
+											dark={dark}
+											countdowns={countdowns}
+										/>
+										{countdown && <Countdown cds={countdowns} />}
+									</div>
+								</CarouselItem>
+							</CarouselContent>
 						</Carousel>
 					</div>
 					{/* <div className="fixed bottom-0 flex h-max w-full justify-center">

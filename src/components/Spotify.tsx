@@ -181,8 +181,8 @@ export default function Spotify() {
 	return (
 		<>
 			{currentlyPlaying != null ? (
-				<div className="w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-600 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
-					<div className="hidden w-2/5 flex-shrink-0 sm:flex sm:w-1/3">
+				<div className="flex w-full flex-row overflow-hidden rounded-t-lg border-t-2 border-neutral-600 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl sm:border-x-2 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
+					<div className="w-2/5 flex-shrink-0 sm:w-1/3">
 						<a href={currentlyPlaying.uri} target="_blank" rel="noreferrer">
 							<img
 								className="h-auto w-auto object-cover"
