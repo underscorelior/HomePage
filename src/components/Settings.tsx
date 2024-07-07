@@ -155,6 +155,7 @@ export default function Settings({
 
 		setUnit(localStorage.getItem('unit') || 'f');
 		setCountdowns(JSON.parse(localStorage.getItem('countdowns') || '[]'));
+		setDark(localStorage.getItem('theme') === 'dark');
 	}
 
 	return (
@@ -333,23 +334,16 @@ export default function Settings({
 					<div className="flex w-full flex-row">
 						<Button
 							className="ml-auto flex aspect-square size-max rounded-lg border-2 border-neutral-500 bg-neutral-100 p-2 text-stone-700 hover:bg-neutral-100/80 hover:text-stone-700/90 dark:border-neutral-700 dark:bg-neutral-900/70 dark:text-stone-300 dark:hover:bg-neutral-900/90 dark:hover:text-stone-300/90"
-							onClick={() => {
+							onClick={async () => {
 								setDark(!dark);
+								await new Promise((r) => setTimeout(r, 1));
+								await handleUpdate(localStorage.getItem('code') || '');
+								updatePage();
 							}}>
 							{dark ? (
-								<IoIosSunny
-									className="size-5"
-									onClick={() => {
-										setDark(false);
-									}}
-								/>
+								<IoIosSunny className="size-5" />
 							) : (
-								<IoIosMoon
-									className="size-5"
-									onClick={() => {
-										setDark(true);
-									}}
-								/>
+								<IoIosMoon className="size-5" />
 							)}
 						</Button>
 						<Popover>

@@ -9,7 +9,7 @@ type DBUser = {
 };
 
 export async function handleCreate(): Promise<string> {
-	const res = await fetch(`${import.meta.env.BACKEND_URL}/api/sync/create`, {
+	const res = await fetch(`${process.env.BACKEND_URL}/api/sync/create`, {
 		method: 'GET',
 	});
 
@@ -25,7 +25,7 @@ export async function handleUpdate(code: string, data?: DBUser | object) {
 	}
 
 	const res = await fetch(
-		`${import.meta.env.BACKEND_URL}/api/sync/update?code=${code}&data=${JSON.stringify(data)}`,
+		`${process.env.BACKEND_URL}/api/sync/update?code=${code}&data=${JSON.stringify(data)}`,
 		{
 			method: 'POST',
 		},
@@ -39,7 +39,7 @@ export async function handleUpdate(code: string, data?: DBUser | object) {
 
 export async function handleGet(code: string): Promise<UserData | string> {
 	const res = await fetch(
-		`${import.meta.env.BACKEND_URL}/api/sync/get?code=${code}`,
+		`${process.env.BACKEND_URL}/api/sync/get?code=${code}`,
 		{
 			method: 'POST',
 		},
@@ -74,7 +74,15 @@ export function exportData() {
 		spotify.enabled = localStorage.getItem('is_spotify') === 'true';
 	}
 
-	const out = { countdown, weather, spotify };
+	let theme: 'dark' | 'light' = 'light';
+	if (
+		localStorage.getItem('theme') === 'dark' ||
+		localStorage.getItem('theme') === 'light'
+	) {
+		theme = localStorage.getItem('theme') as 'dark' | 'light';
+	}
+
+	const out = { countdown, weather, spotify, theme };
 
 	return out;
 }
@@ -95,5 +103,7 @@ export async function updateData(code?: string, data?: UserData) {
 		localStorage.setItem('unit', data.weather.unit);
 
 		localStorage.setItem('is_spotify', data.spotify.enabled + '');
+
+		localStorage.setItem('theme', data.theme);
 	}
 }
