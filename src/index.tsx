@@ -13,17 +13,20 @@ import {
 	CarouselContent,
 	CarouselItem,
 } from '@/shadcn/components/ui/carousel';
+import { getAccessToken } from './utils/SpotifyPKCE';
 
 export const RedirContext = createContext<{
 	redirNeeded: boolean | null;
 	setRedirNeeded: (s: boolean) => void;
 	countdowns: Countdown[];
 	setCountdowns: (s: Countdown[]) => void;
+	load: boolean;
 }>({
 	redirNeeded: null,
 	setRedirNeeded: () => undefined,
 	countdowns: [],
 	setCountdowns: () => undefined,
+	load: false,
 });
 export function App() {
 	const [spotify, setSpotify] = useState<boolean>(false);
@@ -38,6 +41,25 @@ export function App() {
 	const [redirNeeded, setRedirNeeded] = useState<boolean>(false);
 
 	const [dark, setDark] = useState<boolean>(localStorage.theme === 'dark');
+	const [load, setLoad] = useState<boolean>(false);
+
+	const code = new URLSearchParams(window.location.search).get('code');
+
+	useEffect(() => {
+		async function c() {
+			if (code) {
+				await getAccessToken(
+					process.env.SPOTIFY_CLIENT_ID || '',
+					code,
+					process.env.CALLBACK_URL || 'http://localhost:5173',
+				);
+				setLoad(true);
+			} else {
+				setLoad(true);
+			}
+		}
+		c();
+	});
 
 	useEffect(() => {
 		localStorage.setItem('theme', dark ? 'dark' : 'light');
@@ -55,7 +77,7 @@ export function App() {
 
 	return (
 		<RedirContext.Provider
-			value={{ redirNeeded, setRedirNeeded, countdowns, setCountdowns }}>
+			value={{ redirNeeded, setRedirNeeded, countdowns, setCountdowns, load }}>
 			{(dark || !dark) && (
 				<div className="flex h-screen w-screen flex-col overflow-hidden bg-neutral-50 dark:bg-neutral-950">
 					<Toaster />
@@ -68,7 +90,9 @@ export function App() {
 							className="flex w-full">
 							<CarouselContent className="flex items-end">
 								<CarouselItem>
-									{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
+									{spotify &&
+										(redirNeeded || !redirNeeded) &&
+										(load || !load) && <Spotify />}
 								</CarouselItem>
 								<CarouselItem>
 									<div className="flex flex-row items-end justify-between">
@@ -101,7 +125,9 @@ export function App() {
 								countdowns={countdowns}
 							/>
 						</div>
-						{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
+						{spotify && (redirNeeded || !redirNeeded) && (load || !load) && (
+							<Spotify />
+						)}
 						{countdown && <Countdown cds={countdowns} />}
 					</div>
 				</div>

@@ -43,7 +43,7 @@ export default function Spotify() {
 	}
 
 	const URL = process.env.CALLBACK_URL || 'http://localhost:5173';
-	const code = new URLSearchParams(window.location.search).get('code');
+	// const code = new URLSearchParams(window.location.search).get('code');
 	const cooldown = 1500;
 
 	const [seekPosition, setSeekPosition] = useState<number>(0);
@@ -62,50 +62,50 @@ export default function Spotify() {
 	// Check for heart and premium, should remove
 	const [specialCheck, setSpecialCheck] = useState<number>(0);
 
-	const { redirNeeded, setRedirNeeded } = useContext(RedirContext);
+	const { redirNeeded, setRedirNeeded, load } = useContext(RedirContext);
 
 	async function doStuff() {
 		setApiCallInProgress(true);
 		const storedAccessToken = localStorage.spotify_access_token || 'undefined';
 
-		if (code && storedAccessToken == 'undefined') {
-			await getAccessToken(clientId, code, URL);
-			const currentlyPlaying = await player(storedAccessToken);
-			setCurrentlyPlaying(currentlyPlaying[0]);
-			setIsPlaying(currentlyPlaying[1]);
+		// if (code && storedAccessToken == 'undefined') {
+		// 	await getAccessToken(clientId, code, URL);
+		// 	const currentlyPlaying = await player(storedAccessToken);
+		// 	setCurrentlyPlaying(currentlyPlaying[0]);
+		// 	setIsPlaying(currentlyPlaying[1]);
+		// } else {
+		// if (load && storedAccessToken == 'undefined') {
+		// 	setRedirNeeded(true);
+		// } else {
+		if (Date.now() > ((localStorage.spotify_expires_in || 0) as number)) {
+			await refreshToken(clientId, URL);
+			setSinceAPICall(cooldown / 10);
 		} else {
-			if (storedAccessToken == 'undefined') {
-				setRedirNeeded(true);
-			} else {
-				if (Date.now() > ((localStorage.spotify_expires_in || 0) as number)) {
-					await refreshToken(clientId, URL);
-					setSinceAPICall(cooldown / 10);
-				} else {
-					const play = await player(storedAccessToken);
-					setIsPlaying(play[1]);
+			const play = await player(storedAccessToken);
+			setIsPlaying(play[1]);
 
-					if (play[1]) {
-						setPlayingProgress(play[0].progress_ms);
-						setIsPlaying(play[0].is_playing);
-					}
-
-					if (specialCheck == 0) {
-						const hearted = await is_hearted(
-							play[1] ? play[0].item.id : play[0].id || '',
-						);
-						setHearted(hearted);
-
-						setIsPremium(await is_premium());
-					}
-					setSpecialCheck((specialCheck + 1) % 3);
-
-					setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
-				}
+			if (play[1]) {
+				setPlayingProgress(play[0].progress_ms);
+				setIsPlaying(play[0].is_playing);
 			}
 
-			setSinceAPICall(cooldown);
-			setApiCallInProgress(false);
+			if (specialCheck == 0) {
+				const hearted = await is_hearted(
+					play[1] ? play[0].item.id : play[0].id || '',
+				);
+				setHearted(hearted);
+
+				setIsPremium(await is_premium());
+			}
+			setSpecialCheck((specialCheck + 1) % 3);
+
+			setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
 		}
+		// }
+
+		setSinceAPICall(cooldown);
+		setApiCallInProgress(false);
+		// }
 	}
 
 	async function doAuth() {
@@ -114,23 +114,23 @@ export default function Spotify() {
 			const storedAccessToken =
 				localStorage.spotify_access_token || 'undefined';
 
-			if (code && storedAccessToken == 'undefined') {
-				await getAccessToken(clientId, code, URL);
-				const currentlyPlaying = await player(storedAccessToken);
-				setCurrentlyPlaying(currentlyPlaying[0]);
-				setIsPlaying(currentlyPlaying[1]);
+			// if (code && storedAccessToken == 'undefined') {
+			// 	await getAccessToken(clientId, code, URL);
+			// 	const currentlyPlaying = await player(storedAccessToken);
+			// 	setCurrentlyPlaying(currentlyPlaying[0]);
+			// 	setIsPlaying(currentlyPlaying[1]);
+			// } else {
+			if (storedAccessToken == 'undefined') {
+				clearKeys();
+				setRedirNeeded(true);
 			} else {
-				if (storedAccessToken == 'undefined') {
-					clearKeys();
-					setRedirNeeded(true);
-				} else {
-					if (Date.now() > ((localStorage.spotify_expires_in || 0) as number)) {
-						await refreshToken(clientId, URL);
-						setSinceAPICall(cooldown / 10);
-					}
-					setApiCallInProgress(false);
+				if (Date.now() > ((localStorage.spotify_expires_in || 0) as number)) {
+					await refreshToken(clientId, URL);
+					setSinceAPICall(cooldown / 10);
 				}
+				setApiCallInProgress(false);
 			}
+			// }
 		}
 	}
 
@@ -343,7 +343,7 @@ export default function Spotify() {
 				</div>
 			) : (
 				// Skeleton
-				<div className="sm:min-w-xl flex w-full min-w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-800 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:bg-neutral-950 dark:text-neutral-300">
+				<div className="flex w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-800 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:bg-neutral-950 dark:text-neutral-300">
 					<div className="w-2/5 sm:w-1/3">
 						<div className="aspect-square max-h-[calc(100%/30%)] w-full animate-pulse rounded-tl-md bg-neutral-200 dark:bg-neutral-800" />
 					</div>
