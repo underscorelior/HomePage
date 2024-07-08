@@ -75,7 +75,7 @@ function Countdown({ cds }: { cds: Countdown[] }) {
 		};
 	}, [cds]);
 	return (
-		<div className="max-w-3/4 flex flex-col rounded-tl-lg border-l-2 border-t-2 border-neutral-600 bg-neutral-50 p-4 text-xl font-bold sm:fixed sm:bottom-0 sm:right-0 sm:max-w-[20%] dark:border-neutral-800 dark:bg-neutral-950">
+		<div className="flex max-w-[50%] flex-col rounded-tl-lg border-l-2 border-t-2 border-neutral-800 bg-neutral-50 p-4 text-xl font-bold sm:fixed sm:bottom-0 sm:right-0 sm:max-w-[20%] dark:border-neutral-800 dark:bg-neutral-950">
 			{countdowns.length == 0 ? (
 				<h3 className="text-zinc-800 dark:text-zinc-300">
 					There are no currently active countdowns.

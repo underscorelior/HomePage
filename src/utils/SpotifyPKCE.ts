@@ -103,7 +103,7 @@ export async function getAccessToken(
 	const at = localStorage.spotify_access_token || 'undefined';
 	if (at !== 'undefined') return localStorage.spotify_access_token;
 
-	let result = await fetch('https://accounts.spotify.com/api/token', {
+	const result = await fetch('https://accounts.spotify.com/api/token', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 		body: new URLSearchParams({
@@ -114,24 +114,6 @@ export async function getAccessToken(
 			code_verifier: verifier,
 		}),
 	});
-	// console.log(code);
-	await new Promise((r) => setTimeout(r, 50));
-	const { access_token: a } = await result.json();
-	if (!a) {
-		result = await fetch('https://accounts.spotify.com/api/token', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-			body: new URLSearchParams({
-				client_id: clientId,
-				grant_type: 'authorization_code',
-				code,
-				redirect_uri: URL + '/callback',
-				code_verifier: verifier,
-			}),
-		});
-	}
-
-	await new Promise((r) => setTimeout(r, 10));
 
 	const { access_token, refresh_token, expires_in } = await result.json();
 
@@ -141,7 +123,6 @@ export async function getAccessToken(
 		'spotify_expires_in',
 		(Date.now() + ((expires_in || 0) as number) * 1000) as unknown as string,
 	);
-	// await new Promise((r) => setTimeout(r, 1000));
 
 	window.location.href = URL;
 	return access_token;

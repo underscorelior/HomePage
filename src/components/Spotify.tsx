@@ -343,13 +343,13 @@ export default function Spotify() {
 				</div>
 			) : (
 				// Skeleton
-				<div className="flex w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-800 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:bg-neutral-950 dark:text-neutral-300">
+				<div className="sm:min-w-xl flex w-full min-w-full max-w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-800 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:bg-neutral-950 dark:text-neutral-300">
 					<div className="w-2/5 sm:w-1/3">
 						<div className="aspect-square max-h-[calc(100%/30%)] w-full animate-pulse rounded-tl-md bg-neutral-200 dark:bg-neutral-800" />
 					</div>
-					<div className="flex h-full w-2/3 items-center justify-center gap-y-2 sm:gap-y-4">
+					<div className="min-w-4/5 flex h-full items-center justify-center gap-y-2 sm:w-2/3 sm:gap-y-4">
 						<div className="flex h-full w-full flex-col justify-between gap-y-2 px-5 py-5 sm:gap-y-4 sm:p-6 sm:px-5">
-							<div className="mb-2 flex items-center justify-between sm:mb-2">
+							<div className="mb-2 flex w-full items-center justify-between sm:mb-2">
 								<div className="w-full animate-pulse pt-[6px] sm:w-[80%]">
 									<div className="mb-0.5 h-[14px] w-2/3 rounded-md bg-neutral-300 sm:mb-[10px] dark:bg-neutral-700" />
 									<div className="h-[14px] w-1/3 rounded-md bg-neutral-300 dark:bg-neutral-700" />

@@ -64,7 +64,8 @@ export function App() {
 						<Carousel
 							opts={{
 								loop: true,
-							}}>
+							}}
+							className="flex w-full">
 							<CarouselContent className="flex items-end">
 								<CarouselItem>
 									{spotify && (redirNeeded || !redirNeeded) && <Spotify />}

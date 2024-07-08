@@ -151,7 +151,7 @@ export default function Settings({
 				<PopoverTrigger
 					className="m-3 mr-2 sm:m-4 sm:w-full"
 					onClick={() => checkValues()}>
-					<div className="flex h-14 w-14 items-center justify-center rounded-lg bg-neutral-50 p-4 ring-2 ring-neutral-600 transition-all duration-200 ease-in-out hover:bg-neutral-200 dark:bg-neutral-950 dark:ring-neutral-800 hover:dark:bg-neutral-900">
+					<div className="flex h-14 w-14 items-center justify-center rounded-lg bg-neutral-50 p-4 ring-2 ring-neutral-800 transition-all duration-200 ease-in-out hover:bg-neutral-200 dark:bg-neutral-950 dark:ring-neutral-800 hover:dark:bg-neutral-900">
 						<FiSettings
 							className="h-10 w-10 text-stone-800 hover:text-stone-950 dark:text-stone-300 dark:hover:text-stone-200"
 							size={'4em'}
