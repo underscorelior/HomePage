@@ -43,7 +43,7 @@ export default function Spotify() {
 	}
 
 	const URL = process.env.CALLBACK_URL || 'http://localhost:5173';
-	// const code = new URLSearchParams(window.location.search).get('code');
+	const code = new URLSearchParams(window.location.search).get('code');
 	const cooldown = 1500;
 
 	const [seekPosition, setSeekPosition] = useState<number>(0);
@@ -62,50 +62,50 @@ export default function Spotify() {
 	// Check for heart and premium, should remove
 	const [specialCheck, setSpecialCheck] = useState<number>(0);
 
-	const { redirNeeded, setRedirNeeded, load } = useContext(RedirContext);
+	const { redirNeeded, setRedirNeeded } = useContext(RedirContext);
 
 	async function doStuff() {
 		setApiCallInProgress(true);
 		const storedAccessToken = localStorage.spotify_access_token || 'undefined';
 
-		// if (code && storedAccessToken == 'undefined') {
-		// 	await getAccessToken(clientId, code, URL);
-		// 	const currentlyPlaying = await player(storedAccessToken);
-		// 	setCurrentlyPlaying(currentlyPlaying[0]);
-		// 	setIsPlaying(currentlyPlaying[1]);
-		// } else {
-		// if (load && storedAccessToken == 'undefined') {
-		// 	setRedirNeeded(true);
-		// } else {
-		if (Date.now() > ((localStorage.spotify_expires_in || 0) as number)) {
-			await refreshToken(clientId, URL);
-			setSinceAPICall(cooldown / 10);
+		if (code && storedAccessToken == 'undefined') {
+			await getAccessToken(clientId, code, URL);
+			const currentlyPlaying = await player(storedAccessToken);
+			setCurrentlyPlaying(currentlyPlaying[0]);
+			setIsPlaying(currentlyPlaying[1]);
 		} else {
-			const play = await player(storedAccessToken);
-			setIsPlaying(play[1]);
+			if (storedAccessToken == 'undefined') {
+				setRedirNeeded(true);
+			} else {
+				if (Date.now() > ((localStorage.spotify_expires_in || 0) as number)) {
+					await refreshToken(clientId, URL);
+					setSinceAPICall(cooldown / 10);
+				} else {
+					const play = await player(storedAccessToken);
+					setIsPlaying(play[1]);
 
-			if (play[1]) {
-				setPlayingProgress(play[0].progress_ms);
-				setIsPlaying(play[0].is_playing);
+					if (play[1]) {
+						setPlayingProgress(play[0].progress_ms);
+						setIsPlaying(play[0].is_playing);
+					}
+
+					if (specialCheck == 0) {
+						const hearted = await is_hearted(
+							play[1] ? play[0].item.id : play[0].id || '',
+						);
+						setHearted(hearted);
+
+						setIsPremium(await is_premium());
+					}
+					setSpecialCheck((specialCheck + 1) % 3);
+
+					setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
+				}
 			}
 
-			if (specialCheck == 0) {
-				const hearted = await is_hearted(
-					play[1] ? play[0].item.id : play[0].id || '',
-				);
-				setHearted(hearted);
-
-				setIsPremium(await is_premium());
-			}
-			setSpecialCheck((specialCheck + 1) % 3);
-
-			setCurrentlyPlaying(play[1] ? play[0].item : play[0]);
+			setSinceAPICall(cooldown);
+			setApiCallInProgress(false);
 		}
-		// }
-
-		setSinceAPICall(cooldown);
-		setApiCallInProgress(false);
-		// }
 	}
 
 	async function doAuth() {
@@ -114,23 +114,23 @@ export default function Spotify() {
 			const storedAccessToken =
 				localStorage.spotify_access_token || 'undefined';
 
-			// if (code && storedAccessToken == 'undefined') {
-			// 	await getAccessToken(clientId, code, URL);
-			// 	const currentlyPlaying = await player(storedAccessToken);
-			// 	setCurrentlyPlaying(currentlyPlaying[0]);
-			// 	setIsPlaying(currentlyPlaying[1]);
-			// } else {
-			if (storedAccessToken == 'undefined') {
-				clearKeys();
-				setRedirNeeded(true);
+			if (code && storedAccessToken == 'undefined') {
+				await getAccessToken(clientId, code, URL);
+				const currentlyPlaying = await player(storedAccessToken);
+				setCurrentlyPlaying(currentlyPlaying[0]);
+				setIsPlaying(currentlyPlaying[1]);
 			} else {
-				if (Date.now() > ((localStorage.spotify_expires_in || 0) as number)) {
-					await refreshToken(clientId, URL);
-					setSinceAPICall(cooldown / 10);
+				if (storedAccessToken == 'undefined') {
+					clearKeys();
+					setRedirNeeded(true);
+				} else {
+					if (Date.now() > ((localStorage.spotify_expires_in || 0) as number)) {
+						await refreshToken(clientId, URL);
+						setSinceAPICall(cooldown / 10);
+					}
+					setApiCallInProgress(false);
 				}
-				setApiCallInProgress(false);
 			}
-			// }
 		}
 	}
 
@@ -181,7 +181,7 @@ export default function Spotify() {
 	return (
 		<>
 			{currentlyPlaying != null ? (
-				<div className="flex w-full flex-row overflow-hidden rounded-t-lg border-t-2 border-neutral-600 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl sm:border-x-2 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
+				<div className="flex w-full flex-row overflow-hidden rounded-t-lg border-t-2 border-neutral-600 bg-neutral-50 text-neutral-800 shadow-md dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200 sm:w-2/3 sm:max-w-xl sm:border-x-2">
 					<div className="w-2/5 flex-shrink-0 sm:w-1/3">
 						<a href={currentlyPlaying.uri} target="_blank" rel="noreferrer">
 							<img
@@ -197,9 +197,9 @@ export default function Spotify() {
 						</a>
 					</div>
 					<div className="flex h-full w-full items-center justify-center gap-y-4 sm:mx-auto sm:w-2/3">
-						<div className="flex h-full w-full flex-col justify-between gap-y-2 px-4 py-3 sm:gap-y-4 sm:py-6">
+						<div className="flex h-full w-full flex-col justify-between gap-y-3 px-4 py-3 sm:gap-y-4 sm:py-6">
 							<div className="flex w-[95%] items-center justify-between sm:mb-3 sm:w-full">
-								<div className="sm:w-[85%]">
+								<div className="w-[85%]">
 									<p className="text-md -mb-1 overflow-hidden text-ellipsis whitespace-nowrap font-medium sm:mb-0">
 										{currentlyPlaying.name}
 									</p>
@@ -232,7 +232,7 @@ export default function Spotify() {
 								</button>
 							</div>
 							{isPlaying && (
-								<div className="flex items-center pb-3">
+								<div className="flex items-center pb-3 pt-3 sm:pt-0">
 									<div className="relative h-3 w-full rounded-lg border-[1.5px] border-neutral-700 bg-neutral-200/90 dark:border-neutral-900 dark:bg-neutral-800/90">
 										<div
 											className="h-full rounded-lg bg-green-500 dark:bg-green-400"
@@ -262,7 +262,7 @@ export default function Spotify() {
 											/>
 										)}
 										<div
-											className="absolute top-[50%] size-4 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-green-500 dark:bg-green-400"
+											className="size-3 absolute top-[50%] -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-green-500 dark:bg-green-400"
 											style={{
 												left:
 													((playingProgress % currentlyPlaying.duration_ms) /
@@ -299,7 +299,7 @@ export default function Spotify() {
 								</div>
 							)}
 							{isPremium && (
-								<div className="flex justify-center gap-x-4">
+								<div className="flex justify-center gap-x-4 pt-4 sm:pt-0">
 									<button
 										className="rounded-full"
 										onClick={async () => {
@@ -343,15 +343,15 @@ export default function Spotify() {
 				</div>
 			) : (
 				// Skeleton
-				<div className="flex w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-800 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:bg-neutral-950 dark:text-neutral-300">
-					<div className="w-2/5 sm:w-1/3">
-						<div className="aspect-square max-h-[calc(100%/30%)] w-full animate-pulse rounded-tl-md bg-neutral-200 dark:bg-neutral-800" />
+				<div className="flex w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-800 bg-neutral-50 text-neutral-800 shadow-md dark:bg-neutral-950 dark:text-neutral-300 sm:w-2/3 sm:max-w-xl">
+					<div className="h-2/5 w-2/5 sm:w-1/3">
+						<div className="aspect-square w-full animate-pulse rounded-tl-md bg-neutral-200 dark:bg-neutral-800" />
 					</div>
-					<div className="min-w-4/5 flex h-full items-center justify-center gap-y-2 sm:w-2/3 sm:gap-y-4">
+					<div className="min-w-3/5 flex h-full w-3/5 items-center justify-center gap-y-2 sm:w-2/3 sm:gap-y-4">
 						<div className="flex h-full w-full flex-col justify-between gap-y-2 px-5 py-5 sm:gap-y-4 sm:p-6 sm:px-5">
 							<div className="mb-2 flex w-full items-center justify-between sm:mb-2">
 								<div className="w-full animate-pulse pt-[6px] sm:w-[80%]">
-									<div className="mb-0.5 h-[14px] w-2/3 rounded-md bg-neutral-300 sm:mb-[10px] dark:bg-neutral-700" />
+									<div className="mb-0.5 h-[14px] w-2/3 rounded-md bg-neutral-300 dark:bg-neutral-700 sm:mb-[10px]" />
 									<div className="h-[14px] w-1/3 rounded-md bg-neutral-300 dark:bg-neutral-700" />
 								</div>
 								<div className="animate-pulse rounded-full">
