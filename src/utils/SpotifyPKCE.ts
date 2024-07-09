@@ -1,5 +1,3 @@
-// TODO: Refactor
-
 import toast from 'react-hot-toast';
 
 function generateCodeVerifier(length: number) {
@@ -223,7 +221,7 @@ export async function next() {
 	return res.status == 204;
 }
 
-export async function is_premium() {
+export async function isPremium() {
 	const accessToken = localStorage.spotify_access_token || '';
 
 	const result = await fetch('https://api.spotify.com/v1/me', {
@@ -296,7 +294,7 @@ export async function heart(isHearted: boolean, trackId: string) {
 	return res.status == 200;
 }
 
-export async function is_hearted(trackId: string) {
+export async function isHearted(trackId: string) {
 	const accessToken = localStorage.spotify_access_token || '';
 	const result = await fetch(
 		`https://api.spotify.com/v1/me/tracks/contains?ids=${trackId}`,

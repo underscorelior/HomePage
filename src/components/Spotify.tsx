@@ -3,8 +3,6 @@
 // TODO: Store previous device id to try and play from it.
 // TODO: Toast errors for failing to seek, heart, etc.
 // TODO: Refactor API code.
-// TODO: Use constant code style (camelCase)
-// TODO: Fix light mode toast
 
 import { RedirContext } from '@/index';
 import { Button } from '@/shadcn/components/ui/button';
@@ -22,8 +20,8 @@ import {
 	clearKeys,
 	getAccessToken,
 	heart,
-	is_hearted,
-	is_premium,
+	isHearted,
+	isPremium,
 	next,
 	pause,
 	play,
@@ -50,7 +48,7 @@ export default function Spotify() {
 	const [currentlyPlaying, setCurrentlyPlaying] = useState<TrackObject | null>(
 		null,
 	);
-	const [isPremium, setIsPremium] = useState<boolean>(false);
+	const [premium, setPremium] = useState<boolean>(false);
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
 	const [playingProgress, setPlayingProgress] = useState<number>(0);
 	const [sinceAPICall, setSinceAPICall] = useState<number>(0);
@@ -90,12 +88,12 @@ export default function Spotify() {
 					}
 
 					if (specialCheck == 0) {
-						const hearted = await is_hearted(
+						const hearted = await isHearted(
 							play[1] ? play[0].item.id : play[0].id || '',
 						);
 						setHearted(hearted);
 
-						setIsPremium(await is_premium());
+						setPremium(await isPremium());
 					}
 					setSpecialCheck((specialCheck + 1) % 3);
 
@@ -181,7 +179,7 @@ export default function Spotify() {
 	return (
 		<>
 			{currentlyPlaying != null ? (
-				<div className="flex w-full flex-row overflow-hidden rounded-t-lg border-t-2 border-neutral-600 bg-neutral-50 text-neutral-800 shadow-md dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200 sm:w-2/3 sm:max-w-xl sm:border-x-2">
+				<div className="flex w-full flex-row overflow-hidden rounded-t-lg border-t-2 border-neutral-600 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl sm:border-x-2 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
 					<div className="w-2/5 flex-shrink-0 sm:w-1/3">
 						<a href={currentlyPlaying.uri} target="_blank" rel="noreferrer">
 							<img
@@ -244,7 +242,7 @@ export default function Spotify() {
 													'%',
 											}}
 										/>
-										{isPremium && (
+										{premium && (
 											<input
 												className="absolute top-0 h-full w-full cursor-pointer opacity-0"
 												type="range"
@@ -262,7 +260,7 @@ export default function Spotify() {
 											/>
 										)}
 										<div
-											className="size-3 absolute top-[50%] -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-green-500 dark:bg-green-400"
+											className="absolute top-[50%] size-3 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-green-500 dark:bg-green-400"
 											style={{
 												left:
 													((playingProgress % currentlyPlaying.duration_ms) /
@@ -298,7 +296,7 @@ export default function Spotify() {
 									</div>
 								</div>
 							)}
-							{isPremium && (
+							{premium && (
 								<div className="flex justify-center gap-x-4 pt-4 sm:pt-0">
 									<button
 										className="rounded-full"
@@ -343,7 +341,7 @@ export default function Spotify() {
 				</div>
 			) : (
 				// Skeleton
-				<div className="flex w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-800 bg-neutral-50 text-neutral-800 shadow-md dark:bg-neutral-950 dark:text-neutral-300 sm:w-2/3 sm:max-w-xl">
+				<div className="flex w-full overflow-hidden rounded-t-lg border-x-2 border-t-2 border-neutral-800 bg-neutral-50 text-neutral-800 shadow-md sm:w-2/3 sm:max-w-xl dark:bg-neutral-950 dark:text-neutral-300">
 					<div className="h-2/5 w-2/5 sm:w-1/3">
 						<div className="aspect-square w-full animate-pulse rounded-tl-md bg-neutral-200 dark:bg-neutral-800" />
 					</div>
@@ -351,7 +349,7 @@ export default function Spotify() {
 						<div className="flex h-full w-full flex-col justify-between gap-y-2 px-5 py-5 sm:gap-y-4 sm:p-6 sm:px-5">
 							<div className="mb-2 flex w-full items-center justify-between sm:mb-2">
 								<div className="w-full animate-pulse pt-[6px] sm:w-[80%]">
-									<div className="mb-0.5 h-[14px] w-2/3 rounded-md bg-neutral-300 dark:bg-neutral-700 sm:mb-[10px]" />
+									<div className="mb-0.5 h-[14px] w-2/3 rounded-md bg-neutral-300 sm:mb-[10px] dark:bg-neutral-700" />
 									<div className="h-[14px] w-1/3 rounded-md bg-neutral-300 dark:bg-neutral-700" />
 								</div>
 								<div className="animate-pulse rounded-full">
