@@ -71,11 +71,13 @@ export function App() {
 								}}
 								className="flex w-full">
 								<CarouselContent className="flex w-full items-end">
-									<CarouselItem className="w-full">
-										{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
-									</CarouselItem>
+									{spotify && (
+										<CarouselItem className="w-full">
+											{(redirNeeded || !redirNeeded) && <Spotify />}
+										</CarouselItem>
+									)}
 									<CarouselItem>
-										<div className="flex flex-row items-end justify-between">
+										<div className="flex w-full flex-row items-end justify-between">
 											<Settings
 												setSpotify={setSpotify}
 												setCountdown={setCountdown}
