@@ -1,4 +1,6 @@
 # Homepage
+My highly customizable new tab page with a spotify display, countdowns, and a settings system.
+
 
 ## ToDo:
 
