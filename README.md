@@ -12,6 +12,7 @@ My highly customizable new tab page with a spotify display, countdowns, and a se
 - [x] Sync
 - [ ] Basic offline version
 - [ ] Minigames - (Snake, 2048, minesweeper, tetris, etc.)
+- [ ] MD Textbox for notes
 
 ### If possible:
 
