@@ -13,6 +13,7 @@ My highly customizable new tab page with a spotify display, countdowns, and a se
 - [ ] Basic offline version
 - [ ] Minigames - (Snake, 2048, minesweeper, tetris, etc.)
 - [ ] MD Textbox for notes
+- [ ] Coundown Desyncing for some reason
 
 ### If possible:
 
