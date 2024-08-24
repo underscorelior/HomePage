@@ -1,4 +1,5 @@
 // TODO: Highlight active date on calendar -- NOT SURE IF POSSIBLE
+// TODO: Fix countdown desync
 
 import { Button } from '@/shadcn/components/ui/button';
 import { DateTimePicker } from '@/shadcn/components/ui/date-time-picker/date-time-picker';
@@ -232,9 +233,10 @@ function CountdownEditPopup({
 	}, [globalOpen, open]);
 
 	async function onSubmit() {
+		const properTimestamp = new Date(ts).setSeconds(0, 0);
 		setOpen(false);
-		await syncCountdowns(cdName, ts);
-		setOuterTimestamp(ts);
+		await syncCountdowns(cdName, properTimestamp);
+		setOuterTimestamp(properTimestamp);
 		setOuterName(cdName);
 		setGlobalOpen(false);
 	}
@@ -396,9 +398,11 @@ export function CountdownCreatePopup({
 						granularity={'minute'}
 						onChange={(dv) => {
 							setTimestamp(
-								dv
-									.toDate(Intl.DateTimeFormat().resolvedOptions().timeZone)
-									.getTime(),
+								new Date(
+									dv
+										.toDate(Intl.DateTimeFormat().resolvedOptions().timeZone)
+										.setSeconds(0, 0),
+								).getTime(),
 							);
 						}}
 					/>
