@@ -42,7 +42,7 @@ export default function Spotify() {
 
 	const URL = process.env.CALLBACK_URL || 'http://localhost:5173';
 	const code = new URLSearchParams(window.location.search).get('code');
-	const cooldown = 1500;
+	const cooldown = 1000;
 
 	const [seekPosition, setSeekPosition] = useState<number>(0);
 	const [currentlyPlaying, setCurrentlyPlaying] = useState<TrackObject | null>(
@@ -56,6 +56,7 @@ export default function Spotify() {
 	const [hearted, setHearted] = useState<boolean>(false);
 	const [heartClicked, setHeartClicked] = useState<boolean>(false);
 	const [lastFocus, setLastFocus] = useState<boolean>(false);
+	const [diff, setDiff] = useState<number>(0);
 
 	// Check for heart and premium, should remove
 	const [specialCheck, setSpecialCheck] = useState<number>(0);
@@ -83,7 +84,18 @@ export default function Spotify() {
 					setIsPlaying(play[1]);
 
 					if (play[1]) {
-						setPlayingProgress(play[0].progress_ms);
+						setDiff(Math.abs(play[0].progress_ms - playingProgress));
+						if (
+							diff > 5000 ||
+							playingProgress == 0 ||
+							play[0].item.id != currentlyPlaying?.id
+							// (play[0].item.id == currentlyPlaying?.id && diff > 5000)
+						) {
+							setPlayingProgress(play[0].progress_ms);
+							// if (play[0].item.id != currentlyPlaying?.id) {
+							setDiff(0);
+							// }
+						}
 						setIsPlaying(play[0].is_playing);
 					}
 
@@ -140,7 +152,9 @@ export default function Spotify() {
 
 		setLastFocus(document.hasFocus());
 		if (isPlaying) {
-			setPlayingProgress(Math.round(100 * (playingProgress + 4.95 / 3)) / 100);
+			setPlayingProgress(
+				Math.round(playingProgress + 1 + (diff < 5000 ? diff / cooldown : 0)),
+			);
 		}
 		if (
 			(isPlaying &&
@@ -152,6 +166,10 @@ export default function Spotify() {
 			doStuff();
 		}
 		setSinceAPICall(sinceAPICall - 1);
+		if (sinceAPICall < 0 && apiCallInProgress) {
+			setSinceAPICall(0);
+			setPlayingProgress(playingProgress + 1);
+		}
 	}
 
 	useEffect(() => {

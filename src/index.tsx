@@ -14,6 +14,7 @@ import {
 	CarouselItem,
 } from '@/shadcn/components/ui/carousel';
 import { useWindowSize } from '@uidotdev/usehooks';
+// import Notes from './components/Notes';
 
 export const RedirContext = createContext<{
 	redirNeeded: boolean | null;
@@ -110,6 +111,7 @@ export function App() {
 							</div>
 							{spotify && (redirNeeded || !redirNeeded) && <Spotify />}
 							{countdown && <Countdown cds={countdowns} />}
+							{/* <Notes /> */}
 						</div>
 					)}
 				</div>
