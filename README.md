@@ -2,7 +2,7 @@
 
 <img width="750" alt="image" src="https://github.com/user-attachments/assets/b1107f9b-e81b-439c-a92a-e72c70f04875">
 
-> A highly customizable new tab page featuring a Spotify display, countdowns, and a settings system with a simple syncing system.
+> A highly customizable new tab page featuring a Spotify display, countdowns, a settings menu for toggling elements, and an easy to use syncing system.
 
 ## Features
 
